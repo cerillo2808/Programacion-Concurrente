@@ -1,3 +1,10 @@
+# Programación Paralela y Concurrente
+Estudiante: Liqing Yosery Zheng Lu C38680 <br>
+Profesor: Daniel Alvarado <br>
+Semestre I, 2025 <br>
+Grupo 02
+
+
 # Glossary
 
 ### 1. Programación serial
