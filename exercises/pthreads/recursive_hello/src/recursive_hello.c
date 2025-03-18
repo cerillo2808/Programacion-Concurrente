@@ -33,7 +33,7 @@ void* greet(void* data) {
   //(void)data;
   // print "Hello from secondary thread"
   if (variable_local==0){
-    printf("Hello from secondary thread. Counter: %zu\n", variable_local);
+    printf("Goodbye. Counter: %zu\n", variable_local);
   }
   else{
     printf("No es cero. Creando otro hilo.\n");
