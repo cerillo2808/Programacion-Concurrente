@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 // #include <unistd.h>
+// los include usualmente van en orden alfabético por el linter
 
 /**
  * @brief ...
@@ -15,6 +16,7 @@ int main(void) {
   // create_thread(greet)
   pthread_t thread;
   int error = pthread_create(&thread, /*attr*/ NULL, greet, /*arg*/ NULL);
+  // el método a realizar por el nuevo hilo está en el tercer parámetro
   if (error == EXIT_SUCCESS) {
     // print "Hello from main thread"
     // usleep(1);  // indeterminism
