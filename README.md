@@ -25,6 +25,8 @@ Relacionado con el incremento del desempeño. En vez de hacer que un solo hilo s
 ### 6. Hilo de ejecución
 
 ### 7. Indeterminismo
+El calendarizador define cuándo y dónde atender a los diferentes procesos. Las colas sólo se utilizan cuando el programa ya está en ejecución, pero esperando a alguna otra instrucción a ser procesada. El indeterminismo es cuando no podemos saber el orden exacto en que se procesan instrucciones por falta de control sobre el calendarizador. Más formalmente, es la incapacidad de conocer de forma precisa el orden de ejecución de los programas (hilos, procesos).
+
 
 ### 8. Memoria privada y compartida
 
