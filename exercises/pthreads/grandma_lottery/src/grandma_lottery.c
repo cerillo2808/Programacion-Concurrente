@@ -38,14 +38,11 @@ int main () {
 
 }
 
-void* comprar_numero (/*void* seed*/){
-    /*unsigned int* s = (unsigned int*) seed;
+void* comprar_numero (){
+    unsigned int seed = (unsigned int)time(NULL) ^ (unsigned int)(uintptr_t)pthread_self();
+    // se hace un XOR del tiempo y del ID del hilo para que las semillas sean diferentes para cada nieto.
     unsigned int *loteria = malloc(sizeof(unsigned int));
-    *loteria = rand_r(s) % 101;
-    return loteria;*/
-
-    unsigned int *loteria = malloc(sizeof(unsigned int));
-    *loteria = 3;
+    *loteria = rand_r(&seed) % 101;
     return loteria;
 
 }
