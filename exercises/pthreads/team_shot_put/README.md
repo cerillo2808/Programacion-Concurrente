@@ -26,3 +26,6 @@ El árbitro se encargará de comparar los resultados de cada pareja de atletas, 
 `2.3: best shot put 24.681m`<br>
 `1.2: best shot put 14.009m`<br>
 `result 1:2, team 2 wins`
+
+# Observaciones
+El output de mi programa no es el mismo que el del enunciado porque se imprimen los best shots dentro del for que crea a los pthreads, están en orden. Debido a lo anterior, no es posible demostrar que la computadora está usando la concurrencia de la manera más eficiente.

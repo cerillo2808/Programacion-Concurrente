@@ -6,7 +6,7 @@
 /**
  * @brief ...
  */
-void* tirar_3veces ();
+void* tirar_3veces (void* arg);
 
 int main(int argc, char* argv[]) {
 
@@ -33,41 +33,75 @@ int main(int argc, char* argv[]) {
         // no hay errores y se sigue
 
         // son dos equipos, cada equipo con una cantidad impar de atletas
-        double pizarra[2][cantidadAtletas];
+        int ganes_equipo1 = 0;
+        int ganes_equipo2 = 0;
 
         // instancio a los atletas
-        pthread_t *atletas = malloc(sizeof(pthread_t)*cantidadAtletas*2);
+        pthread_t *atletas_equipo1 = malloc(sizeof(pthread_t)*cantidadAtletas);
+        pthread_t *atletas_equipo2 = malloc(sizeof(pthread_t)*cantidadAtletas);
 
-        for (int i =0; i<2; i++){
-            for (int j = 0; j<cantidadAtletas; j++){
+        for (int i = 0; i<cantidadAtletas; i++){
 
-                // hacer uno único para cada atleta
-                int indice = i*cantidadAtletas+j;
+            double *resultado_equipo1;
+            double *resultado_equipo2;
+            int* indice1 = malloc(sizeof(int));
+            int* indice2 = malloc(sizeof(int));
+            *indice1 = i;
+            *indice2 = i;
 
-                pthread_create(&atletas[indice], NULL, tirar_3veces, NULL);
-                double *resultado;
-                pthread_join(atletas[indice], (void**)&resultado);
-                pizarra[i][j] = *resultado;
-                free(resultado);
+            pthread_create(&atletas_equipo1[i], NULL, tirar_3veces, indice1);
+            pthread_create(&atletas_equipo2[i], NULL, tirar_3veces, indice2);
+
+            pthread_join(atletas_equipo1[i], (void**)&resultado_equipo1);
+            printf("1.%d: best shot put %f\n", i+1, *resultado_equipo1);
+            pthread_join(atletas_equipo2[i], (void**)&resultado_equipo2);
+            printf("2.%d: best shot put %f\n", i+1, *resultado_equipo2);
+            
+            if (*resultado_equipo1<*resultado_equipo2){
+                ganes_equipo2++;
+            } else if (*resultado_equipo1>*resultado_equipo2){
+                ganes_equipo1++;
             }
+            // si es empate, a nadie se le da punto.
+            
+            free(indice1);
+            free(indice2);
+
         }
 
-        for (int equipo = 0; equipo<2; equipo++){
-            for (int atleta = 0; atleta<cantidadAtletas; atleta++){
-                printf("%f\n", pizarra[equipo][atleta]);
-            }
+        // Imprimir resultados finales
+        printf("\nGanes equipo 1: %d\n", ganes_equipo1);
+        printf("Ganes equipo 2: %d\n", ganes_equipo2);
+        
+        if (ganes_equipo1<ganes_equipo2){
+            printf("\nGana equipo 2\n");
+        } else if (ganes_equipo1>ganes_equipo2){
+            printf("\nGana equipo 1\n");
+        } else{
+            printf("\nEmpate\n");
         }
 
-    }
+        }
 
     return 0;
     } 
 
-    void* tirar_3veces(){
-        unsigned int seed = (unsigned int)time(NULL) ^ (unsigned int)(uintptr_t)pthread_self();
-        double *tiro = malloc(sizeof(double));
-        *tiro = ((double)rand_r(&seed) / RAND_MAX) * 20.5;
-        return tiro;
+    void* tirar_3veces(void* arg){
 
-        // TO-DO: Hacer que tire tres veces y retorne el más alto.
+        int indice = *((int*)arg);
+        free(arg);
+
+        unsigned int seed = (unsigned int)time(NULL) ^ (unsigned int)(uintptr_t)pthread_self() ^ indice;
+        // la seed depende del índice que se pasó como parámetro
+
+        double *tiro_mas_alto = malloc(sizeof(double));
+        double tiro_actual; 
+        for (int i = 0; i<3; i++){
+           tiro_actual = ((double)rand_r(&seed) / RAND_MAX) * 20.5;
+           if (tiro_actual > *tiro_mas_alto) {
+            *tiro_mas_alto = tiro_actual;
+            }  
+        }
+        
+        return tiro_mas_alto;
     }
