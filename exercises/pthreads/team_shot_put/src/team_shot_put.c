@@ -10,9 +10,6 @@ void* tirar_3veces (void* arg);
 
 int main(int argc, char* argv[]) {
 
-    // para que no tire warning de que no se usa argc
-    (void) argc;
-
     // para verificar que sí haya parámetros
     if (argc < 2) {
         printf("Error: debe pasar la cantidad de atletas como argumento\n");
@@ -40,22 +37,25 @@ int main(int argc, char* argv[]) {
         pthread_t *atletas_equipo1 = malloc(sizeof(pthread_t)*cantidadAtletas);
         pthread_t *atletas_equipo2 = malloc(sizeof(pthread_t)*cantidadAtletas);
 
+        double *resultado_equipo1;
+        double *resultado_equipo2;
+
         for (int i = 0; i<cantidadAtletas; i++){
 
-            double *resultado_equipo1;
-            double *resultado_equipo2;
-            int* indice1 = malloc(sizeof(int));
-            int* indice2 = malloc(sizeof(int));
-            *indice1 = i;
-            *indice2 = i;
+            int* datos1 = malloc(sizeof(int) * 2);
+            int* datos2 = malloc(sizeof(int) * 2);
 
-            pthread_create(&atletas_equipo1[i], NULL, tirar_3veces, indice1);
-            pthread_create(&atletas_equipo2[i], NULL, tirar_3veces, indice2);
+            // en datos se pasa el equipo y el numero de atleta.
+            datos1[0] = 1; datos1[1] = i;
+            datos2[0] = 2; datos2[1] = i;
 
+            pthread_create(&atletas_equipo1[i], NULL, tirar_3veces, datos1);
+            pthread_create(&atletas_equipo2[i], NULL, tirar_3veces, datos2);
+        }
+
+        for (int i = 0; i<cantidadAtletas; i++){
             pthread_join(atletas_equipo1[i], (void**)&resultado_equipo1);
-            printf("1.%d: best shot put %f\n", i+1, *resultado_equipo1);
             pthread_join(atletas_equipo2[i], (void**)&resultado_equipo2);
-            printf("2.%d: best shot put %f\n", i+1, *resultado_equipo2);
             
             if (*resultado_equipo1<*resultado_equipo2){
                 ganes_equipo2++;
@@ -63,10 +63,6 @@ int main(int argc, char* argv[]) {
                 ganes_equipo1++;
             }
             // si es empate, a nadie se le da punto.
-            
-            free(indice1);
-            free(indice2);
-
         }
 
         // Imprimir resultados finales
@@ -81,6 +77,9 @@ int main(int argc, char* argv[]) {
             printf("\nEmpate\n");
         }
 
+        free(atletas_equipo1);
+        free(atletas_equipo2);
+
         }
 
     return 0;
@@ -88,8 +87,9 @@ int main(int argc, char* argv[]) {
 
     void* tirar_3veces(void* arg){
 
-        int indice = *((int*)arg);
-        free(arg);
+        int* datos = (int*)arg;
+        int equipo = datos[0];
+        int indice = datos[1];
 
         unsigned int seed = (unsigned int)time(NULL) ^ (unsigned int)(uintptr_t)pthread_self() ^ indice;
         // la seed depende del índice que se pasó como parámetro
@@ -102,6 +102,8 @@ int main(int argc, char* argv[]) {
             *tiro_mas_alto = tiro_actual;
             }  
         }
+
+        printf("%d.%d: best shot put %f\n", equipo, indice + 1, *tiro_mas_alto);
         
         return tiro_mas_alto;
     }
