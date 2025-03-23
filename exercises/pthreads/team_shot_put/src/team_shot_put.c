@@ -29,40 +29,50 @@ int main(int argc, char* argv[]) {
     } else{
         // no hay errores y se sigue
 
+        // instancio a los atletas
+        pthread_t *atletas = malloc(sizeof(pthread_t)*cantidadAtletas*2);
+
+        double** pizarra = malloc(2 * sizeof(double*));
+        for (int i = 0; i < 2; i++) {
+            pizarra[i] = malloc(cantidadAtletas * sizeof(double));
+        }
+
+        double *resultado;
+
+        for (int i = 0; i<2; i++){
+            for (int j = 0; j<cantidadAtletas; j++){
+                int* datos = malloc(sizeof(int) * 2);
+                // en datos se pasa el equipo y el numero de atleta.
+                datos[0] = i; 
+                datos[1] = j;
+
+                pthread_create(&atletas[2 * i + j], NULL, tirar_3veces, datos);
+            }
+        }
+
+        for (int i = 0; i<2; i++){
+        
+            for (int j = 0; j<cantidadAtletas; j++){
+                pthread_join(atletas[2 * i + j], (void**)&resultado);
+                // guardar el resultado en la pizarra
+                pizarra[i][j] = *resultado;
+            }
+            
+            // TO-DO: recorrer matriz pizarra para sacar puntos
+            // si es empate, a nadie se le da punto.
+        }
+
         // son dos equipos, cada equipo con una cantidad impar de atletas
         int ganes_equipo1 = 0;
         int ganes_equipo2 = 0;
 
-        // instancio a los atletas
-        pthread_t *atletas_equipo1 = malloc(sizeof(pthread_t)*cantidadAtletas);
-        pthread_t *atletas_equipo2 = malloc(sizeof(pthread_t)*cantidadAtletas);
-
-        double *resultado_equipo1;
-        double *resultado_equipo2;
-
         for (int i = 0; i<cantidadAtletas; i++){
-
-            int* datos1 = malloc(sizeof(int) * 2);
-            int* datos2 = malloc(sizeof(int) * 2);
-
-            // en datos se pasa el equipo y el numero de atleta.
-            datos1[0] = 1; datos1[1] = i;
-            datos2[0] = 2; datos2[1] = i;
-
-            pthread_create(&atletas_equipo1[i], NULL, tirar_3veces, datos1);
-            pthread_create(&atletas_equipo2[i], NULL, tirar_3veces, datos2);
-        }
-
-        for (int i = 0; i<cantidadAtletas; i++){
-            pthread_join(atletas_equipo1[i], (void**)&resultado_equipo1);
-            pthread_join(atletas_equipo2[i], (void**)&resultado_equipo2);
-            
-            if (*resultado_equipo1<*resultado_equipo2){
-                ganes_equipo2++;
-            } else if (*resultado_equipo1>*resultado_equipo2){
+            if(pizarra[0][i]>pizarra[1][i]){
                 ganes_equipo1++;
+            } else if (pizarra[0][i]<pizarra[1][i]){
+                ganes_equipo2++;
             }
-            // si es empate, a nadie se le da punto.
+            // si es empate nadie tiene punto
         }
 
         // Imprimir resultados finales
@@ -77,8 +87,8 @@ int main(int argc, char* argv[]) {
             printf("\nEmpate\n");
         }
 
-        free(atletas_equipo1);
-        free(atletas_equipo2);
+        free(atletas);
+        free(pizarra);
 
         }
 
@@ -103,7 +113,7 @@ int main(int argc, char* argv[]) {
             }  
         }
 
-        printf("%d.%d: best shot put %f\n", equipo, indice + 1, *tiro_mas_alto);
+        printf("%d.%d: best shot put %f\n", equipo + 1, indice + 1, *tiro_mas_alto);
         
         return tiro_mas_alto;
     }
