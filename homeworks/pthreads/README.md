@@ -1,2 +1,0 @@
-# Descripción
-Simulación de calor.
