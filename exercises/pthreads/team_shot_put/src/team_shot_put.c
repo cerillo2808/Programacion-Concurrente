@@ -1,3 +1,5 @@
+// Copyright [2025] <Liqing Yosery Zheng Lu>
+
 #include <inttypes.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -54,6 +56,7 @@ int main(int argc, char *argv[]) {
         pthread_join(atletas[2 * i + j], (void **)&resultado);
         // guardar el resultado en la pizarra
         pizarra[i][j] = *resultado;
+        free(resultado);
       }
     }
 
@@ -96,7 +99,8 @@ void *tirar_3veces(void *arg) {
   int equipo = datos[0];
   int indice = datos[1];
 
-  unsigned int seed = (unsigned int)time(NULL) ^ (unsigned int)(uintptr_t)pthread_self() ^ indice;
+  unsigned int seed = (unsigned int)time(NULL)
+    ^ (unsigned int)(uintptr_t)pthread_self() ^ indice;
   // la seed depende del índice que se pasó como parámetro
 
   double *tiro_mas_alto = malloc(sizeof(double));
@@ -109,7 +113,6 @@ void *tirar_3veces(void *arg) {
   }
 
   printf("%d.%d: best shot put %f\n", equipo + 1, indice + 1, *tiro_mas_alto);
-  
   free(datos);
 
   return tiro_mas_alto;
