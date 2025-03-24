@@ -28,10 +28,15 @@ Un hilo de ejecución, también conocido como trabajadores o simplemente hilo, e
 ### 7. Indeterminismo
 El calendarizador define cuándo y dónde atender a los diferentes procesos. Las colas sólo se utilizan cuando el programa ya está en ejecución, pero esperando a alguna otra instrucción a ser procesada. El indeterminismo es cuando no podemos saber el orden exacto en que se procesan instrucciones por falta de control sobre el calendarizador. Más formalmente, es la incapacidad de conocer de forma precisa el orden de ejecución de los programas (hilos, procesos).
 
-
 ### 8. Memoria privada y compartida
+Regiones continuas de memoria.
+
+Privada: Es cuando la región de memoria es un struct y se le asigna a un hilo. Ningún hilo tiene acceso a la memoria privada de otros hilos, pero cada hilo tiene su propia memoria privada.
+
+Compartida: Es cuando se define como un atributo dentro de la memoria privada. Todos los hilos pueden acceder a esta memoria.
 
 ### 9. Espera activa
+También conocido como busywait. Es un ciclo que hace a un hilo de ejecución esperar repetitivamente hasta que una condición se haga falsa.
 
 ### 10. Condición de carrera
 
