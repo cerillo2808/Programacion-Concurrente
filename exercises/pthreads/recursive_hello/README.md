@@ -29,3 +29,8 @@ Hello from another thread. Counter: 0 <br>
 Goodbye. Counter: 0 <br>
 
 Sí se acerté la predicción. Sin embargo, me costó imprimir un t_size que se hace con un '%zu' y al final ponerle la variable a imprimir. También me costó compilar y ejecutar el programa, que se hace estando la terminal en la carpeta 'recursive_hello', ejecutar 'make', luego moverse a bin, y ejecutar './recursive_hello'.
+
+# Diagrama de Rastreo de Memoria
+Hecho en MermaidChart
+
+https://www.mermaidchart.com/raw/ccd0f141-1842-4eb7-b49c-af914474e068?theme=light&version=v0.1&format=svg
