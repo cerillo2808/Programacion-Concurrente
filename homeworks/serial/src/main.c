@@ -26,8 +26,16 @@ int main(int argc, char *argv[]){
             return 1;
 
         } else{
-            printf("Archivo %s abierto correctamente. Cargando información...\n", jobPath);
-            // TO-DO: leer cada linea del job e ir inicializando el objeto plate.
+            printf("Archivo %s abierto correctamente. Cargando información.\n", jobPath);
+
+            char linea[256];
+            // buffer para cada linea de job
+
+            while (fgets(linea, sizeof(linea), jobFile)) {
+                crear_plate(linea);
+            }
+        
+            fclose(jobFile);
         }
         
     }
