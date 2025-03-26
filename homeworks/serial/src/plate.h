@@ -24,4 +24,7 @@ typedef struct{
 
 void crear_plate(const char *linea);
 
+void leer_plate(const char *nombreBin);
+
+
 #endif
