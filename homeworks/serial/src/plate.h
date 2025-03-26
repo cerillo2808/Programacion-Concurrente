@@ -5,7 +5,8 @@
 #include <stdlib.h>
 
 typedef struct{
-    char *nombreArchivo;
+    char nombreArchivo [256];
+    // el nombre del archivo sólo puede tener máximo 256 chars
 
     double delta;
     // paso de tiempo entre cálculos

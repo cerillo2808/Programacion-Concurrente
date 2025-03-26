@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
             printf("Archivo %s abierto correctamente. Cargando información.\n", jobPath);
 
             char linea[256];
-            // buffer para cada linea de job
+            // buffer para cada linea de job, máximo de 256 chars
 
             while (fgets(linea, sizeof(linea), jobFile)) {
                 crear_plate(linea);
