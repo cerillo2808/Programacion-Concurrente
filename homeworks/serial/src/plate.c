@@ -25,7 +25,7 @@ int crear_plate(const char *linea) {
     // Pedir memoria para matriz que se llama temperaturas
     double *temperaturas = (double *)malloc(plate.R * plate.C * sizeof(double));
     if (!temperaturas) {
-        printf("Error: No se pudo asignar memoria para la matriz\n");
+        printf("Error: No se pudo asignar memoria para la matriz.\n");
         fclose(bin);
         return 1;
     }
@@ -38,8 +38,6 @@ int crear_plate(const char *linea) {
     // Simular la dispersión del calor
     cambio_temperatura(temperaturas, plate);
 
-    // TO-DO: generar reporte
-
     // Liberar memoria después de la simulación
     free(temperaturas);
 
@@ -49,7 +47,7 @@ int crear_plate(const char *linea) {
 int leer_plate(const char *nombreBin, Plate *plate, FILE *bin) {
     
     if (!bin) {
-        printf("Error: No se pudo abrir el archivo binario '%s'\n", nombreBin);
+        printf("Error: No se pudo abrir el archivo binario '%s'.\n", nombreBin);
         return 1;
     }
 
