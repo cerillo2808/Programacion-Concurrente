@@ -23,7 +23,7 @@ Relacionado con la separación de asuntos. Diferentes tareas son realizadas por 
 Relacionado con el incremento del desempeño. En vez de hacer que un solo hilo se encargue de todo el conjunto de datos a procesar, se divide la carga en varios hilos.
 
 ### 6. Hilo de ejecución
-Un hilo de ejecución, también conocido como trabajadores o simplemente hilo, es un arreglo de valores o proceso que el sistema operativo puede mandar al procesador y ejecutar. Un programa que solo tiene un hilo es secuencial, mientras que uno que tiene múltiples hilos permite la ejecución concurrente siempre y cuando la arquitectura de la computadora lo permita.
+Un hilo de ejecución, también conocido como trabajadores o simplemente hilo, es un conjunyo de datos que el sistema operativo puede mandar al procesador y ejecutar. Un programa que solo tiene un hilo es secuencial, mientras que uno que tiene múltiples hilos permite la ejecución concurrente siempre y cuando la arquitectura de la computadora lo permita. 
 
 ### 7. Indeterminismo
 El calendarizador define cuándo y dónde atender a los diferentes procesos. Las colas sólo se utilizan cuando el programa ya está en ejecución, pero esperando a alguna otra instrucción a ser procesada. El indeterminismo es cuando no podemos saber el orden exacto en que se procesan instrucciones por falta de control sobre el calendarizador. Más formalmente, es la incapacidad de conocer de forma precisa el orden de ejecución de los programas (hilos, procesos).
