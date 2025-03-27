@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 typedef struct{
     char nombreArchivo [256];
@@ -20,11 +21,16 @@ typedef struct{
     double epsilon;
     // punto de equilibrio
 
+    uint64_t R;
+    // número de filas
+
+    uint64_t C;
+    // número de columnas
+
 } Plate;
 
-void crear_plate(const char *linea);
+int crear_plate(const char *linea);
 
-void leer_plate(const char *nombreBin);
-
+int leer_plate(const char *nombreBin, Plate *plate, FILE *bin);
 
 #endif
