@@ -56,7 +56,6 @@ int main(int argc, char *argv[]) {
         pthread_join(atletas[2 * i + j], (void **)&resultado);
         // guardar el resultado en la pizarra
         pizarra[i][j] = *resultado;
-        free(resultado);
       }
     }
 
