@@ -9,16 +9,18 @@ typedef struct{
     char nombreArchivo [256];
     // el nombre del archivo sólo puede tener máximo 256 chars
 
-    double delta;
+    char nombreJob [256];
+
+    uint64_t delta;
     // paso de tiempo entre cálculos
 
-    double alfa;
+    uint64_t alfa;
     // difusividad térmica
 
-    double h;
+    uint64_t h;
     // tamaño de cada celda
 
-    double epsilon;
+    uint64_t epsilon;
     // punto de equilibrio
 
     uint64_t R;
@@ -29,7 +31,7 @@ typedef struct{
 
 } Plate;
 
-int crear_plate(const char *linea);
+int crear_plate(const char *linea, const char *nombreJob);
 
 int leer_plate(const char *nombreBin, Plate *plate, FILE *bin);
 

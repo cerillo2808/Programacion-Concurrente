@@ -5,8 +5,11 @@
 #include <inttypes.h>
 #include <time.h>
 #include <controlador.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 int verificar_argumentos(int argc, char *argv[]){
+
     if(argc>3){
         // muchos argumentos
         printf("Error: Hay más argumentos de los necesarios. Ingrese la dirección del archivo y la cantidad de hilos a utilizar.\n");
@@ -34,12 +37,32 @@ int verificar_argumentos(int argc, char *argv[]){
         } else{
             printf("Archivo %s abierto correctamente. Cargando información.\n", jobPath);
 
+            char nombreJob[256];
+            
+            // buscar el / del job
+            char *base = strrchr(jobPath, '/');
+            if (base) {
+                // saltarse el /
+                base++;
+            } else {
+                base = jobPath;
+            }
+
+            strncpy(nombreJob, base, sizeof(nombreJob));
+
+            // Eliminar la extensión .txt
+            char *punto = strrchr(nombreJob, '.');
+            if (punto && strcmp(punto, ".txt") == 0) {
+                // el punto se vuelve caracter nulo
+                *punto = '\0';
+            }
+
             char linea[256];
             // buffer para cada linea de job, máximo de 256 chars
 
             while (fgets(linea, sizeof(linea), jobFile)) {
                 // crear un plate para cada linea del txt
-                if(crear_plate(linea)){
+                if(crear_plate(linea, nombreJob)){
                     return 1;
                 }
             }
@@ -51,20 +74,20 @@ int verificar_argumentos(int argc, char *argv[]){
     return 0;
 }
 
-void cambio_temperatura(double* temperaturas, Plate plate){
+void cambio_temperatura(uint64_t* temperaturas, Plate plate){
     
     int iteraciones;
     double cambio_maximo;
     double cambio;
 
     // Se crea matriz temporal para calcular el cambio
-    double *temperaturas_temporal = (double *)malloc(plate.R * plate.C * sizeof(double));
+    uint64_t *temperaturas_temporal = (uint64_t *)malloc(plate.R * plate.C * sizeof(uint64_t));
     if (!temperaturas_temporal) {
         printf("Error: No se pudo asignar memoria para la matriz temporal.\n");
         return;
     }
 
-    time_t tiempoInicio = time(NULL);
+    clock_t tiempoInicio = clock();
 
     do{
         cambio_maximo = 0.0;
@@ -78,10 +101,10 @@ void cambio_temperatura(double* temperaturas, Plate plate){
                     
                 } else{
                     // no son bordes y tienen que ser transformadas
-                    double arriba = temperaturas[(i - 1) * plate.C + j];
-                    double abajo = temperaturas[(i + 1) * plate.C + j];
-                    double izquierda = temperaturas[i * plate.C + (j - 1)];
-                    double derecha = temperaturas[i * plate.C + (j + 1)];
+                    uint64_t arriba = temperaturas[(i - 1) * plate.C + j];
+                    uint64_t abajo = temperaturas[(i + 1) * plate.C + j];
+                    uint64_t izquierda = temperaturas[i * plate.C + (j - 1)];
+                    uint64_t derecha = temperaturas[i * plate.C + (j + 1)];
 
                     // nueva temperatura se calcula con la fórmula y se pone en la matriz temporal
                     temperaturas_temporal[indice] = temperaturas[indice] + plate.alfa * plate.delta * ((arriba + abajo + izquierda + derecha - 4.0 * temperaturas[indice]) / (plate.h * plate.h));
@@ -110,22 +133,15 @@ void cambio_temperatura(double* temperaturas, Plate plate){
     } while(cambio_maximo > plate.epsilon);
 
     // calcular el tiempo transcurrido
-    time_t tiempoFin = time(NULL);
-    double tiempoSegundos = difftime(tiempoFin, tiempoInicio);
+    clock_t tiempoFin = clock();
+    double tiempoSegundos = (double)(tiempoFin - tiempoInicio) / CLOCKS_PER_SEC;
     
-    printf("Difusión completada.");
+    printf("Difusión completada.\n");
 
-    // concatenar nombre del plate.bin con su número de iteraciones
-    char nombre_final_bin[512];
-    snprintf(nombre_final_bin, sizeof(nombre_final_bin), "%s/%d", plate.nombreArchivo, iteraciones);
-    generar_archivo_binario("output", nombre_final_bin, plate.R, plate.C, temperaturas);
-
+    generar_archivo_binario(plate.nombreArchivo, plate.R, plate.C, temperaturas);
+    
     char nombre_final_tsv[512];
-    size_t len = strlen(plate.nombreArchivo);
-    if (len > 4) {
-        plate.nombreArchivo[len - 4] = '\0';
-    }
-    snprintf(nombre_final_tsv, sizeof(nombre_final_tsv), "%s%s", plate.nombreArchivo, ".tsv");
+    snprintf(nombre_final_tsv, sizeof(nombre_final_tsv), "%s%s", plate.nombreJob, ".tsv");
     generar_archivo_tsv("output", nombre_final_tsv, plate, tiempoSegundos, iteraciones);
     
     free(temperaturas_temporal);
@@ -140,10 +156,14 @@ char* format_time(const time_t seconds, char* text, const size_t capacity) {
     return text;
 }
 
-void generar_archivo_binario(const char *directorio, const char *nombre_archivo, uint64_t R, uint64_t C, double *temperaturas) {
-
+void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C, uint64_t *temperaturas) {
     char rutaCompleta[512];
-    snprintf(rutaCompleta, sizeof(rutaCompleta), "%s/%s", directorio, nombre_archivo);
+
+    // Crear el directorio "output" si no existe
+    mkdir("output", 0777);
+
+    // Construir la ruta completa del archivo dentro de "output"
+    snprintf(rutaCompleta, sizeof(rutaCompleta), "output/%s", nombre_archivo);
 
     FILE *archivo = fopen(rutaCompleta, "wb");
     if (archivo == NULL) {
@@ -151,11 +171,9 @@ void generar_archivo_binario(const char *directorio, const char *nombre_archivo,
         return;
     }
 
-    fwrite(&R, sizeof(uint64_t), 1, archivo);
-    fwrite(&C, sizeof(uint64_t), 1, archivo);
-
-    // Escribir todas las temperaturas en el archivo
-    fwrite(temperaturas, sizeof(double), R * C, archivo);
+    fwrite(&R, sizeof(uint64_t), 1, archivo);  // Guardar R
+    fwrite(&C, sizeof(uint64_t), 1, archivo);  // Guardar C
+    fwrite(temperaturas, sizeof(uint64_t), R * C, archivo);  // Guardar la matriz de temperaturas
 
     fclose(archivo);
 }
@@ -171,11 +189,11 @@ void generar_archivo_tsv(const char *directorio, const char *nombreArchivo, Plat
         return;
     }
 
-    char* tiempo[512];
-    format_time((time_t)tiempoSegundos, *tiempo, sizeof(tiempo));
+    char tiempo[512];
+    format_time((time_t)tiempoSegundos, tiempo, sizeof(tiempo));
 
     // Escribir los resultados en el archivo TSV
-    fprintf(tsvFile, "%s\t%lf\t%lf\t%lf\t%lf\t%d\t%lf\n", plate.nombreArchivo, plate.delta, plate.alfa, plate.h, plate.epsilon, iteraciones, tiempoSegundos);
+    fprintf(tsvFile, "%s\t%ld\t%ld\t%ld\t%ld\t%d\t%s\n", plate.nombreArchivo, plate.delta, plate.alfa, plate.h, plate.epsilon, iteraciones, tiempo);
 
     fclose(tsvFile);
 }
