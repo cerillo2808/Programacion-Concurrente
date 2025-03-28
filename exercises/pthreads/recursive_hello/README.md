@@ -33,4 +33,4 @@ Sí se acerté la predicción. Sin embargo, me costó imprimir un t_size que se 
 # Diagrama de Rastreo de Memoria
 Hecho en MermaidChart
 
-https://www.mermaidchart.com/raw/ccd0f141-1842-4eb7-b49c-af914474e068?theme=light&version=v0.1&format=svg
+![alt text](diagrama_memoria_recursive_hello.png)
