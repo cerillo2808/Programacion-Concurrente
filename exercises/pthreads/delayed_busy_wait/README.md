@@ -42,5 +42,11 @@ Cree una gráfica donde el eje-x son las duraciones dadas por argumento al progr
 Agregue la gráfica al readme.md del ejercicio y una discusión de a lo sumo dos párrafos. Indique cuál fue el mejor tiempo máximo de espera obtenido y los efectos de disminuir o incrementarlo. Conjeture y trate de explicar por qué ocurre este comportamiento. Finalmente indique si la espera activa con retraso es una solución óptima, y en caso negativo, provea una idea que pueda lograr este ideal.
 
 # Gráfica
+![alt text](<Gráfico comparación espera activa.png>)
 
 # Observaciones
+Se puede notar que no hay mucha diferencia entre las columnas, especialmente considerando que la escala es de microsegundos. El mejor tiempo máximo fue de 32 microsegundos, y los diferentes delays no parecen impactar gravemente al tiempo de ejecución.
+
+Primero, se puede observar que la columna "hello_order_busywait" no tiene mucha diferencia con las columnas que usan delay. También se puede notar que no hay mucha diferencia entre manejar los hilos con un delay constante y un delay pseudo-aleatorio. 
+
+Lo anterior podría significar que la espera activa no es la solución para la programación paralela. Además, soluciones como el delay tampoco son factibles. Para lograr un mejor manejo de la parelelización, es mejor buscar otro algoritmo.
