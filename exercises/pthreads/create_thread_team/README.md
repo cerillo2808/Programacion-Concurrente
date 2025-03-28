@@ -54,4 +54,4 @@ Aplique estas subrutinas a un ejemplo o ejercicio que utilice equipos de hilos.
 
 # Observaciones
 
-Se aplicó al programa de team_shot_put. La separación de métodos ayuda a crear un código más legible y modularizado.
+Se aplicó al programa de [team_shot_put](../team_shot_put/src/team_shot_put.c). La separación de métodos ayuda a crear un código más legible y modularizado.
