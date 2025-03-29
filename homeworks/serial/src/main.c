@@ -10,5 +10,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
 
+    printf("Fin del programa\n");
+
     return 0;
 }

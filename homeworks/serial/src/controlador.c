@@ -26,8 +26,7 @@ int verificar_argumentos(int argc, char *argv[]){
         // TO-DO: verificar que se haya ingresado cantidad hilos (tarea 2)
 
         char *jobPath = argv[1];
-
-        printf("Intentando abrir: '%s'\n", jobPath);
+        
         FILE *jobFile = fopen(jobPath, "r");
         // el parámetro r es para lectura (read)
 
@@ -36,7 +35,6 @@ int verificar_argumentos(int argc, char *argv[]){
             return 1;
 
         } else{
-            printf("Archivo %s abierto correctamente. Cargando información.\n", jobPath);
 
             char nombreJob[256];
             // guardar de forma job###
@@ -129,8 +127,6 @@ void cambio_temperatura(double* temperaturas, Plate plate){
     // calcular el tiempo transcurrido
     clock_gettime(CLOCK_MONOTONIC, &end);
     double tiempoSegundos = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec);
-    
-    printf("Difusión completada.\n");
 
     char nombre_con_iteraciones[512];
 

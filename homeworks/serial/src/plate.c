@@ -35,8 +35,6 @@ int crear_plate(const char *linea, const char *nombreJob) {
     // Subir temperaturas a la matriz
     fread(temperaturas, sizeof(double), plate.R * plate.C, bin);
 
-    printf("%s cargado con éxito.\n", plate.nombreArchivo);
-
     // Simular la dispersión del calor
     cambio_temperatura(temperaturas, plate);
 
