@@ -1,3 +1,5 @@
+// Copyright [2025] <Liqing Yosery Zheng Lu>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,11 +8,10 @@
 #include <controlador.h>
 
 int crear_plate(const char *linea, const char *nombreJob) {
-
     Plate plate;
 
     sscanf(linea, "%s %lf %lf %lf %lf", plate.nombreArchivo, &plate.delta, &plate.alfa, &plate.h, &plate.epsilon);
-    char rutaCompleta [512];
+    char rutaCompleta[512];
     // la ruta completa sólo puede medir 512 como máximo
     snprintf(rutaCompleta, sizeof(rutaCompleta), "tests/%s", plate.nombreArchivo);
     // agregarle a nombre de archivo el path completo
@@ -20,7 +21,7 @@ int crear_plate(const char *linea, const char *nombreJob) {
     // abrir el archivo bin
     FILE *bin = fopen(rutaCompleta, "rb");
 
-    if(leer_plate(rutaCompleta, &plate, bin)){
+    if (leer_plate(rutaCompleta, &plate, bin)) {
         return 1;
     }
 
@@ -45,7 +46,6 @@ int crear_plate(const char *linea, const char *nombreJob) {
 }
 
 int leer_plate(const char *nombreBin, Plate *plate, FILE *bin) {
-    
     if (!bin) {
         printf("Error: No se pudo abrir el archivo binario '%s'.\n", nombreBin);
         return 1;
@@ -70,4 +70,4 @@ int leer_plate(const char *nombreBin, Plate *plate, FILE *bin) {
     plate->C = C;
 
     return 0;
-}   
+}

@@ -1,3 +1,5 @@
+// Copyright [2025] <Liqing Yosery Zheng Lu>
+
 #ifndef PLATE_H
 #define PLATE_H
 
@@ -5,11 +7,11 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-typedef struct{
-    char nombreArchivo [256];
+typedef struct {
+    char nombreArchivo[256];
     // el nombre del archivo sólo puede tener máximo 256 chars
 
-    char nombreJob [256];
+    char nombreJob[256];
 
     double delta;
     // paso de tiempo entre cálculos
@@ -28,7 +30,6 @@ typedef struct{
 
     uint64_t C;
     // número de columnas
-
 } Plate;
 
 int crear_plate(const char *linea, const char *nombreJob);

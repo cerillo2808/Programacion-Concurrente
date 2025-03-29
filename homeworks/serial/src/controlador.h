@@ -1,3 +1,5 @@
+// Copyright [2025] <Liqing Yosery Zheng Lu>
+
 #ifndef CONTROLADOR_H
 #define CONTROLADOR_H
 
