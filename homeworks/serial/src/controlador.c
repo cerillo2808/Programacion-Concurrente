@@ -184,7 +184,6 @@ void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C,
 }
 
 void generar_archivo_tsv(const char *directorio, const char *nombreArchivo, Plate plate, double tiempoSegundos, int iteraciones) {
-   
     char rutaCompleta[512];
     snprintf(rutaCompleta, sizeof(rutaCompleta), "%s/%s", directorio, nombreArchivo);
 
@@ -197,8 +196,38 @@ void generar_archivo_tsv(const char *directorio, const char *nombreArchivo, Plat
     char tiempo[512];
     format_time((time_t)tiempoSegundos, tiempo, sizeof(tiempo));
 
-    // Escribir los resultados en el archivo TSV
-    fprintf(tsvFile, "%s\t%f\t%f\t%f\t%f\t%d\t%s\n", plate.nombreArchivo, plate.delta, plate.alfa, plate.h, plate.epsilon, iteraciones, tiempo);
+    fprintf(tsvFile, "%s\t", plate.nombreArchivo);
+
+    // Formatear delta (sin decimales si es entero)
+    if (plate.delta == (int64_t)plate.delta) {
+        fprintf(tsvFile, "%ld\t", (int64_t)plate.delta);
+    } else {
+        fprintf(tsvFile, "%g\t", plate.delta);
+    }
+
+    // Formatear alfa (sin decimales si es entero)
+    if (plate.alfa == (int64_t)plate.alfa) {
+        fprintf(tsvFile, "%ld\t", (int64_t)plate.alfa);
+    } else {
+        fprintf(tsvFile, "%g\t", plate.alfa);
+    }
+
+    // Formatear h (sin decimales si es entero)
+    if (plate.h == (int64_t)plate.h) {
+        fprintf(tsvFile, "%ld\t", (int64_t)plate.h);
+    } else {
+        fprintf(tsvFile, "%g\t", plate.h);
+    }
+
+    // Formatear epsilon (notación científica si es muy pequeño)
+    if (plate.epsilon < 0.0001) {
+        fprintf(tsvFile, "%.1e\t", plate.epsilon);
+    } else {
+        fprintf(tsvFile, "%g\t", plate.epsilon);
+    }
+
+    // Escribir iteraciones y tiempo
+    fprintf(tsvFile, "%d\t%s\n", iteraciones, tiempo);
 
     fclose(tsvFile);
 }
