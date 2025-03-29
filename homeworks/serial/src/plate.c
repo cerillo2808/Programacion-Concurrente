@@ -9,7 +9,7 @@ int crear_plate(const char *linea, const char *nombreJob) {
 
     Plate plate;
 
-    sscanf(linea, "%s %ld %ld %ld %ld", plate.nombreArchivo, &plate.delta, &plate.alfa, &plate.h, &plate.epsilon);
+    sscanf(linea, "%s %lf %lf %lf %lf", plate.nombreArchivo, &plate.delta, &plate.alfa, &plate.h, &plate.epsilon);
     char rutaCompleta [512];
     // la ruta completa sólo puede medir 512 como máximo
     snprintf(rutaCompleta, sizeof(rutaCompleta), "tests/%s", plate.nombreArchivo);
@@ -25,7 +25,7 @@ int crear_plate(const char *linea, const char *nombreJob) {
     }
 
     // Pedir memoria para matriz que se llama temperaturas
-    uint64_t *temperaturas = (uint64_t *)malloc(plate.R * plate.C * sizeof(uint64_t));
+    double *temperaturas = (double *)malloc(plate.R * plate.C * sizeof(double));
     if (!temperaturas) {
         printf("Error: No se pudo asignar memoria para la matriz.\n");
         fclose(bin);
@@ -33,7 +33,7 @@ int crear_plate(const char *linea, const char *nombreJob) {
     }
 
     // Subir temperaturas a la matriz
-    fread(temperaturas, sizeof(uint64_t), plate.R * plate.C, bin);
+    fread(temperaturas, sizeof(double), plate.R * plate.C, bin);
 
     printf("%s cargado con éxito.\n", plate.nombreArchivo);
 

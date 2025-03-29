@@ -11,16 +11,16 @@ typedef struct{
 
     char nombreJob [256];
 
-    uint64_t delta;
+    double delta;
     // paso de tiempo entre cálculos
 
-    uint64_t alfa;
+    double alfa;
     // difusividad térmica
 
-    uint64_t h;
+    double h;
     // tamaño de cada celda
 
-    uint64_t epsilon;
+    double epsilon;
     // punto de equilibrio
 
     uint64_t R;

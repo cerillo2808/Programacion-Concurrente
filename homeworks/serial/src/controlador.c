@@ -7,6 +7,7 @@
 #include <controlador.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <math.h>
 
 int verificar_argumentos(int argc, char *argv[]){
 
@@ -22,7 +23,7 @@ int verificar_argumentos(int argc, char *argv[]){
 
     } else{
         // hay al menos un argumento
-        // TO-DO: verificar que se haya ingresado cantidad hilos
+        // TO-DO: verificar que se haya ingresado cantidad hilos (tarea 2)
 
         char *jobPath = argv[1];
 
@@ -38,6 +39,7 @@ int verificar_argumentos(int argc, char *argv[]){
             printf("Archivo %s abierto correctamente. Cargando información.\n", jobPath);
 
             char nombreJob[256];
+            // guardar de forma job###
             
             // buscar el / del job
             char *base = strrchr(jobPath, '/');
@@ -74,71 +76,74 @@ int verificar_argumentos(int argc, char *argv[]){
     return 0;
 }
 
-void cambio_temperatura(uint64_t* temperaturas, Plate plate){
+void cambio_temperatura(double* temperaturas, Plate plate){
     
-    int iteraciones;
-    double cambio_maximo;
-    double cambio;
+    int iteraciones = 0;
+    double cambio_maximo = 0;
+    double cambio = 0;
 
     // Se crea matriz temporal para calcular el cambio
-    uint64_t *temperaturas_temporal = (uint64_t *)malloc(plate.R * plate.C * sizeof(uint64_t));
+    double *temperaturas_temporal = (double *)malloc(plate.R * plate.C * sizeof(double));
     if (!temperaturas_temporal) {
         printf("Error: No se pudo asignar memoria para la matriz temporal.\n");
         return;
     }
 
-    clock_t tiempoInicio = clock();
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
-    do{
+    do {
+        iteraciones++;
         cambio_maximo = 0.0;
-        for (uint64_t i = 0; i<plate.R; i++){
-            for (uint64_t j = 0; j<plate.C; j++){
+    
+        for (uint64_t i = 0; i < plate.R; i++) {
+            for (uint64_t j = 0; j < plate.C; j++) {
                 uint64_t indice = i * plate.C + j;
-
-                if (i == 0 || i == plate.R - 1 || j == 0 || j == plate.C - 1){
-                    // son los bordes de la matriz, no se cambian
+    
+                if (i == 0 || i == plate.R - 1 || j == 0 || j == plate.C - 1) {
+                    // es un borde y se copia como tal
                     temperaturas_temporal[indice] = temperaturas[indice];
-                    
-                } else{
-                    // no son bordes y tienen que ser transformadas
-                    uint64_t arriba = temperaturas[(i - 1) * plate.C + j];
-                    uint64_t abajo = temperaturas[(i + 1) * plate.C + j];
-                    uint64_t izquierda = temperaturas[i * plate.C + (j - 1)];
-                    uint64_t derecha = temperaturas[i * plate.C + (j + 1)];
-
-                    // nueva temperatura se calcula con la fórmula y se pone en la matriz temporal
-                    temperaturas_temporal[indice] = temperaturas[indice] + plate.alfa * plate.delta * ((arriba + abajo + izquierda + derecha - 4.0 * temperaturas[indice]) / (plate.h * plate.h));
-                    
-                    // verificar y actualizar cambio máximo
-                    cambio = temperaturas_temporal[indice] - temperaturas[indice];
-
-                    if (cambio < 0){
-                        // si es negativo, guardarlo como positivo
-                        cambio = -cambio;
-                    } 
-
-                    if (cambio > cambio_maximo){
+                } else {
+                    double arriba = temperaturas[(i - 1) * plate.C + j];
+                    double abajo = temperaturas[(i + 1) * plate.C + j];
+                    double izquierda = temperaturas[i * plate.C + (j - 1)];
+                    double derecha = temperaturas[i * plate.C + (j + 1)];
+    
+                    temperaturas_temporal[indice] = temperaturas[indice] + 
+                        plate.alfa * plate.delta * 
+                        ((arriba + abajo + izquierda + derecha - 4.0 * temperaturas[indice]) / (plate.h * plate.h));
+    
+                    // Calcular cambio absoluto
+                    cambio = fabs(temperaturas_temporal[indice] - temperaturas[indice]);
+                    if (cambio > cambio_maximo) {
                         cambio_maximo = cambio;
                     }
-                }    
+                }
             }
         }
-
-        // sobreescribir viejas temperaturas con las nuevas
-        for (uint64_t i = 0; i < plate.R * plate.C; i++) {
-            temperaturas[i] = temperaturas_temporal[i];
-        }
-
-        iteraciones++;
-    } while(cambio_maximo > plate.epsilon);
+    
+        // Actualizar temperaturas, copia matriz temporal a matriz temperatura
+        memcpy(temperaturas, temperaturas_temporal, plate.R * plate.C * sizeof(double));
+    } while (cambio_maximo > plate.epsilon);
 
     // calcular el tiempo transcurrido
-    clock_t tiempoFin = clock();
-    double tiempoSegundos = (double)(tiempoFin - tiempoInicio) / CLOCKS_PER_SEC;
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    double tiempoSegundos = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec);
     
     printf("Difusión completada.\n");
 
-    generar_archivo_binario(plate.nombreArchivo, plate.R, plate.C, temperaturas);
+    char nombre_con_iteraciones[512];
+
+    // quitar .bin
+    int len = strlen(plate.nombreArchivo);
+    if (len > 4 && strcmp(plate.nombreArchivo + len - 4, ".bin") == 0) {
+        len -= 4;
+    }
+
+    // Formato: "nombre-iteraciones.bin"
+    snprintf(nombre_con_iteraciones, sizeof(nombre_con_iteraciones), "%.*s-%d.bin", len, plate.nombreArchivo, iteraciones);
+
+    generar_archivo_binario(nombre_con_iteraciones, plate.R, plate.C, temperaturas);
     
     char nombre_final_tsv[512];
     snprintf(nombre_final_tsv, sizeof(nombre_final_tsv), "%s%s", plate.nombreJob, ".tsv");
@@ -156,7 +161,7 @@ char* format_time(const time_t seconds, char* text, const size_t capacity) {
     return text;
 }
 
-void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C, uint64_t *temperaturas) {
+void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C, double *temperaturas) {
     char rutaCompleta[512];
 
     // Crear el directorio "output" si no existe
@@ -171,9 +176,9 @@ void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C,
         return;
     }
 
-    fwrite(&R, sizeof(uint64_t), 1, archivo);  // Guardar R
-    fwrite(&C, sizeof(uint64_t), 1, archivo);  // Guardar C
-    fwrite(temperaturas, sizeof(uint64_t), R * C, archivo);  // Guardar la matriz de temperaturas
+    fwrite(&R, sizeof(uint64_t), 1, archivo);
+    fwrite(&C, sizeof(uint64_t), 1, archivo);
+    fwrite(temperaturas, sizeof(double), R * C, archivo);
 
     fclose(archivo);
 }
@@ -193,7 +198,7 @@ void generar_archivo_tsv(const char *directorio, const char *nombreArchivo, Plat
     format_time((time_t)tiempoSegundos, tiempo, sizeof(tiempo));
 
     // Escribir los resultados en el archivo TSV
-    fprintf(tsvFile, "%s\t%ld\t%ld\t%ld\t%ld\t%d\t%s\n", plate.nombreArchivo, plate.delta, plate.alfa, plate.h, plate.epsilon, iteraciones, tiempo);
+    fprintf(tsvFile, "%s\t%f\t%f\t%f\t%f\t%d\t%s\n", plate.nombreArchivo, plate.delta, plate.alfa, plate.h, plate.epsilon, iteraciones, tiempo);
 
     fclose(tsvFile);
 }
