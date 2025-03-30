@@ -5,7 +5,7 @@
 #include <controlador.h>
 
 int main(int argc, char *argv[]) {
-    // Asegurar de que entren dos inputs del usuario
+    // asegurar de que entren dos inputs del usuario
     if (verificar_argumentos(argc, argv)) {
         // retorno de 1 significa error
         return 1;

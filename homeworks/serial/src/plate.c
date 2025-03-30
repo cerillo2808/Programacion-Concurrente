@@ -27,7 +27,7 @@ int crear_plate(const char *linea, const char *nombreJob) {
         return 1;
     }
 
-    // Pedir memoria para matriz que se llama temperaturas
+    // pedir memoria para matriz que se llama temperaturas
     double *temperaturas = (double *)malloc(plate.R * plate.C * sizeof(double));
     if (!temperaturas) {
         printf("Error: No se pudo asignar memoria para la matriz.\n");
@@ -35,13 +35,13 @@ int crear_plate(const char *linea, const char *nombreJob) {
         return 1;
     }
 
-    // Subir temperaturas a la matriz
+    // subir temperaturas a la matriz
     fread(temperaturas, sizeof(double), plate.R * plate.C, bin);
 
-    // Simular la dispersión del calor
+    // simular la dispersión del calor
     cambio_temperatura(temperaturas, plate);
 
-    // Liberar memoria después de la simulación
+    // liberar memoria después de la simulación
     free(temperaturas);
 
     return 0;
@@ -61,7 +61,7 @@ int leer_plate(const char *nombreBin, Plate *plate, FILE *bin) {
     fread(&R, sizeof(uint64_t), 1, bin);
     fread(&C, sizeof(uint64_t), 1, bin);
 
-    // Verificar que R y C sean válidos
+    // verificar que R y C sean válidos
     if (R == 0 || C == 0) {
         printf("Error: Dimensiones inválidas en el archivo binario '%s'.\n",
                  nombreBin);

@@ -51,7 +51,7 @@ int verificar_argumentos(int argc, char *argv[]) {
 
             strncpy(nombreJob, base, sizeof(nombreJob));
 
-            // Eliminar la extensión .txt
+            // eliminar la extensión .txt
             char *punto = strrchr(nombreJob, '.');
             if (punto && strcmp(punto, ".txt") == 0) {
                 // el punto se vuelve caracter nulo
@@ -78,7 +78,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
     double cambio_maximo = 0;
     double cambio = 0;
 
-    // Se crea matriz temporal para calcular el cambio
+    // se crea matriz temporal para calcular el cambio
     double *temperaturas_temporal = (double *)malloc(plate.R * plate.C
         * sizeof(double));
     if (!temperaturas_temporal) {
@@ -107,7 +107,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
                         plate.alfa * plate.delta *
                         ((arriba + abajo + izquierda + derecha - 4.0 *
                              temperaturas[indice]) / (plate.h * plate.h));
-                    // Calcular cambio absoluto
+                    // calcular cambio absoluto
                     cambio = fabs(temperaturas_temporal[indice] -
                         temperaturas[indice]);
                     if (cambio > cambio_maximo) {
@@ -116,7 +116,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
                 }
             }
         }
-        // Actualizar temperaturas, copia matriz temporal a matriz temperatura
+        // actualizar temperaturas, copia matriz temporal a matriz temperatura
         memcpy(temperaturas, temperaturas_temporal, plate.R * plate.C *
              sizeof(double));
     } while (cambio_maximo > plate.epsilon);
@@ -134,7 +134,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
         len -= 4;
     }
 
-    // Formato: "nombre-iteraciones.bin"
+    // formato: "nombre-iteraciones.bin"
     snprintf(nombre_con_iteraciones, sizeof(nombre_con_iteraciones),
             "%.*s-%d.bin", len, plate.nombreArchivo, iteraciones);
 
@@ -149,17 +149,20 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
 }
 
 /**
- * @brief Convert given amount of @a seconds to an aproximate text
+ * @brief Convierte la cantidad dada de @a segundos a un texto aproximado
  * YYYY/MM/DD hh:mm:ss
  * 
- * @param seconds Amount of seconds elapsed from any point in time, no need
- * from 1970-Jan-01 00:00:00 GMT
- * @param text Pointer to a buffer of at least 48 chars
- * @param capacity Capacity of the pointed buffer array must be 48 or greater
- * @return The pointer to text
+ * @param seconds Cantidad de segundos transcurridos desde cualquier punto en
+ * el tiempo, no es necesario que sea desde el 1 de enero de 1970 a las
+ * 00:00:00 GMT
+ * @param text Puntero a un búfer de al menos 48 caracteres
+ * @param capacity Capacidad del arreglo apuntado por el búfer, debe ser de 
+ * 48 o mayor
+ * @return El puntero a text
  */
 // Método copiado de la página del profesor Jeisson Hidalgo
-// Return parameter text must have at least 48 chars (YYYY/MM/DD hh:mm:ss)
+// El parámetro de retorno text debe tener al menos 48 caracteres
+// (YYYY/MM/DD hh:mm:ss)
 char* format_time(const time_t seconds, char* text, const size_t capacity) {
     const struct tm* gmt = gmtime(&seconds);
     snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt->tm_year
@@ -172,10 +175,10 @@ void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C,
                              double *temperaturas) {
     char rutaCompleta[512];
 
-    // Crear el directorio "output" si no existe
+    // crear el directorio "output" si no existe
     mkdir("output", 0777);
 
-    // Construir la ruta completa del archivo dentro de "output"
+    // construir la ruta completa del archivo dentro de "output"
     snprintf(rutaCompleta, sizeof(rutaCompleta), "output/%s", nombre_archivo);
 
     FILE *archivo = fopen(rutaCompleta, "wb");
@@ -209,35 +212,35 @@ void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
 
     fprintf(tsvFile, "%s\t", plate.nombreArchivo);
 
-    // Formatear delta (sin decimales si es entero)
+    // formatear delta (sin decimales si es entero)
     if (plate.delta == (int64_t)plate.delta) {
         fprintf(tsvFile, "%ld\t", (int64_t)plate.delta);
     } else {
         fprintf(tsvFile, "%g\t", plate.delta);
     }
 
-    // Formatear alfa (sin decimales si es entero)
+    // formatear alfa (sin decimales si es entero)
     if (plate.alfa == (int64_t)plate.alfa) {
         fprintf(tsvFile, "%ld\t", (int64_t)plate.alfa);
     } else {
         fprintf(tsvFile, "%g\t", plate.alfa);
     }
 
-    // Formatear h (sin decimales si es entero)
+    // formatear h (sin decimales si es entero)
     if (plate.h == (int64_t)plate.h) {
         fprintf(tsvFile, "%ld\t", (int64_t)plate.h);
     } else {
         fprintf(tsvFile, "%g\t", plate.h);
     }
 
-    // Formatear epsilon (notación científica si es muy pequeño)
+    // formatear epsilon (notación científica si es muy pequeño)
     if (plate.epsilon < 0.0001) {
         fprintf(tsvFile, "%.1e\t", plate.epsilon);
     } else {
         fprintf(tsvFile, "%g\t", plate.epsilon);
     }
 
-    // Escribir iteraciones y tiempo
+    // escribir iteraciones y tiempo
     fprintf(tsvFile, "%d\t%s\n", iteraciones, tiempo);
 
     fclose(tsvFile);
