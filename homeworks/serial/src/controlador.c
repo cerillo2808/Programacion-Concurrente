@@ -148,18 +148,6 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
     free(temperaturas_temporal);
 }
 
-/**
- * @brief Convierte la cantidad dada de @a segundos a un texto aproximado
- * YYYY/MM/DD hh:mm:ss
- * 
- * @param seconds Cantidad de segundos transcurridos desde cualquier punto en
- * el tiempo, no es necesario que sea desde el 1 de enero de 1970 a las
- * 00:00:00 GMT
- * @param text Puntero a un búfer de al menos 48 caracteres
- * @param capacity Capacidad del arreglo apuntado por el búfer, debe ser de 
- * 48 o mayor
- * @return El puntero a text
- */
 // Método copiado de la página del profesor Jeisson Hidalgo
 // El parámetro de retorno text debe tener al menos 48 caracteres
 // (YYYY/MM/DD hh:mm:ss)
