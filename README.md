@@ -4,6 +4,10 @@ Profesor: Daniel Alvarado <br>
 Semestre I, 2025 <br>
 Grupo 02
 
+# Tabla de Contenidos
+1. [Glossary](#glossary)
+2. [Tareas](#tareas)
+3. [Pthreads](#pthreads)
 
 # Glossary
 
@@ -67,3 +71,22 @@ También conocido como busywait. Es un ciclo que hace a un hilo de ejecución es
 ### 23. Comunicación colectiva entre procesos
 
 ### 24. Reducción
+
+# Tareas
+| # | Nombre | Descripción
+|---|---|---
+| 1 | [serial](homeworks/serial)| Simulación de calor
+
+# Pthreads
+| # | Semana | Tipo | Nombre | Descripción
+|---|---|---|---|---
+| 1 | 1 | Ejemplo | [hello](examples/pthreads/hello/) | Main crea un hilo secundario que imprime hello
+| 2 | 1 | Ejercicio | [recursive_hello](exercises/pthreads/recursive_hello/) | El método create_thread se llama a sí mismo para crear más hilos. La recursión se controla con el controlador, que es el input del usuario.
+| 3 | 2 | Ejemplo | [hello_w](examples/pthreads/hello_w/) | Indeterminismo. Los hilos no siempre se ejecutan en el orden en el que fueron creados.
+| 4 | 2 | Ejercicio | [grandma_lottery](exercises/pthreads/grandma_lottery/) | Main espera a dos hilos con pthread_join. Simulación de la abuela siendo main y sus nietos siendo los hilos.
+| 5 | 2 | Ejemplo | [hello_iw_pri](examples/pthreads/hello_iw_pri/) | -
+| 6 | 2 | Ejemplo | [hello_iw_shr](examples/pthreads/hello_iw_shr/) | -
+| 7 | 2 | Ejemplo | [hello_order_busywait](examples/pthreads/hello_order_busywait/) | -
+| 8 | 2 | Ejercicio | [team_shot_put](exercises/pthreads/team_shot_put/) | -
+| 9 | 2 | Ejercicio | [create_thread_team](exercises/pthreads/create_thread_team/) | -
+| 10 | 3 | Ejercicio | [delayed_busy_wait](exercises/pthreads/delayed_busy_wait/) | -
