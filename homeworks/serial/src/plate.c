@@ -10,10 +10,12 @@
 int crear_plate(const char *linea, const char *nombreJob) {
     Plate plate;
 
-    sscanf(linea, "%s %lf %lf %lf %lf", plate.nombreArchivo, &plate.delta, &plate.alfa, &plate.h, &plate.epsilon);
+    sscanf(linea, "%s %lf %lf %lf %lf", plate.nombreArchivo, &plate.delta,
+             &plate.alfa, &plate.h, &plate.epsilon);
     char rutaCompleta[512];
     // la ruta completa sólo puede medir 512 como máximo
-    snprintf(rutaCompleta, sizeof(rutaCompleta), "tests/%s", plate.nombreArchivo);
+    snprintf(rutaCompleta, sizeof(rutaCompleta), "tests/%s",
+             plate.nombreArchivo);
     // agregarle a nombre de archivo el path completo
 
     sscanf(nombreJob, "%s", plate.nombreJob);
@@ -61,7 +63,8 @@ int leer_plate(const char *nombreBin, Plate *plate, FILE *bin) {
 
     // Verificar que R y C sean válidos
     if (R == 0 || C == 0) {
-        printf("Error: Dimensiones inválidas en el archivo binario '%s'.\n", nombreBin);
+        printf("Error: Dimensiones inválidas en el archivo binario '%s'.\n",
+                 nombreBin);
         fclose(bin);
         return 1;
     }

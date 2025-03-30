@@ -16,8 +16,10 @@ void cambio_temperatura(double* temperaturas, Plate plate);
 
 char* format_time(const time_t seconds, char* text, const size_t capacity);
 
-void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C, double *temperaturas);
+void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C,
+                             double *temperaturas);
 
-void generar_archivo_tsv(const char *directorio, const char *nombreArchivo, Plate plate, double tiempoSegundos, int iteraciones);
+void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
+                         Plate plate, double tiempoSegundos, int iteraciones);
 
 #endif
