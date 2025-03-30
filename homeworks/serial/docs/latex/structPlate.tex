@@ -1,0 +1,110 @@
+\hypertarget{structPlate}{}\doxysection{Plate Struct Reference}
+\label{structPlate}\index{Plate@{Plate}}
+
+
+Estructura que representa los parámetros y características de una placa en la simulación térmica.  
+
+
+
+
+{\ttfamily \#include $<$plate.\+h$>$}
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+char \mbox{\hyperlink{structPlate_a5a56c823bd11b43382d6a46a5fddff88}{nombre\+Archivo}} \mbox{[}256\mbox{]}
+\item 
+char \mbox{\hyperlink{structPlate_ac86f8c561d94a9234b2fd18d9269e79d}{nombre\+Job}} \mbox{[}256\mbox{]}
+\item 
+double \mbox{\hyperlink{structPlate_a88466ab02d55fc3f17128043bcf7553e}{delta}}
+\item 
+double \mbox{\hyperlink{structPlate_a1fcc87374701918d86588135f91451d8}{alfa}}
+\item 
+double \mbox{\hyperlink{structPlate_acca348d7b410b80e38366eb7be21e875}{h}}
+\item 
+double \mbox{\hyperlink{structPlate_a59a29709cb6cb14f715300d877aeaf87}{epsilon}}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{structPlate_a31ff5900f40a3ffbc301d3559321edd8}{R}}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{structPlate_a97d561d9521925a84b823f11cfb038ff}{C}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Estructura que representa los parámetros y características de una placa en la simulación térmica. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nombre\+Archivo} & Nombre del archivo asociado a la simulación \\
+\hline
+{\em nombre\+Job} & Nombre del trabajo asociado a la simulación \\
+\hline
+{\em delta} & Paso de tiempo entre cálculos de temperatura \\
+\hline
+{\em alfa} & Difusividad térmica de la placa \\
+\hline
+{\em h} & Tamaño de cada celda en la placa \\
+\hline
+{\em epsilon} & Punto de equilibrio para la simulación (tolerancia para detener la iteración) \\
+\hline
+{\em R} & Número de filas de la placa \\
+\hline
+{\em C} & Número de columnas de la placa\\
+\hline
+\end{DoxyParams}
+Esta estructura contiene todos los parámetros necesarios para simular el comportamiento térmico de una placa, incluyendo la configuración del archivo y los parámetros físicos (delta, alfa, h, epsilon) necesarios para los cálculos. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structPlate_a1fcc87374701918d86588135f91451d8}\label{structPlate_a1fcc87374701918d86588135f91451d8}} 
+\index{Plate@{Plate}!alfa@{alfa}}
+\index{alfa@{alfa}!Plate@{Plate}}
+\doxysubsubsection{\texorpdfstring{alfa}{alfa}}
+{\footnotesize\ttfamily double Plate\+::alfa}
+
+\mbox{\Hypertarget{structPlate_a97d561d9521925a84b823f11cfb038ff}\label{structPlate_a97d561d9521925a84b823f11cfb038ff}} 
+\index{Plate@{Plate}!C@{C}}
+\index{C@{C}!Plate@{Plate}}
+\doxysubsubsection{\texorpdfstring{C}{C}}
+{\footnotesize\ttfamily uint64\+\_\+t Plate\+::C}
+
+\mbox{\Hypertarget{structPlate_a88466ab02d55fc3f17128043bcf7553e}\label{structPlate_a88466ab02d55fc3f17128043bcf7553e}} 
+\index{Plate@{Plate}!delta@{delta}}
+\index{delta@{delta}!Plate@{Plate}}
+\doxysubsubsection{\texorpdfstring{delta}{delta}}
+{\footnotesize\ttfamily double Plate\+::delta}
+
+\mbox{\Hypertarget{structPlate_a59a29709cb6cb14f715300d877aeaf87}\label{structPlate_a59a29709cb6cb14f715300d877aeaf87}} 
+\index{Plate@{Plate}!epsilon@{epsilon}}
+\index{epsilon@{epsilon}!Plate@{Plate}}
+\doxysubsubsection{\texorpdfstring{epsilon}{epsilon}}
+{\footnotesize\ttfamily double Plate\+::epsilon}
+
+\mbox{\Hypertarget{structPlate_acca348d7b410b80e38366eb7be21e875}\label{structPlate_acca348d7b410b80e38366eb7be21e875}} 
+\index{Plate@{Plate}!h@{h}}
+\index{h@{h}!Plate@{Plate}}
+\doxysubsubsection{\texorpdfstring{h}{h}}
+{\footnotesize\ttfamily double Plate\+::h}
+
+\mbox{\Hypertarget{structPlate_a5a56c823bd11b43382d6a46a5fddff88}\label{structPlate_a5a56c823bd11b43382d6a46a5fddff88}} 
+\index{Plate@{Plate}!nombreArchivo@{nombreArchivo}}
+\index{nombreArchivo@{nombreArchivo}!Plate@{Plate}}
+\doxysubsubsection{\texorpdfstring{nombreArchivo}{nombreArchivo}}
+{\footnotesize\ttfamily char Plate\+::nombre\+Archivo\mbox{[}256\mbox{]}}
+
+\mbox{\Hypertarget{structPlate_ac86f8c561d94a9234b2fd18d9269e79d}\label{structPlate_ac86f8c561d94a9234b2fd18d9269e79d}} 
+\index{Plate@{Plate}!nombreJob@{nombreJob}}
+\index{nombreJob@{nombreJob}!Plate@{Plate}}
+\doxysubsubsection{\texorpdfstring{nombreJob}{nombreJob}}
+{\footnotesize\ttfamily char Plate\+::nombre\+Job\mbox{[}256\mbox{]}}
+
+\mbox{\Hypertarget{structPlate_a31ff5900f40a3ffbc301d3559321edd8}\label{structPlate_a31ff5900f40a3ffbc301d3559321edd8}} 
+\index{Plate@{Plate}!R@{R}}
+\index{R@{R}!Plate@{Plate}}
+\doxysubsubsection{\texorpdfstring{R}{R}}
+{\footnotesize\ttfamily uint64\+\_\+t Plate\+::R}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{plate_8h}{plate.\+h}}\end{DoxyCompactItemize}

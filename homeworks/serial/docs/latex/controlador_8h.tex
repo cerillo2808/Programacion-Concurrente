@@ -1,0 +1,161 @@
+\hypertarget{controlador_8h}{}\doxysection{src/controlador.h File Reference}
+\label{controlador_8h}\index{src/controlador.h@{src/controlador.h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$plate.\+h$>$}\newline
+{\ttfamily \#include $<$inttypes.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+Include dependency graph for controlador.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{controlador_8h_afb2a3be6d1a771a854c61cd7485df23f}{verificar\+\_\+argumentos}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Verifica la validez de los argumentos proporcionados al programa y procesa el archivo indicado. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{controlador_8h_a6695b50f25a274be9f924e0e36fe6e54}{cambio\+\_\+temperatura}} (double $\ast$temperaturas, \mbox{\hyperlink{structPlate}{Plate}} plate)
+\begin{DoxyCompactList}\small\item\em Realiza la simulación de cambio de temperatura en una placa utilizando el método de diferencias finitas. \end{DoxyCompactList}\item 
+char $\ast$ \mbox{\hyperlink{controlador_8h_ab2a0d0aa94aad5063c016ea819b0a83b}{format\+\_\+time}} (const time\+\_\+t seconds, char $\ast$text, const size\+\_\+t capacity)
+\begin{DoxyCompactList}\small\item\em Convierte la cantidad dada de {\itshape segundos} a un texto aproximado YYYY/\+MM/\+DD hh\+:mm\+:ss. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{controlador_8h_a49c3e53a6aa7ea6d0740f1f916669981}{generar\+\_\+archivo\+\_\+binario}} (const char $\ast$nombre\+\_\+archivo, uint64\+\_\+t R, uint64\+\_\+t C, double $\ast$temperaturas)
+\begin{DoxyCompactList}\small\item\em Genera un archivo binario con las temperaturas de la placa. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{controlador_8h_a50bc449f294b1a41740f21ab868aab3e}{generar\+\_\+archivo\+\_\+tsv}} (const char $\ast$directorio, const char $\ast$nombre\+Archivo, \mbox{\hyperlink{structPlate}{Plate}} plate, double tiempo\+Segundos, int iteraciones)
+\begin{DoxyCompactList}\small\item\em Genera o actualiza un archivo TSV con información de la simulación de la placa. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{controlador_8h_a6695b50f25a274be9f924e0e36fe6e54}\label{controlador_8h_a6695b50f25a274be9f924e0e36fe6e54}} 
+\index{controlador.h@{controlador.h}!cambio\_temperatura@{cambio\_temperatura}}
+\index{cambio\_temperatura@{cambio\_temperatura}!controlador.h@{controlador.h}}
+\doxysubsubsection{\texorpdfstring{cambio\_temperatura()}{cambio\_temperatura()}}
+{\footnotesize\ttfamily void cambio\+\_\+temperatura (\begin{DoxyParamCaption}\item[{double $\ast$}]{temperaturas,  }\item[{\mbox{\hyperlink{structPlate}{Plate}}}]{plate }\end{DoxyParamCaption})}
+
+
+
+Realiza la simulación de cambio de temperatura en una placa utilizando el método de diferencias finitas. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em temperaturas} & Arreglo de temperaturas actuales en la placa \\
+\hline
+{\em plate} & Estructura que contiene los parámetros de la placa, como dimensiones y constantes de simulación Esta función realiza iteraciones de simulación para calcular el cambio de temperatura en cada punto de la placa, utilizando un método de diferencias finitas. La simulación se repite hasta que el cambio máximo entre las iteraciones es menor que el valor de epsilon especificado en la estructura plate.\\
+\hline
+\end{DoxyParams}
+Al finalizar, genera dos archivos de salida\+:
+\begin{DoxyEnumerate}
+\item Un archivo binario con el nombre del archivo original seguido de la cantidad de iteraciones realizadas.
+\item Un archivo .tsv con los resultados de la simulación, incluyendo el tiempo transcurrido y el número de iteraciones.
+\end{DoxyEnumerate}
+
+\begin{DoxyReturn}{Returns}
+No tiene valor de retorno. Los resultados se guardan en los archivos generados. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{controlador_8h_ab2a0d0aa94aad5063c016ea819b0a83b}\label{controlador_8h_ab2a0d0aa94aad5063c016ea819b0a83b}} 
+\index{controlador.h@{controlador.h}!format\_time@{format\_time}}
+\index{format\_time@{format\_time}!controlador.h@{controlador.h}}
+\doxysubsubsection{\texorpdfstring{format\_time()}{format\_time()}}
+{\footnotesize\ttfamily char$\ast$ format\+\_\+time (\begin{DoxyParamCaption}\item[{const time\+\_\+t}]{seconds,  }\item[{char $\ast$}]{text,  }\item[{const size\+\_\+t}]{capacity }\end{DoxyParamCaption})}
+
+
+
+Convierte la cantidad dada de {\itshape segundos} a un texto aproximado YYYY/\+MM/\+DD hh\+:mm\+:ss. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em seconds} & Cantidad de segundos transcurridos desde cualquier punto en el tiempo, no es necesario que sea desde el 1 de enero de 1970 a las 00\+:00\+:00 GMT \\
+\hline
+{\em text} & Puntero a un búfer de al menos 48 caracteres \\
+\hline
+{\em capacity} & Capacidad del arreglo apuntado por el búfer, debe ser de 48 o mayor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+El puntero a text 
+\end{DoxyReturn}
+\mbox{\Hypertarget{controlador_8h_a49c3e53a6aa7ea6d0740f1f916669981}\label{controlador_8h_a49c3e53a6aa7ea6d0740f1f916669981}} 
+\index{controlador.h@{controlador.h}!generar\_archivo\_binario@{generar\_archivo\_binario}}
+\index{generar\_archivo\_binario@{generar\_archivo\_binario}!controlador.h@{controlador.h}}
+\doxysubsubsection{\texorpdfstring{generar\_archivo\_binario()}{generar\_archivo\_binario()}}
+{\footnotesize\ttfamily void generar\+\_\+archivo\+\_\+binario (\begin{DoxyParamCaption}\item[{const char $\ast$}]{nombre\+\_\+archivo,  }\item[{uint64\+\_\+t}]{R,  }\item[{uint64\+\_\+t}]{C,  }\item[{double $\ast$}]{temperaturas }\end{DoxyParamCaption})}
+
+
+
+Genera un archivo binario con las temperaturas de la placa. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nombre\+\_\+archivo} & Nombre del archivo binario a generar \\
+\hline
+{\em R} & Número de filas de la placa \\
+\hline
+{\em C} & Número de columnas de la placa \\
+\hline
+{\em temperaturas} & Arreglo con las temperaturas actuales de la placa\\
+\hline
+\end{DoxyParams}
+Esta función crea un archivo binario en el directorio \char`\"{}output\char`\"{} con el nombre proporcionado en {\itshape nombre\+\_\+archivo}. El archivo contiene las dimensiones de la placa (R y C) y los valores de las temperaturas en la placa.
+
+Si el directorio \char`\"{}output\char`\"{} no existe, se crea antes de generar el archivo binario. Si ocurre algún error al abrir el archivo, la función imprime un mensaje de error y termina la ejecución.
+
+\begin{DoxyReturn}{Returns}
+No tiene valor de retorno. El archivo binario se genera en el sistema de archivos. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{controlador_8h_a50bc449f294b1a41740f21ab868aab3e}\label{controlador_8h_a50bc449f294b1a41740f21ab868aab3e}} 
+\index{controlador.h@{controlador.h}!generar\_archivo\_tsv@{generar\_archivo\_tsv}}
+\index{generar\_archivo\_tsv@{generar\_archivo\_tsv}!controlador.h@{controlador.h}}
+\doxysubsubsection{\texorpdfstring{generar\_archivo\_tsv()}{generar\_archivo\_tsv()}}
+{\footnotesize\ttfamily void generar\+\_\+archivo\+\_\+tsv (\begin{DoxyParamCaption}\item[{const char $\ast$}]{directorio,  }\item[{const char $\ast$}]{nombre\+Archivo,  }\item[{\mbox{\hyperlink{structPlate}{Plate}}}]{plate,  }\item[{double}]{tiempo\+Segundos,  }\item[{int}]{iteraciones }\end{DoxyParamCaption})}
+
+
+
+Genera o actualiza un archivo TSV con información de la simulación de la placa. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em directorio} & Directorio donde se guardará el archivo TSV \\
+\hline
+{\em nombre\+Archivo} & Nombre del archivo TSV a generar o actualizar \\
+\hline
+{\em plate} & Estructura que contiene los parámetros de la placa, como dimensiones y constantes de simulación \\
+\hline
+{\em tiempo\+Segundos} & Tiempo transcurrido durante la simulación en segundos \\
+\hline
+{\em iteraciones} & Número de iteraciones realizadas durante la simulación\\
+\hline
+\end{DoxyParams}
+Esta función abre el archivo TSV especificado en el directorio dado y lo actualiza (o lo crea si no existe) con los resultados de la simulación de la placa. Se guarda el nombre del archivo original, los valores de los parámetros de la placa (delta, alfa, h, epsilon), el número de iteraciones y el tiempo transcurrido, todo en formato tabulado.
+
+Si ocurre un error al abrir el archivo, se imprime un mensaje de error.
+
+\begin{DoxyReturn}{Returns}
+No tiene valor de retorno. El archivo TSV se actualiza con los datos proporcionados. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{controlador_8h_afb2a3be6d1a771a854c61cd7485df23f}\label{controlador_8h_afb2a3be6d1a771a854c61cd7485df23f}} 
+\index{controlador.h@{controlador.h}!verificar\_argumentos@{verificar\_argumentos}}
+\index{verificar\_argumentos@{verificar\_argumentos}!controlador.h@{controlador.h}}
+\doxysubsubsection{\texorpdfstring{verificar\_argumentos()}{verificar\_argumentos()}}
+{\footnotesize\ttfamily int verificar\+\_\+argumentos (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Verifica la validez de los argumentos proporcionados al programa y procesa el archivo indicado. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & Número de argumentos pasados al programa \\
+\hline
+{\em argv} & Arreglo de cadenas de caracteres que contiene los argumentos \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Un código de error\+: 0 si los argumentos son válidos y el archivo se procesa correctamente. 1 si el número de argumentos es incorrecto, si el archivo no se puede abrir o si ocurre un error al crear un plate.
+\end{DoxyReturn}
+El programa espera exactamente 2 argumentos\+:
+\begin{DoxyEnumerate}
+\item La dirección del archivo a procesar
+\item La cantidad de hilos a utilizar (por implementar en la tarea 2)
+\end{DoxyEnumerate}
+
+La función intenta abrir el archivo especificado y, si tiene éxito, extrae el nombre del trabajo a partir de la ruta del archivo, eliminando la extensión \char`\"{}.\+txt\char`\"{} si está presente. Luego, lee cada línea del archivo y utiliza la función {\ttfamily crear\+\_\+plate} para crear un plate a partir de la línea leída. Si ocurre algún error durante el proceso, se retorna un código de error. 
