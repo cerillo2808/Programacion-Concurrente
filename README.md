@@ -43,12 +43,15 @@ Compartida: Es cuando se define como un atributo dentro de la memoria privada. T
 También conocido como busywait. Es un ciclo que hace a un hilo de ejecución esperar repetitivamente hasta que una condición se haga falsa.
 
 ### 10. Condición de carrera
+Modificación concurrente de memoria compartida. Los hilos compiten para editar la memoria que comparten entre ellos. Es una mala práctica de programación porque pueden generar resultados no predecibles e incorrectos. No es permitido para el curso, y para verificar que no hay condiciones de carrera se usa tsan.
 
 ### 11. Control de concurrencia
+Hay varios mecanismos para controlar la concurrencia. El concepto usualmente se basa en las colas que usa el sistema operativo como lista de espera para usar el procesador. Entre ellas está la exclusión mutua, también conocida como mutex.
 
 ### 12. Seguridad condicional
 
 ### 13. Exclusión mutua
+Conocida como mutex. Es un mecanismo para controlar concurrencia, también es un tipo de espera inactiva. Tiene una región crítica, que son una o varias líneas de código que no permite que se ejecuten de manera paralela.
 
 ### 14. Semáforo
 
@@ -80,13 +83,15 @@ También conocido como busywait. Es un ciclo que hace a un hilo de ejecución es
 # Pthreads
 | # | Semana | Tipo | Nombre | Descripción
 |---|---|---|---|---
-| 1 | 1 | Ejemplo | [hello](examples/pthreads/hello/) | Main crea un hilo secundario que imprime hello
+| 1 | 1 | Ejemplo | [hello](examples/pthreads/hello/) | Main crea un hilo secundario que imprime hello.
 | 2 | 1 | Ejercicio | [recursive_hello](exercises/pthreads/recursive_hello/) | El método create_thread se llama a sí mismo para crear más hilos. La recursión se controla con el controlador, que es el input del usuario.
 | 3 | 2 | Ejemplo | [hello_w](examples/pthreads/hello_w/) | Indeterminismo. Los hilos no siempre se ejecutan en el orden en el que fueron creados.
 | 4 | 2 | Ejercicio | [grandma_lottery](exercises/pthreads/grandma_lottery/) | Main espera a dos hilos con pthread_join. Simulación de la abuela siendo main y sus nietos siendo los hilos.
-| 5 | 2 | Ejemplo | [hello_iw_pri](examples/pthreads/hello_iw_pri/) | -
-| 6 | 2 | Ejemplo | [hello_iw_shr](examples/pthreads/hello_iw_shr/) | -
-| 7 | 2 | Ejemplo | [hello_order_busywait](examples/pthreads/hello_order_busywait/) | -
-| 8 | 2 | Ejercicio | [team_shot_put](exercises/pthreads/team_shot_put/) | -
-| 9 | 2 | Ejercicio | [create_thread_team](exercises/pthreads/create_thread_team/) | -
-| 10 | 3 | Ejercicio | [delayed_busy_wait](exercises/pthreads/delayed_busy_wait/) | -
+| 5 | 3 | Ejemplo | [hello_iw_pri](examples/pthreads/hello_iw_pri/) | Los hilos usan memoria privada para saber cuál número de hilo son.
+| 6 | 3 | Ejemplo | [hello_iw_shr](examples/pthreads/hello_iw_shr/) | Los hilos usan memoria compartida para saber cuál es la cantidad total de hilos.
+| 7 | 3 | Ejemplo | [hello_order_busywait](examples/pthreads/hello_order_busywait/) | Se usa la espera activa para que los hilos se impriman en orden.
+| 8 | 3 | Ejercicio | [team_shot_put](exercises/pthreads/team_shot_put/) | Main usa pthread_join para esperar a todos los hilos que crea. Cada hilo retorna un valor, y cuando regresan todos los hilos, los valores se comparan entre ellos. Simulación del árbitro siendo main y los jugadores siendo los hilos.
+| 9 | 3| Ejercicio | [create_thread_team](exercises/pthreads/create_thread_team/) | Se usan los métodos create_threads y join_threads para modularizar la creación y espera de hilos.
+| 10 | 4 | Ejercicio | [delayed_busy_wait](exercises/pthreads/delayed_busy_wait/) | Modificación de hello_order_busywait. Se usa un delay para la espera activa.
+| 11 | 4 | Ejemplo | [race_position](examples/pthreads/race_position/) | Modificación de hello_order_busywait. Se usa el mutex para que los hilos modifiquen a una misma variable compartida.
+| 12 | 4 | - | - | - 
