@@ -43,15 +43,19 @@ Compartida: Es cuando se define como un atributo dentro de la memoria privada. T
 También conocido como busywait. Es un ciclo que hace a un hilo de ejecución esperar repetitivamente hasta que una condición se haga falsa.
 
 ### 10. Condición de carrera
-Modificación concurrente de memoria compartida. Los hilos compiten para editar la memoria que comparten entre ellos. Es una mala práctica de programación porque pueden generar resultados no predecibles e incorrectos. No es permitido para el curso, y para verificar que no hay condiciones de carrera se usa tsan.
+Modificación concurrente de memoria compartida. Los hilos compiten para editar la memoria que comparten entre ellos. Es una mala práctica de programación porque pueden generar resultados no predecibles e incorrectos. No es permitido para el curso, y para verificar que no hay condiciones de carrera se usa tsan. Los requisitos son:<br>
+1. Concurrencia
+2. Memoria compartida
+3. Escritura en memoria
 
 ### 11. Control de concurrencia
 Hay varios mecanismos para controlar la concurrencia. El concepto usualmente se basa en las colas que usa el sistema operativo como lista de espera para usar el procesador. Entre ellas está la exclusión mutua, también conocida como mutex.
 
 ### 12. Seguridad condicional
 
+
 ### 13. Exclusión mutua
-Conocida como mutex. Es un mecanismo para controlar concurrencia, también es un tipo de espera inactiva. Tiene una región crítica, que son una o varias líneas de código que no permite que se ejecuten de manera paralela.
+Conocida como mutex o candado. Es un mecanismo para controlar concurrencia, también es un tipo de espera inactiva. Tiene una región crítica, que son una o varias líneas de código que no permite que se ejecuten de manera paralela. Asegura que no existen condiciones de carrera dentro de la región crítica.
 
 ### 14. Semáforo
 
@@ -94,4 +98,4 @@ Conocida como mutex. Es un mecanismo para controlar concurrencia, también es un
 | 9 | 3| Ejercicio | [create_thread_team](exercises/pthreads/create_thread_team/) | Se usan los métodos create_threads y join_threads para modularizar la creación y espera de hilos.
 | 10 | 4 | Ejercicio | [delayed_busy_wait](exercises/pthreads/delayed_busy_wait/) | Modificación de hello_order_busywait. Se usa un delay para la espera activa.
 | 11 | 4 | Ejemplo | [race_position](examples/pthreads/race_position/) | Modificación de hello_order_busywait. Se usa el mutex para que los hilos modifiquen a una misma variable compartida.
-| 12 | 4 | - | - | - 
+| 12 | 4 | Ejercicio | [birthday_pinata](exercises/pthreads/birthday_pinata/) | Se usa un mutex para controlar que sólo un hilo a la vez modifique memoria compartida. Simulación del hilo principal siendo la piñata y los hilos como los que celebran el cumpleaños. 
