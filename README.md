@@ -52,12 +52,13 @@ Modificación concurrente de memoria compartida. Los hilos compiten para editar 
 Hay varios mecanismos para controlar la concurrencia. El concepto usualmente se basa en las colas que usa el sistema operativo como lista de espera para usar el procesador. Entre ellas está la exclusión mutua, también conocida como mutex.
 
 ### 12. Seguridad condicional
-
+Es un mecanismo para controlar la memoria compartida. Formalmente, es cuando un hilo nunca toca la misma memoria de otro hilo. O sea, permite que cada hilo trabaje en diferentes partes de la memoria, evitando condiciones de carrera. Es una de las mejores formas para trabajar concurrencia porque no provoca un cuello de botella. 
 
 ### 13. Exclusión mutua
 Conocida como mutex o candado. Es un mecanismo para controlar concurrencia, también es un tipo de espera inactiva. Tiene una región crítica, que son una o varias líneas de código que no permite que se ejecuten de manera paralela. Asegura que no existen condiciones de carrera dentro de la región crítica.
 
 ### 14. Semáforo
+
 
 ### 15. Barrera
 
