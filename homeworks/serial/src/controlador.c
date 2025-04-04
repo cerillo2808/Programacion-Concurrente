@@ -5,7 +5,6 @@
 #include <string.h>
 #include <plate.h>
 #include <inttypes.h>
-#include <time.h>
 #include <controlador.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -86,9 +85,6 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
         return;
     }
 
-    struct timespec start, end;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-
     do {
         iteraciones++;
         cambio_maximo = 0.0;
@@ -122,9 +118,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
     } while (cambio_maximo > plate.epsilon);
 
     // calcular el tiempo transcurrido
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    double tiempoSegundos = (end.tv_sec - start.tv_sec) + (end.tv_nsec -
-         start.tv_nsec);
+    double tiempoSegundos = iteraciones * plate.delta;
 
     char nombre_con_iteraciones[512];
 
