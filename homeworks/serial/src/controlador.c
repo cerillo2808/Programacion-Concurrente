@@ -87,18 +87,24 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
 
     do {
         iteraciones++;
+        // se actualiza la variable de iteraciones desde la primera corrida
         cambio_maximo = 0.0;
+        // se inicializa la variable en 0
         for (uint64_t i = 0; i < plate.R; i++) {
             for (uint64_t j = 0; j < plate.C; j++) {
                 uint64_t indice = i * plate.C + j;
+                // se crea un índice único para cada posición de la matriz
+                // sirve para ubicar los datos en un arreglo
                 if (i == 0 || i == plate.R - 1 || j == 0 || j == plate.C - 1) {
                     // es un borde y se copia como tal
                     temperaturas_temporal[indice] = temperaturas[indice];
                 } else {
+                    // se consiguen las temperaturas de las placas vecinas
                     double arriba = temperaturas[(i - 1) * plate.C + j];
                     double abajo = temperaturas[(i + 1) * plate.C + j];
                     double izquierda = temperaturas[i * plate.C + (j - 1)];
                     double derecha = temperaturas[i * plate.C + (j + 1)];
+                    // se calcula la temperatura con la fórmula de relación
                     temperaturas_temporal[indice] = temperaturas[indice] +
                         plate.alfa * plate.delta *
                         ((arriba + abajo + izquierda + derecha - 4.0 *
@@ -106,7 +112,9 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
                     // calcular cambio absoluto
                     cambio = fabs(temperaturas_temporal[indice] -
                         temperaturas[indice]);
+                    // verificar si el cambio actual fue más que cambio_máximo
                     if (cambio > cambio_maximo) {
+                        // en caso de que sí, se actualiza cambio_máximo
                         cambio_maximo = cambio;
                     }
                 }
