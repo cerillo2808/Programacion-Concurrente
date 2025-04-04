@@ -1,6 +1,14 @@
 # Descripción
 El presente programa simula la dispersión del calor de una lámina rectangular a la que le inyectan calor constante por los bordes. Cada lámina tiene celdas con diferentes temperaturas y entre celdas vecinas se transfieren calor. El propósito del programa es encontrar cuándo y cómo quedan las temperaturas de cada celda una vez se estabiliza la temperatura de la lámina entera.
 
+Para empezar, el programa lee un archivo job###.txt que contiene en orden el nombre del archivo de la lámina, el tiempo que dura para un cambio de temperatura, la difusividad térmica de la lámina, el tamaño de cada celda de la lámina, y el punto de equilibrio para la simulación. Una vez se carga toda la información del job, se procede a leer los archivos plate###.bin que indica el job.
+
+El archivo plate###.bin está en binario, donde los primeros ocho bits son el número de filas de la lámina, y los próximos ocho bits son el número de columnas. Después, en orden, están las temperaturas de cada celda de la lámina. El programa lee el archivo plate###.bin y carga la información a una matriz.
+
+En la simulación, se usa una fórmula de relación para calcular el cambio de temperatura de cada celda. Una vez se calculan todas las celdas, se actualiza la matriz inicial, y se procede a escribir los archivos de reporte. 
+
+Las salidas del programa son los plate###-k.bin, actualizadas con su nueva temperatura, siendo k la cantidad de iteraciones necesarias para que la temperatura de la lámina quede en equilibrio. También un archivo job###.tsv, que contiene la información original además de las iteraciones y el tiempo transcurrido hasta que se detuvo la simulación.
+
 # Manual de Uso
 
 ### 0. Requisitos
