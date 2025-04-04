@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    printf("Fin del programa\n");
+    printf("Fin del programa\n"); //NOLINT
 
     return 0;
 }

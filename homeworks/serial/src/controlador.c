@@ -146,7 +146,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
 // El parámetro de retorno text debe tener al menos 48 caracteres
 // (YYYY/MM/DD hh:mm:ss)
 char* format_time(const time_t seconds, char* text, const size_t capacity) {
-    const struct tm* gmt = gmtime(&seconds);
+    const struct tm* gmt = gmtime(&seconds); //NOLINT
     snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt->tm_year
          - 70, gmt->tm_mon, gmt->tm_mday - 1, gmt->tm_hour, gmt->tm_min,
           gmt->tm_sec);
@@ -225,6 +225,6 @@ void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
     // escribir iteraciones y tiempo
     fprintf(tsvFile, "%d\t%s\n", iteraciones, tiempo);
 
-    fclose(tsvFile);
+    fclose(tsvFile); // NOLINT
 }
 

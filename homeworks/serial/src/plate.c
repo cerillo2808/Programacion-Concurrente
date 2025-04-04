@@ -65,7 +65,7 @@ int leer_plate(const char *nombreBin, Plate *plate, FILE *bin) {
     if (R == 0 || C == 0) {
         printf("Error: Dimensiones inválidas en el archivo binario '%s'.\n",
                  nombreBin);
-        fclose(bin);
+        fclose(bin); //NOLINT
         return 1;
     }
 
