@@ -58,7 +58,10 @@ Es un mecanismo para controlar la memoria compartida. Formalmente, es cuando un 
 Conocida como mutex o candado. Es un mecanismo para controlar concurrencia, también es un tipo de espera inactiva. Tiene una región crítica, que son una o varias líneas de código que no permite que se ejecuten de manera paralela. Asegura que no existen condiciones de carrera dentro de la región crítica.
 
 ### 14. Semáforo
-
+Según Dijkstra, un semáforo es un entero con signo que se puede incrementar con la instrucción "signal" y decrementar con "wait". Si el signo es negativo, el hilo espera para ejecutarse. Si el signo es positivo, el hilo puede continuar ejecutándose. Hay tres reglas:<br>
+1. No se puede leer el valor actual del semáforo. Sólo se le puede incrementar o decrementar.
+2. Cuando un hilo decrementa un semáforo, si el resultado es negativo, el hilo es bloqueado y no puede continuar hasta que otro hilo incremente el semáforo.
+3. Los hilos desbloqueados por el semáforo siguen una tendencia indeterminística. No se sabe en qué orden los hilos van a ser desbloqueados.
 
 ### 15. Barrera
 
@@ -99,4 +102,8 @@ Conocida como mutex o candado. Es un mecanismo para controlar concurrencia, tamb
 | 9 | 3| Ejercicio | [create_thread_team](exercises/pthreads/create_thread_team/) | Se usan los métodos create_threads y join_threads para modularizar la creación y espera de hilos.
 | 10 | 4 | Ejercicio | [delayed_busy_wait](exercises/pthreads/delayed_busy_wait/) | Modificación de hello_order_busywait. Se usa un delay para la espera activa.
 | 11 | 4 | Ejemplo | [race_position](examples/pthreads/race_position/) | Modificación de hello_order_busywait. Se usa el mutex para que los hilos modifiquen a una misma variable compartida.
-| 12 | 4 | Ejercicio | [birthday_pinata](exercises/pthreads/birthday_pinata/) | Se usa un mutex para controlar que sólo un hilo a la vez modifique memoria compartida. Simulación del hilo principal siendo la piñata y los hilos como los que celebran el cumpleaños. 
+| 12 | 4 | Ejercicio | [birthday_pinata](exercises/pthreads/birthday_pinata/) | Se usa un mutex para controlar que sólo un hilo a la vez modifique memoria compartida. Simulación del hilo principal siendo la piñata y los hilos como los que celebran el cumpleaños.
+| 13 | 4 | Ejemplo | [hello_order_semaphor](examples/pthreads/hello_order_semaphor/) | Modificación de hello_order_busywait, donde se usa un arreglo de semáforos para controlar la concurrencia.
+| 14 | 4 | Ejemplo | [hello_order_cond_safe](examples/pthreads/hello_order_cond_safe/) | Modificación de hello_order_busywait, donde se usa el concepto de seguridad condicional para evitar escritura en memoria compartida.
+| 15 | 4 | Ejercicio | [sem_vs_condsafe](exercises/pthreads/safe_vs_condsafe/) | Comparación de semáforos contra seguridad condicional.
+| 16 | 4 | Ejercicio | [building_tasks](exercises/pthreads/building_tasks/) | Hilos que tienen diferentes dependencias.

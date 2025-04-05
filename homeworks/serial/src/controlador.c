@@ -5,7 +5,6 @@
 #include <string.h>
 #include <plate.h>
 #include <inttypes.h>
-#include <time.h>
 #include <controlador.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -86,23 +85,26 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
         return;
     }
 
-    struct timespec start, end;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-
     do {
         iteraciones++;
+        // se actualiza la variable de iteraciones desde la primera corrida
         cambio_maximo = 0.0;
+        // se inicializa la variable en 0
         for (uint64_t i = 0; i < plate.R; i++) {
             for (uint64_t j = 0; j < plate.C; j++) {
                 uint64_t indice = i * plate.C + j;
+                // se crea un índice único para cada posición de la matriz
+                // sirve para ubicar los datos en un arreglo
                 if (i == 0 || i == plate.R - 1 || j == 0 || j == plate.C - 1) {
                     // es un borde y se copia como tal
                     temperaturas_temporal[indice] = temperaturas[indice];
                 } else {
+                    // se consiguen las temperaturas de las placas vecinas
                     double arriba = temperaturas[(i - 1) * plate.C + j];
                     double abajo = temperaturas[(i + 1) * plate.C + j];
                     double izquierda = temperaturas[i * plate.C + (j - 1)];
                     double derecha = temperaturas[i * plate.C + (j + 1)];
+                    // se calcula la temperatura con la fórmula de relación
                     temperaturas_temporal[indice] = temperaturas[indice] +
                         plate.alfa * plate.delta *
                         ((arriba + abajo + izquierda + derecha - 4.0 *
@@ -110,7 +112,9 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
                     // calcular cambio absoluto
                     cambio = fabs(temperaturas_temporal[indice] -
                         temperaturas[indice]);
+                    // verificar si el cambio actual fue más que cambio_máximo
                     if (cambio > cambio_maximo) {
+                        // en caso de que sí, se actualiza cambio_máximo
                         cambio_maximo = cambio;
                     }
                 }
@@ -122,9 +126,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
     } while (cambio_maximo > plate.epsilon);
 
     // calcular el tiempo transcurrido
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    double tiempoSegundos = (end.tv_sec - start.tv_sec) + (end.tv_nsec -
-         start.tv_nsec);
+    double tiempoSegundos = iteraciones * plate.delta;
 
     char nombre_con_iteraciones[512];
 
@@ -152,7 +154,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
 // El parámetro de retorno text debe tener al menos 48 caracteres
 // (YYYY/MM/DD hh:mm:ss)
 char* format_time(const time_t seconds, char* text, const size_t capacity) {
-    const struct tm* gmt = gmtime(&seconds);
+    const struct tm* gmt = gmtime(&seconds); //NOLINT
     snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt->tm_year
          - 70, gmt->tm_mon, gmt->tm_mday - 1, gmt->tm_hour, gmt->tm_min,
           gmt->tm_sec);
@@ -231,6 +233,6 @@ void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
     // escribir iteraciones y tiempo
     fprintf(tsvFile, "%d\t%s\n", iteraciones, tiempo);
 
-    fclose(tsvFile);
+    fclose(tsvFile); // NOLINT
 }
 

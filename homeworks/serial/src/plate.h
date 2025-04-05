@@ -74,6 +74,6 @@ int crear_plate(const char *linea, const char *nombreJob);
    0 si la operación fue exitosa.
    1 si ocurre un error al abrir o leer el archivo
 */
-int leer_plate(const char *nombreBin, Plate *plate, FILE *bin);
+int leer_plate(const char *nombreBin, Plate *plate, FILE *bin); // NOLINT
 
 #endif

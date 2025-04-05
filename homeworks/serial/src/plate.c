@@ -10,6 +10,7 @@
 int crear_plate(const char *linea, const char *nombreJob) {
     Plate plate;
 
+    // lee las lineas del plate###.bin
     sscanf(linea, "%s %lf %lf %lf %lf", plate.nombreArchivo, &plate.delta,
              &plate.alfa, &plate.h, &plate.epsilon);
     char rutaCompleta[512];
@@ -58,6 +59,7 @@ int leer_plate(const char *nombreBin, Plate *plate, FILE *bin) {
     // C por columnas
     uint64_t C;
 
+    // leer la cantidad de filas y columnas
     fread(&R, sizeof(uint64_t), 1, bin);
     fread(&C, sizeof(uint64_t), 1, bin);
 
@@ -65,10 +67,11 @@ int leer_plate(const char *nombreBin, Plate *plate, FILE *bin) {
     if (R == 0 || C == 0) {
         printf("Error: Dimensiones inválidas en el archivo binario '%s'.\n",
                  nombreBin);
-        fclose(bin);
+        fclose(bin); //NOLINT
         return 1;
     }
 
+    // asignar valores a los atributos
     plate->R = R;
     plate->C = C;
 

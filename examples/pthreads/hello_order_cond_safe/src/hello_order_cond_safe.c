@@ -3,17 +3,20 @@
 #include <assert.h>
 #include <inttypes.h>
 #include <pthread.h>
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 
+#define MAX_GREET_LEN 256
+
+//**@var greets es un puntero a un arreglo dinámico con máximo 256 de tamaño */
 // thread_shared_data_t
 typedef struct shared_data {
-  uint64_t next_thread;
+  char** greets;
   uint64_t thread_count;
-  uint64_t delay;
 } shared_data_t;
 
 // thread_private_data_t
@@ -23,16 +26,14 @@ typedef struct private_data {
 } private_data_t;
 
 /**
- * @brief ...
+ * @brief se crean los hilos, se inicializa el arreglo de greets, cada hilo
+ * imprime el índice del arreglo greets que corresponde a su ID.
  */
 void* greet(void* data);
 int create_threads(shared_data_t* shared_data);
 
 // procedure main(argc, argv[])
 int main(int argc, char* argv[]) {
-
-    shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
-
   int error = EXIT_SUCCESS;
   // create thread_count as result of converting argv[1] to integer
   // thread_count := integer(argv[1])
@@ -44,36 +45,34 @@ int main(int argc, char* argv[]) {
       return 11;
     }
   }
-  if (argc == 3){
-    uint64_t delay_lectura = 0;
-    sscanf(argv[2], "%" SCNu64, &delay_lectura);
-    shared_data->delay = delay_lectura;
-  } else{
-    printf("Error: ingrese cantidad de hilos y el delay.\n");
-    return 1;
-  }
-  
 
-  
+  shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
   if (shared_data) {
-    shared_data->next_thread = 0;
+    shared_data->greets = (char**) calloc(thread_count, sizeof(char*));
     shared_data->thread_count = thread_count;
 
-    struct timespec start_time, finish_time;
-    clock_gettime(CLOCK_MONOTONIC, &start_time);
+    if (shared_data->greets) {
 
-    error = create_threads(shared_data);
+      struct timespec start_time, finish_time;
+      clock_gettime(CLOCK_MONOTONIC, &start_time);
 
-    clock_gettime(CLOCK_MONOTONIC, &finish_time);
-    double elapsed_time = finish_time.tv_sec - start_time.tv_sec +
-      (finish_time.tv_nsec - start_time.tv_nsec) * 1e-9;
+      error = create_threads(shared_data);
 
-    printf("Execution time: %.9lfs\n", elapsed_time);
+      clock_gettime(CLOCK_MONOTONIC, &finish_time);
+      double elapsed_time = finish_time.tv_sec - start_time.tv_sec +
+        (finish_time.tv_nsec - start_time.tv_nsec) * 1e-9;
 
+      printf("Execution time: %.9lfs\n", elapsed_time);
+
+      free(shared_data->greets);
+    } else {
+      fprintf(stderr, "Error: could not allocate greets\n");
+      error = 13;
+    }
     free(shared_data);
   } else {
     fprintf(stderr, "Error: could not allocate shared data\n");
-    return 12;
+    error = 12;
   }
   return error;
 }  // end procedure
@@ -89,15 +88,26 @@ int create_threads(shared_data_t* shared_data) {
   if (threads && private_data) {
     for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
         ; ++thread_number) {
-      private_data[thread_number].thread_number = thread_number;
-      private_data[thread_number].shared_data = shared_data;
-      // create_thread(greet, thread_number)
-      error = pthread_create(&threads[thread_number], /*attr*/ NULL, greet
-        , /*arg*/ &private_data[thread_number]);
-      if (error == EXIT_SUCCESS) {
+      shared_data->greets[thread_number] = (char*)
+        malloc(MAX_GREET_LEN * sizeof(char));
+      if (shared_data->greets[thread_number]) {
+        // *shared_data->greets[thread_number] = '\0';
+        shared_data->greets[thread_number][0] = '\0';
+        private_data[thread_number].thread_number = thread_number;
+        private_data[thread_number].shared_data = shared_data;
+        // create_thread(greet, thread_number)
+        error = pthread_create(&threads[thread_number], /*attr*/ NULL, greet
+          , /*arg*/ &private_data[thread_number]);
+        if (error == EXIT_SUCCESS) {
+        } else {
+          fprintf(stderr, "Error: could not create secondary thread\n");
+          error = 21;
+          break;
+        }
+
       } else {
-        fprintf(stderr, "Error: could not create secondary thread\n");
-        error = 21;
+        fprintf(stderr, "Error: could not init semaphore\n");
+        error = 22;
         break;
       }
     }
@@ -108,7 +118,16 @@ int create_threads(shared_data_t* shared_data) {
     for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
         ; ++thread_number) {
       pthread_join(threads[thread_number], /*value_ptr*/ NULL);
+
     }
+
+    // for thread_number := 0 to thread_count do
+    for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
+        ; ++thread_number) {
+      // print greets[thread_number]
+      printf("%s\n", shared_data->greets[thread_number]);
+      free(shared_data->greets[thread_number]);
+    }  // end for
 
     free(private_data);
     free(threads);
@@ -127,19 +146,10 @@ void* greet(void* data) {
   private_data_t* private_data = (private_data_t*) data;
   shared_data_t* shared_data = private_data->shared_data;
 
-  // Wait until it is my turn
-  while (shared_data->next_thread < private_data->thread_number) {
-    unsigned int seed = (unsigned int)time(NULL);
-    unsigned my_delay = rand_r(&seed) % shared_data->delay;
-    usleep(my_delay);
-  }  // end while
-
-  // print "Hello from secondary thread"
-  printf("Hello from secondary thread %" PRIu64 " of %" PRIu64 "\n"
+  // greets[thread_number] := format("Hello from secondary thread"
+  // , thread_number, " of ", thread_count)
+  sprintf(shared_data->greets[private_data->thread_number]
+    , "Hello from secondary thread %" PRIu64 " of %" PRIu64
     , private_data->thread_number, shared_data->thread_count);
-
-  // Allow subsequent thread to do the task
-  ++shared_data->next_thread;
-
   return NULL;
 }  // end procedure

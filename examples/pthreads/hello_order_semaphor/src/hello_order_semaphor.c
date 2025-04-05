@@ -3,17 +3,23 @@
 #include <assert.h>
 #include <inttypes.h>
 #include <pthread.h>
+//** @include semaphore.h para poder usar semáforos */ 
+#include <semaphore.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 
+/**
+ * @var can_greet es el arreglo de semáforos. Es un puntero porque el tamaño del
+ * arreglo ocupa ser dinámico. Está en shared porque un semáforo puede ser
+ * incrementado y decrementado por cualquier hilo.
+ */
 // thread_shared_data_t
 typedef struct shared_data {
-  uint64_t next_thread;
+  sem_t* can_greet;
   uint64_t thread_count;
-  uint64_t delay;
 } shared_data_t;
 
 // thread_private_data_t
@@ -30,9 +36,6 @@ int create_threads(shared_data_t* shared_data);
 
 // procedure main(argc, argv[])
 int main(int argc, char* argv[]) {
-
-    shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
-
   int error = EXIT_SUCCESS;
   // create thread_count as result of converting argv[1] to integer
   // thread_count := integer(argv[1])
@@ -44,21 +47,20 @@ int main(int argc, char* argv[]) {
       return 11;
     }
   }
-  if (argc == 3){
-    uint64_t delay_lectura = 0;
-    sscanf(argv[2], "%" SCNu64, &delay_lectura);
-    shared_data->delay = delay_lectura;
-  } else{
-    printf("Error: ingrese cantidad de hilos y el delay.\n");
-    return 1;
-  }
-  
 
-  
+  shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
   if (shared_data) {
-    shared_data->next_thread = 0;
+    shared_data->can_greet = (sem_t*) calloc(thread_count, sizeof(sem_t));
     shared_data->thread_count = thread_count;
 
+    for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
+        ; ++thread_number) {
+      // can_greet[thread_number] := create_semaphore(not thread_number)
+      error = sem_init(&shared_data->can_greet[thread_number], /*pshared*/ 0
+        , /*value*/ !thread_number);
+    }
+
+    if (shared_data->can_greet) {
     struct timespec start_time, finish_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
 
@@ -70,10 +72,15 @@ int main(int argc, char* argv[]) {
 
     printf("Execution time: %.9lfs\n", elapsed_time);
 
+      free(shared_data->can_greet);
+    } else {
+      fprintf(stderr, "Error: could not allocate semaphores\n");
+      error = 13;
+    }
     free(shared_data);
   } else {
     fprintf(stderr, "Error: could not allocate shared data\n");
-    return 12;
+    error = 12;
   }
   return error;
 }  // end procedure
@@ -89,6 +96,7 @@ int create_threads(shared_data_t* shared_data) {
   if (threads && private_data) {
     for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
         ; ++thread_number) {
+      if (error == EXIT_SUCCESS) {
       private_data[thread_number].thread_number = thread_number;
       private_data[thread_number].shared_data = shared_data;
       // create_thread(greet, thread_number)
@@ -100,6 +108,12 @@ int create_threads(shared_data_t* shared_data) {
         error = 21;
         break;
       }
+
+      } else {
+        fprintf(stderr, "Error: could not init semaphore\n");
+        error = 22;
+        break;
+      }
     }
 
     // print "Hello from main thread"
@@ -108,6 +122,7 @@ int create_threads(shared_data_t* shared_data) {
     for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
         ; ++thread_number) {
       pthread_join(threads[thread_number], /*value_ptr*/ NULL);
+      sem_destroy(&shared_data->can_greet[thread_number]);
     }
 
     free(private_data);
@@ -115,7 +130,7 @@ int create_threads(shared_data_t* shared_data) {
   } else {
     fprintf(stderr, "Error: could not allocate %" PRIu64 " threads\n"
       , shared_data->thread_count);
-    error = 22;
+    error = 23;
   }
 
   return error;
@@ -128,18 +143,25 @@ void* greet(void* data) {
   shared_data_t* shared_data = private_data->shared_data;
 
   // Wait until it is my turn
-  while (shared_data->next_thread < private_data->thread_number) {
-    unsigned int seed = (unsigned int)time(NULL);
-    unsigned my_delay = rand_r(&seed) % shared_data->delay;
-    usleep(my_delay);
-  }  // end while
+  // wait(can_greet[thread_number])
+  int error = sem_wait(&shared_data->can_greet[private_data->thread_number]);
+  if (error) {
+    fprintf(stderr, "error: could not wait for semaphore\n");
+  }
 
   // print "Hello from secondary thread"
   printf("Hello from secondary thread %" PRIu64 " of %" PRIu64 "\n"
     , private_data->thread_number, shared_data->thread_count);
 
   // Allow subsequent thread to do the task
-  ++shared_data->next_thread;
+  // signal(can_greet[(thread_number + 1) mod thread_count])
+  const uint64_t next_thread = (private_data->thread_number + 1)
+    % shared_data->thread_count;
+
+  error = sem_post(&shared_data->can_greet[next_thread]);
+  if (error) {
+    fprintf(stderr, "error: could not increment semaphore\n");
+  }
 
   return NULL;
 }  // end procedure
