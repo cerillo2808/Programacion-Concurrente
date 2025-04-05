@@ -103,4 +103,5 @@ Según Dijkstra, un semáforo es un entero con signo que se puede incrementar co
 | 10 | 4 | Ejercicio | [delayed_busy_wait](exercises/pthreads/delayed_busy_wait/) | Modificación de hello_order_busywait. Se usa un delay para la espera activa.
 | 11 | 4 | Ejemplo | [race_position](examples/pthreads/race_position/) | Modificación de hello_order_busywait. Se usa el mutex para que los hilos modifiquen a una misma variable compartida.
 | 12 | 4 | Ejercicio | [birthday_pinata](exercises/pthreads/birthday_pinata/) | Se usa un mutex para controlar que sólo un hilo a la vez modifique memoria compartida. Simulación del hilo principal siendo la piñata y los hilos como los que celebran el cumpleaños.
-| 13 | 4 | Ejemplo | [hello_order_semaphor](examples/pthreads/hello_order_semaphor/) | Modificación de hello_order_busywait, donde se usa un arreglo de semáforos para controlar la concurrencia. 
+| 13 | 4 | Ejemplo | [hello_order_semaphor](examples/pthreads/hello_order_semaphor/) | Modificación de hello_order_busywait, donde se usa un arreglo de semáforos para controlar la concurrencia.
+| 14 | 4 | Ejemplo | [hello_order_cond_safe](examples/pthreads/hello_order_cond_safe/) | Modificación de hello_order_busywait, donde se usa el concepto de seguridad condicional para evitar escritura en memoria compartida.
