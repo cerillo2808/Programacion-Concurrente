@@ -130,7 +130,7 @@ void* greet(void* data) {
   // Wait until it is my turn
   while (shared_data->next_thread < private_data->thread_number) {
     unsigned int seed = (unsigned int)time(NULL);
-    const unsigned my_delay = rand_r(&seed) % shared_data->delay;
+    unsigned my_delay = rand_r(&seed) % shared_data->delay;
     usleep(my_delay);
   }  // end while
 

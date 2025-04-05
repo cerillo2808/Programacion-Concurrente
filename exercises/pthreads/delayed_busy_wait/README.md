@@ -41,11 +41,29 @@ Cree una gráfica donde el eje-x son las duraciones dadas por argumento al progr
 
 Agregue la gráfica al readme.md del ejercicio y una discusión de a lo sumo dos párrafos. Indique cuál fue el mejor tiempo máximo de espera obtenido y los efectos de disminuir o incrementarlo. Conjeture y trate de explicar por qué ocurre este comportamiento. Finalmente indique si la espera activa con retraso es una solución óptima, y en caso negativo, provea una idea que pueda lograr este ideal.
 
+# Datos
+| Ejecución | Espera activa |
+| --- | --- |
+| 1 | 0.001184151s
+| 2 | 0.001280034s
+| 3 | 0.001115950s
+
+Los datos de la tabla del delay son el tiempo mayor de tres ejecuciones.
+
+| Delay | Pseudoaleatorio | Constante
+| --- | --- | --- | 
+| 1µs | 0.000982483s | 0.001005767s
+| 5µs | 0.001055817s | 0.001228975s
+| 25µs | 0.001308450s | 0.001211558s
+| 50µs | 0.001353367s | 0.001307625s
+| 75µs | 0.001384167s | 0.001371517s
+| 100µs | 0.001497009s | 0.001469601s
+
 # Gráfica
-![alt text](<Gráfico comparación espera activa.png>)
+![alt text](<Gráfico comparación espera activa-1.png>)
 
 # Observaciones
-Se puede notar que no hay mucha diferencia entre las columnas, especialmente considerando que la escala es de microsegundos. El mejor tiempo máximo fue de 32 microsegundos, y los diferentes delays no parecen impactar gravemente al tiempo de ejecución.
+Se puede notar que no hay mucha diferencia entre las columnas, especialmente considerando que la escala es de microsegundos. El mejor tiempo máximo fue de 14 microsegundos, y los diferentes delays no parecen impactar gravemente al tiempo de ejecución.
 
 Primero, se puede observar que la columna "hello_order_busywait" no tiene mucha diferencia con las columnas que usan delay. También se puede notar que no hay mucha diferencia entre manejar los hilos con un delay constante y un delay pseudo-aleatorio. 
 
