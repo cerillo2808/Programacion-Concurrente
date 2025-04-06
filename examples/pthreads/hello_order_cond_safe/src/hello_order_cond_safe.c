@@ -1,4 +1,5 @@
 // Copyright 2021 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr> CC-BY 4.0
+// Más observaciones en el README
 
 #include <assert.h>
 #include <inttypes.h>

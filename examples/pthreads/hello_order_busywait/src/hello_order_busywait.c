@@ -1,4 +1,5 @@
 // Copyright 2021 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr> CC-BY 4.0
+// Más observaciones en el README
 
 #include <assert.h>
 #include <inttypes.h>
@@ -118,6 +119,10 @@ void* greet(void* data) {
   while (shared_data->next_thread < private_data->thread_number) {
     // busy-waiting
   }  // end while
+
+  // Este es el busywait, es una mala práctica de programación
+  // Es un while que no tiene nada adentro, y sólo espera
+  // Es espera activa y no inactiva, porque consume CPU
 
   // print "Hello from secondary thread"
   printf("Hello from secondary thread %" PRIu64 " of %" PRIu64 "\n"

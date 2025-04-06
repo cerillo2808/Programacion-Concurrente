@@ -1,4 +1,5 @@
 // Copyright 2021 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr> CC-BY 4.0
+// Más observaciones en el README
 
 #include <assert.h>
 #include <inttypes.h>
@@ -8,6 +9,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+
+//**@var el mutex tiene que ir en la memoria compartida porque todos los hilos
+// la ocupan usar */
 
 // thread_shared_data_t
 typedef struct shared_data {
@@ -59,6 +63,8 @@ int main(int argc, char* argv[]) {
       (finish_time.tv_nsec - start_time.tv_nsec) * 1e-9;
 
     printf("Execution time: %.9lfs\n", elapsed_time);
+
+    //** El mutex se tiene que destruir después de ser usado */
 
       pthread_mutex_destroy(&shared_data->can_access_position);
     free(shared_data);
@@ -135,8 +141,7 @@ void* race(void* data) {
   printf("Thread %" PRIu64 "/%" PRIu64 ": I arrived at position %" PRIu64 "\n"
     , private_data->thread_number, shared_data->thread_count, my_position);
 
-
-
+  //** Lo que estaba antes de este unlock es parte de la zona de seguridad */
 
   // unlock(can_access_position)
   pthread_mutex_unlock(&shared_data->can_access_position);
