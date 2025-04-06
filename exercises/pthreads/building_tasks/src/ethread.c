@@ -1,6 +1,7 @@
 // Copyright 2024 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr> CC-BY 4.0
 #include <assert.h>
 #include <stdlib.h>
+#include <semaphore.h>
 
 #include "ethread.h"
 
