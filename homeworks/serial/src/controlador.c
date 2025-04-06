@@ -68,7 +68,7 @@ int verificar_argumentos(int argc, char *argv[]) {
                     return 1;
                 }
             }
-            fclose(jobFile);
+            fclose(jobFile); //NOLINT
         }
     }
     return 0;

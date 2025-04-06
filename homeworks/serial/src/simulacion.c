@@ -83,7 +83,7 @@ void cambio_temperatura(double* temperaturas, Plate plate) {
     generar_archivo_binario(nombre_con_iteraciones, plate.R, plate.C,
          temperaturas);
     char nombre_final_tsv[512];
-    snprintf(nombre_final_tsv, sizeof(nombre_final_tsv), "%s%s",
+    snprintf(nombre_final_tsv, sizeof(nombre_final_tsv), "%s%s", //NOLINT
              plate.nombreJob, ".tsv");
     generar_archivo_tsv("output", nombre_final_tsv, plate, tiempoSegundos,
                          iteraciones);

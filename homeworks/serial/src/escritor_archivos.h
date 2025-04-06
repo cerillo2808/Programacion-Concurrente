@@ -1,7 +1,9 @@
+// Copyright [2025] <Liqing Yosery Zheng Lu>
+
 #ifndef ESCRITOR_ARCHIVOS_H
 #define ESCRITOR_ARCHIVOS_H
 
-#include "plate.h"
+#include <plate.h>
 #include <time.h>
 
 /**

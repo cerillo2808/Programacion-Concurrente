@@ -1,3 +1,5 @@
+// Copyright [2025] <Liqing Yosery Zheng Lu>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -84,8 +86,8 @@ fclose(tsvFile); // NOLINT
 // (YYYY/MM/DD hh:mm:ss)
 char* format_time(const time_t seconds, char* text, const size_t capacity) {
     const struct tm* gmt = gmtime(&seconds); //NOLINT
-    snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt->tm_year
-         - 70, gmt->tm_mon, gmt->tm_mday - 1, gmt->tm_hour, gmt->tm_min,
-          gmt->tm_sec);
+    snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", //NOLINT
+         gmt->tm_year - 70, gmt->tm_mon, gmt->tm_mday - 1, gmt->tm_hour,
+         gmt->tm_min, gmt->tm_sec);
     return text;
 }
