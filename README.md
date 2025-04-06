@@ -107,4 +107,5 @@ Según Dijkstra, un semáforo es un entero con signo que se puede incrementar co
 | 14 | 4 | Ejemplo | [hello_order_cond_safe](examples/pthreads/hello_order_cond_safe/) | Modificación de hello_order_busywait, donde se usa el concepto de seguridad condicional para evitar escritura en memoria compartida.
 | 15 | 4 | Ejercicio | [sem_vs_condsafe](exercises/pthreads/safe_vs_condsafe/) | Comparación de semáforos contra seguridad condicional.
 | 16 | 4 | Ejercicio | [building_tasks](exercises/pthreads/building_tasks/) | Hilos que tienen diferentes dependencias.
-| 17 | 5 | Ejemplo | [prod_cons_bound](examples/pthreads/prod_cons_bound/) | Productor y consumidor regulan sus acciones a través de semáforos.
+| 17 | 5 | Ejemplo | [prod_cons_bound](examples/pthreads/prod_cons_bound/) | Productor y consumidor regulan sus acciones a través de semáforos. El buffer que tienen es limitado.
+| 18 | 5 | Ejemplo | [prod_cons_unbound](examples/pthreads/prod_cons_unbound/) | El buffer se asume como ilimitado.
