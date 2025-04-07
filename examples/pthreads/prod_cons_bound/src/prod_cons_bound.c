@@ -13,9 +13,7 @@
 #include <sys/random.h>
 #include <unistd.h>
 
-/** @enum se hace para simular un arreglo, para implementar la seguridad
- *  condicional. O sea, cada hilo sólo edita un campo de memoria específico y no
- *  choca con otros hilos. Evitando una condición de carrera. */
+/** @enum se hace para guardar los errores */
 enum {
   ERR_NOMEM_SHARED = EXIT_FAILURE + 1,
   ERR_NOMEM_BUFFER,
