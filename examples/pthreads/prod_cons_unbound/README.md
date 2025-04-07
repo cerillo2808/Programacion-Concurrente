@@ -31,3 +31,4 @@ $ ./producer_consumer 5 2 3 0 100 0 750
 Note que no necesariamente los productos se generan en orden secuencial, debido al indeterminismo de los productores. Recuerde, el problema está resuelto si todos los consumidores procesan todos los productos en el mismo orden en que los productores los generan.
 
 # Observaciones
+El código implementado sigue la solución 1 en pseudocódigo.
