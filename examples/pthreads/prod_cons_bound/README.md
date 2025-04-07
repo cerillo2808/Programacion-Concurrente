@@ -39,4 +39,4 @@ Produced 6
 ````
 
 # Observaciones
-Se usan semáforos para controlar la concurrencia. Debido a la naturaleza de los semáforos, el productor sabe cuánto espacio tiene para producir y el consumidor sabe cuánto tiene para consumir.
+Se usan semáforos para controlar la concurrencia. Debido a la naturaleza de los semáforos, el productor sabe cuánto espacio tiene para producir y el consumidor sabe cuánto tiene para consumir. Si no se controlara la concurrencia, problemas como sobreescritura del buffer y lectura del buffer vacío pueden suceder.
