@@ -1,0 +1,34 @@
+procedimiento main():
+  verificar_argumentos(inputs usuario)
+fin procedimiento
+
+procedimiento verificar_argumentos(inputs usuario):
+    if (input es archivo)
+        while (hayan lineas)
+            crear_plate(...)
+            // se crea una plate por cada archivo .bin que haya
+fin procedimiento
+
+procedimiento crear_plate(...):
+    for (todas las celdas)
+        matriz temperaturas = temperatura de celda
+        // se sube la temperatura de las cedas a una matriz
+    cambio_temperatura()
+    // se procede a empezar la simulación
+fin procedimiento
+
+procedimiento cambio_temperatura():
+    inicializar matriz temperaturas temporal
+    while(cambio>epsilon)
+        matriz temperaturas temporal [bordes] = matriz temperaturas original [bordes]
+        // los bordes de la temperatura se copian como temporal
+        for (todas las celdas)
+            calcular nuevas temperaturas para cada celda
+            nueva temperatura = matriz temperaturas temporal
+            // la nueva temperatura se guarda en la matriz temporal
+        matriz original = matriz temporal
+        // después de cada iteración, se copia lo que está en la matriz temporal a la original
+    generar_archivo_binario()
+    generar_archivo_tsv()
+    // se generan los reportes
+fin procedimiento
