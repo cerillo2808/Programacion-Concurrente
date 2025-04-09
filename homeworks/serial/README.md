@@ -33,7 +33,7 @@ Si está posicionado en el directorio `../serial`, ejecute el comando `./bin/ser
 El programa generará una carpeta llamada `output`. Dentro de la carpeta estará un reporte con la información original del .txt provisto además de las iteraciones y el tiempo que duró la simulación de cada lámina. El programa, dentro de la carpeta `output`, también generará archivos binarios de nombre `plate###-k.bin` para cada lámina procesada. Estos archivos son la representación de cómo quedaron las temperaturas de cada celda después de que se estabilizó la temperatura. Además, la k de su nombre representa las iteraciones necesitadas.
 
 # Detalles Técnicos
-Puede ver los diagramas de diseño del presente programa en el siguiente [enlace](design/README.md).
+Puede ver los diagramas de diseño del presente programa en el siguiente [enlace](/homeworks/serial/design/README.md).
 
 # Créditos
 Este proyecto fue desarrollado por Liqing Yosery Zheng Lu. En caso de consultas, contáctese por el correo liqing.zheng@ucr.ac.cr

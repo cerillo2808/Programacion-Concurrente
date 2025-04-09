@@ -9,6 +9,8 @@ En la simulación, se usa una fórmula de relación para calcular el cambio de t
 
 Las salidas del programa son los plate###-k.bin, actualizadas con su nueva temperatura, siendo k la cantidad de iteraciones necesarias para que la temperatura de la lámina quede en equilibrio. También un archivo job###.tsv, que contiene la información original además de las iteraciones y el tiempo transcurrido hasta que se detuvo la simulación.
 
+Además, el programa usa hilos para agilizar la simulación. Si no se epecifican cuántos, se usarán la cantidad de hilos que permita la arquitectura de la computadora que corra el programa. Para especificar cuántos hilos utilizar, se escriben después de la dirección al archivo job###.txt.
+
 # Manual de Uso
 
 ### 0. Requisitos
@@ -33,7 +35,7 @@ Si está posicionado en el directorio `../serial`, ejecute el comando `./bin/ser
 El programa generará una carpeta llamada `output`. Dentro de la carpeta estará un reporte con la información original del .txt provisto además de las iteraciones y el tiempo que duró la simulación de cada lámina. El programa, dentro de la carpeta `output`, también generará archivos binarios de nombre `plate###-k.bin` para cada lámina procesada. Estos archivos son la representación de cómo quedaron las temperaturas de cada celda después de que se estabilizó la temperatura. Además, la k de su nombre representa las iteraciones necesitadas.
 
 # Detalles Técnicos
-Puede ver los diagramas de diseño del presente programa en el siguiente [enlace](design/README.md).
+Puede ver los diagramas de diseño del presente programa en el siguiente [enlace](/homeworks/pthread/design/README.md).
 
 # Créditos
 Este proyecto fue desarrollado por Liqing Yosery Zheng Lu. En caso de consultas, contáctese por el correo liqing.zheng@ucr.ac.cr
