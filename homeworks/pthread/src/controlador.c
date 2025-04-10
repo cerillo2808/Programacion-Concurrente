@@ -12,6 +12,13 @@
 #include <escritor_archivos.h>
 #include <simulacion.h>
 #include <unistd.h>
+#include <pthread.h>
+
+void* procesar_plate_thread(void* arg) {
+    private_data_t* private = (private_data_t*)arg;
+    private->resultado = crear_plate(private->linea, private->nombreJob);
+    return NULL;
+}
 
 int verificar_argumentos(int argc, char *argv[]) {
     if (argc > 3) {
@@ -19,13 +26,11 @@ int verificar_argumentos(int argc, char *argv[]) {
         printf("Error: Hay más argumentos de los necesarios. Ingrese la "
                 "dirección del archivo y la cantidad de hilos a utilizar.\n");
         return 1;
-
     } else if (argc <= 1) {
         // faltan argumentos
         printf("Error: Hay menos argumentos de los necesarios. Ingrese la "
-                "dirección del archivo y la cantidad de hilos a utilizar.\n");;
+                "dirección del archivo y la cantidad de hilos a utilizar.\n");
         return 1;
-
     } else {
         // hay al menos un argumento
 
@@ -44,7 +49,6 @@ int verificar_argumentos(int argc, char *argv[]) {
         }
 
         char *jobPath = argv[1];
-
         FILE *jobFile = fopen(jobPath, "r");
         // el parámetro r es para lectura (read)
 
@@ -57,13 +61,7 @@ int verificar_argumentos(int argc, char *argv[]) {
             char nombreJob[256];
             // buscar el / del job
             char *base = strrchr(jobPath, '/');
-            if (base) {
-                // saltarse el /
-                base++;
-            } else {
-                base = jobPath;
-            }
-
+            base = base ? base + 1 : jobPath;
             strncpy(nombreJob, base, sizeof(nombreJob));
 
             // eliminar la extensión .txt
@@ -73,16 +71,62 @@ int verificar_argumentos(int argc, char *argv[]) {
                 *punto = '\0';
             }
 
-            char linea[256];
-            // buffer para cada linea de job, máximo de 256 chars
+            // Leer todas las líneas del archivo primero
+            char lineas[100][256];  // Asumimos máximo 100 plates por job
+            uint64_t num_plates = 0;
+            
+            while (fgets(lineas[num_plates], sizeof(lineas[0]), jobFile) && num_plates < 100) {
+                num_plates++;
+            }
+            fclose(jobFile);
 
-            while (fgets(linea, sizeof(linea), jobFile)) {
-                // crear un plate para cada linea del txt
-                if (crear_plate(linea, nombreJob)) {
+            // Crear estructuras para mantener el orden
+            private_data_t private[num_plates];
+            pthread_t hilos[num_plates];
+            uint64_t hilos_activos = 0;
+            uint64_t error_ocurrido = 0;
+
+            // Procesar plates en bloques para mantener orden de salida
+            for (uint64_t bloque = 0; bloque < num_plates && !error_ocurrido; bloque += num_hilos) {
+                uint64_t hilos_en_bloque = (num_plates - bloque) < num_hilos ? 
+                                     (num_plates - bloque) : num_hilos;
+                
+                // Iniciar hilos para este bloque
+                for (uint64_t i = 0; i < hilos_en_bloque; i++) {
+                    int plate_actual = bloque + i;
+                    private[plate_actual].linea = lineas[plate_actual];
+                    private[plate_actual].nombreJob = nombreJob;
+                    private[plate_actual].indice = plate_actual;
+                    private[plate_actual].resultado = 0;
+                    
+                    if (pthread_create(&hilos[plate_actual], NULL, 
+                                       procesar_plate_thread, &private[plate_actual]) != 0) {
+                        printf("Error al crear hilo para plate %d\n", plate_actual);
+                        error_ocurrido = 1;
+                        break;
+                    }
+                    hilos_activos++;
+                }
+
+                // Esperar a que todos los hilos del bloque terminen
+                for (uint64_t i = 0; i < hilos_en_bloque && !error_ocurrido; i++) {
+                    int plate_actual = bloque + i;
+                    void* retval;
+                    pthread_join(hilos[plate_actual], &retval);
+                }
+            }
+
+            if (error_ocurrido) {
+                return 1;
+            }
+
+            // Escribir resultados en orden después de que todos los hilos terminen
+            for (uint64_t i = 0; i < num_plates; i++) {
+                if (private[i].resultado != 0) {
+                    printf("Error al procesar plate.");
                     return 1;
                 }
             }
-            fclose(jobFile); //NOLINT
         }
     }
     return 0;

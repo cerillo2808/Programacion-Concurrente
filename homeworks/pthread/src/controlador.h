@@ -10,6 +10,7 @@
 #include <inttypes.h>
 #include <time.h>
 #include <simulacion.h>
+#include <pthread.h>
 
 /**
  @brief Verifica la validez de los argumentos proporcionados al programa y 
@@ -33,5 +34,20 @@
   se retorna un código de error.
 */
 int verificar_argumentos(int argc, char *argv[]);
+
+/**
+ @brief datos privados para mantener el orden de la impresión. Linea es para
+ saber en cuál linea escribe cada plate. Cada plate ocupa saber el nombre del
+ job para escribir sobre él. El índice es para saber en qué orden van los
+ plates. TODO:que es el resultado
+*/
+typedef struct private_data{
+  char* linea;
+  char* nombreJob;
+  uint64_t indice;
+  uint64_t resultado;      // Resultado del procesamiento
+} private_data_t;
+
+void* procesar_plate_thread(void* arg);
 
 #endif
