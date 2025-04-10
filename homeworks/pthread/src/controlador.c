@@ -72,7 +72,8 @@ int verificar_argumentos(int argc, char *argv[]) {
             }
 
             // Leer todas las líneas del archivo primero
-            char lineas[100][256];  // Asumimos máximo 100 plates por job
+            // Se asume 100 plates por job
+            char lineas[100][256];
             uint64_t num_plates = 0;
             
             while (fgets(lineas[num_plates], sizeof(lineas[0]), jobFile) && num_plates < 100) {
@@ -87,6 +88,7 @@ int verificar_argumentos(int argc, char *argv[]) {
             uint64_t error_ocurrido = 0;
 
             // Procesar plates en bloques para mantener orden de salida
+            // Los bloques son la cantidad de plates para cada hilo
             for (uint64_t bloque = 0; bloque < num_plates && !error_ocurrido; bloque += num_hilos) {
                 uint64_t hilos_en_bloque = (num_plates - bloque) < num_hilos ? 
                                      (num_plates - bloque) : num_hilos;
