@@ -1,0 +1,101 @@
+procedimiento main():
+    verificar_argumentos(argc, argv)
+fin procedimiento
+
+procedimiento verificar_argumentos(argc, argv):
+
+    num_hilos = hilos por defecto de la computadora
+    if (hay 3 argumentos):
+        num_hilos = obtener_cantidad_hilos(argv[2])
+    
+    jobFile = (argv[1])
+    
+    // Leer todas las líneas del archivo
+    num_plates = 0
+    while (leer_linea(jobFile, lineas[num_plates])):
+        num_plates++
+    
+    // Estructuras para threads
+    private_data_t private[num_plates]
+    pthread_t hilos[num_plates]
+    
+    // Procesar en bloques para mantener orden
+    for (bloque = 0; bloque < num_plates; bloque += num_hilos):
+        hilos_en_bloque = min(num_hilos, num_plates - bloque)
+        
+        // Crear hilos para este bloque
+        for (i = 0; i < hilos_en_bloque; i++):
+            plate_actual = bloque + i
+            private[plate_actual].linea = lineas[plate_actual]
+            private[plate_actual].nombreJob = nombreJob
+            private[plate_actual].indice = plate_actual
+            
+            create_thread(hilos[plate_actual], procesar_plate_thread, &private[plate_actual])
+        
+        // Esperar hilos del bloque actual
+        for (i = 0; i < hilos_en_bloque; i++):
+            plate_actual = bloque + i
+            join_pthread(hilos[plate_actual])
+
+fin procedimiento
+
+procedimiento procesar_plate_thread(arg):
+    private = (private_data_t*)arg
+    private->resultado = crear_plate(private->linea, private->nombreJob)
+    return NULL
+fin procedimiento
+
+procedimiento crear_plate(linea, nombreJob):
+
+    // Inicializar objeto
+    Plate plate
+    
+    bin = abrir archivo binario plate.nombreArchivo
+    
+    // Leer dimensiones R y C. Asignar a struct Plate
+    plate.R = R;
+    plate.C = C;
+    
+    // Reservar memoria para temperaturas
+    temperaturas = malloc(plate.R * plate.C * sizeof(double))
+    
+    // Leer datos binarios
+    leer_temperaturas(bin, temperaturas, plate.R * plate.C)
+    cerrar_archivo(bin)
+    
+    // Simulación
+    cambio_temperatura(temperaturas, plate)
+    
+    // Liberar memoria
+    free(temperaturas)
+    
+fin procedimiento
+
+procedimiento cambio_temperatura(temperaturas, plate):
+
+    // Pedir memoria para matriz temporal
+    temperaturas_temporal = malloc(plate.R * plate.C * sizeof(double))
+
+    iteraciones = 0
+    do:
+        iteraciones++
+        cambio_maximo = 0
+        
+        for cada celda (i,j):
+            if (es borde):
+                copiar temperatura original
+            else:
+                calcular nueva_temperatura con vecinos
+                temperaturas_temporal[indice] = nueva_temperatura
+                actualizar cambio_maximo
+        
+        copiar temperaturas_temporal a temperaturas
+    while (cambio_maximo > plate.epsilon)
+    
+    // Generar archivos de salida
+    generar_archivo_binario(...)
+    generar_archivo_tsv(...)
+    
+    // Liberar memoria
+    free(temperaturas_temporal)
+fin procedimiento
