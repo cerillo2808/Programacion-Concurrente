@@ -25,7 +25,7 @@
  incluyendo la configuración del archivo y los parámetros físicos
   (delta, alfa, h, epsilon) necesarios para los cálculos.
 */
-typedef struct {
+typedef struct Plate {
     char nombreArchivo[256];
     // el nombre del archivo sólo puede tener máximo 256 chars
 
