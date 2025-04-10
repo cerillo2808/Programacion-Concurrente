@@ -109,4 +109,3 @@ Según Dijkstra, un semáforo es un entero con signo que se puede incrementar co
 | 16 | 4 | Ejercicio | [building_tasks](exercises/pthreads/building_tasks/) | Hilos que tienen diferentes dependencias.
 | 17 | 5 | Ejemplo | [prod_cons_bound](examples/pthreads/prod_cons_bound/) | Productor y consumidor regulan sus acciones a través de semáforos. El buffer que tienen es limitado.
 | 18 | 5 | Ejemplo | [prod_cons_unbound](examples/pthreads/prod_cons_unbound/) | El buffer se asume como ilimitado.
-| 19 | 5| Ejercicio | [prod_cons_bound_mod](exercises/pthreads/prod_cons_bound_mod/) | Modificación de prod_cons_bound en donde se modulariza el código.
