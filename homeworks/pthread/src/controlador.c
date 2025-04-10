@@ -37,7 +37,7 @@ int verificar_argumentos(int argc, char *argv[]) {
             num_hilos = atoi(argv[2]);
 
             // verificar que la cantidad de hilos sea válida
-            if (num_hilos >= 0) {
+            if (num_hilos <= 0) {
                 printf("Error: tiene que haber mínimo un hilo.");
                 return 1;
             }
