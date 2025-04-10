@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <plate.h>
 
 /**
  @brief Realiza la simulación de cambio de temperatura en una placa utilizando
