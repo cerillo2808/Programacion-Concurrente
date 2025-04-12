@@ -8,6 +8,7 @@
 
 int main(int argc, char* argv[]) {
   int error = EXIT_SUCCESS;
+  // inicializa la memoria compartida
   simulation_t* simulation = simulation_create();
   if (simulation) {
     error = simulation_run(simulation, argc, argv);

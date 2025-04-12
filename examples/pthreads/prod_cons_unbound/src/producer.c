@@ -7,6 +7,7 @@
 
 void* produce(void* data) {
   // const private_data_t* private_data = (private_data_t*)data;
+  // simulation funciona como la memoria compartida
   simulation_t* simulation = (simulation_t*)data;
 
   while (true) {
@@ -26,8 +27,10 @@ void* produce(void* data) {
     // unlock(can_access_next_unit)
     pthread_mutex_unlock(&simulation->can_access_next_unit);
 
+    // usa un random para saber cuánto es el delay
     usleep(1000 * random_between(simulation->producer_min_delay
       , simulation->producer_max_delay));
+    // pone lo producido en la cola
     queue_enqueue(&simulation->queue, my_unit);
     printf("Produced %zu\n", my_unit);
 

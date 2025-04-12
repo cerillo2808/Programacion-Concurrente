@@ -14,6 +14,7 @@ void* consume(void* data) {
     pthread_mutex_lock(&simulation->can_access_consumed_count);
     if (simulation->consumed_count < simulation->unit_count) {
       // Reserve the next product to me
+      // le suma 1 más al contador que mantiene las unidades consumidas
       ++simulation->consumed_count;
     } else {
       // unlock(can_access_consumed_count)
@@ -28,6 +29,7 @@ void* consume(void* data) {
     sem_wait(&simulation->can_consume);
 
     size_t value = 0;
+    // quita de la cola el valor consumido
     queue_dequeue(&simulation->queue, &value);
     printf("\tConsuming %zu\n", value);
     usleep(1000 * random_between(simulation->consumer_min_delay

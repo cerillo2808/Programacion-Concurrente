@@ -9,6 +9,7 @@
 
 #include "queue.h"
 
+//**@enum guarda los errores */
 enum {
   ERR_NOMEM_SHARED = EXIT_FAILURE + 1,
   ERR_NOMEM_BUFFER,
@@ -23,6 +24,8 @@ enum {
   ERR_CREATE_THREAD,
 };
 
+//**@struct funciona como la memoria compartida. Se mantiene en commons para 
+// que todos la puedan accesar */
 typedef struct simulation {
   size_t unit_count;
   size_t producer_count;
