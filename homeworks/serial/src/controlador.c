@@ -92,7 +92,7 @@ int run(int argc, char *argv[]) {
 
                 if (temperaturas!=NULL) {
                     // simular la dispersión del calor
-                    cambio_temperatura(temperaturas, plate);
+                    cambio_temperatura(temperaturas, &plate);
                 } else{
                     return 0;
                 }

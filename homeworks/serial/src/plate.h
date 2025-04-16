@@ -48,6 +48,8 @@ typedef struct {
 
     uint64_t C;
     // número de columnas
+
+    int iteraciones;
 } Plate;
 
 /**
