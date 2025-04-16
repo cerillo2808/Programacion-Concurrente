@@ -33,51 +33,71 @@ int verificar_argumentos(int argc) {
     }
 }
 
+int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
+
+    if (jobFile == NULL) {
+        printf("Error: No se pudo abrir. Hay un error con el nombre o path "
+                "de su archivo.\n");
+        return 0;
+    } else {
+        // guardar de forma job###
+        // el nombreJob puede ser de un máximo de 250 chars
+        char* nombreJob = calloc(250, sizeof(char));
+        // buscar el / del job
+        char *base = strrchr(jobPath, '/');
+        if (base) {
+            // saltarse el /
+            base++;
+        } else {
+            base = jobPath;
+        }
+
+        // se le pasa el tamaño 250 porque es la longitud de nombreJob
+        strncpy(nombreJob, base, 250);
+
+        // eliminar la extensión .txt
+        char *punto = strrchr(nombreJob, '.');
+        if (punto && strcmp(punto, ".txt") == 0) {
+            // el punto se vuelve caracter nulo
+            *punto = '\0';
+        }
+
+        shared_data->nombreJob = nombreJob;
+        return 1;
+    }    
+}
+
 
 int run(int argc, char *argv[]) {
+    // inicializa memoria compartida
+    shared_data_t* shared_data = (shared_data_t*) calloc(1, sizeof(shared_data_t));
+
     if (verificar_argumentos(argc)) {
+
         char *jobPath = argv[1];
 
         FILE *jobFile = fopen(jobPath, "r");
         // el parámetro r es para lectura (read)
-
-        if (jobFile == NULL) {
-            printf("Error: No se pudo abrir. Hay un error con el nombre o path "
-                    "de su archivo.\n");
-            return 1;
-        } else {
-            // guardar de forma job###
-            char nombreJob[256];
-            // buscar el / del job
-            char *base = strrchr(jobPath, '/');
-            if (base) {
-                // saltarse el /
-                base++;
-            } else {
-                base = jobPath;
-            }
-
-            strncpy(nombreJob, base, sizeof(nombreJob));
-
-            // eliminar la extensión .txt
-            char *punto = strrchr(nombreJob, '.');
-            if (punto && strcmp(punto, ".txt") == 0) {
-                // el punto se vuelve caracter nulo
-                *punto = '\0';
-            }
+        
+        if(guardarJob(jobFile, jobPath, shared_data)) {
 
             char linea[256];
             // buffer para cada linea de job, máximo de 256 chars
 
             while (fgets(linea, sizeof(linea), jobFile)) {
                 // crear un plate para cada linea del txt
-                if (crear_plate(linea, nombreJob)) {
+                if (crear_plate(linea, shared_data->nombreJob)) {
                     return 1;
                 }
             }
+
             fclose(jobFile); //NOLINT
-            return 0;
-        }    
+            return 0; 
+        }
     }
+
+    // liberar memoria compartida
+    free(shared_data->nombreJob);
+    free(shared_data);
     return 1;
 }

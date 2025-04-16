@@ -11,7 +11,13 @@
 #include <time.h>
 #include <simulacion.h>
 
+typedef struct shared_data {
+  char* nombreJob;
+} shared_data_t;
+
 int run(int argc, char *argv[]);
+
+int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data);
 
 /**
  @brief Verifica la validez de los argumentos proporcionados al programa y 
