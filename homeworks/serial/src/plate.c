@@ -34,7 +34,7 @@ double* leer_plate(const char *nombreJob, Plate *plate) {
 
     if (!bin) {
         printf("Error: No se pudo abrir el archivo binario '%s'.\n", nombreBin);
-        // return 1;
+        return NULL;
     }
 
     // R por rows, filas en inglés
@@ -51,7 +51,7 @@ double* leer_plate(const char *nombreJob, Plate *plate) {
         printf("Error: Dimensiones inválidas en el archivo binario '%s'.\n",
                  nombreBin);
         fclose(bin); //NOLINT
-        // return 1;
+        return NULL;
     }
 
     // asignar valores a los atributos
@@ -63,11 +63,12 @@ double* leer_plate(const char *nombreJob, Plate *plate) {
     if (!temperaturas) {
         printf("Error: No se pudo asignar memoria para la matriz.\n");
         fclose(bin);
-        // return 1;
+        return NULL;
     }
 
     // subir temperaturas a la matriz
     fread(temperaturas, sizeof(double), plate->R * plate->C, bin);
+    fclose(bin);
 
     return temperaturas;
 }
