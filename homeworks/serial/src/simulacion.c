@@ -19,7 +19,7 @@ void cambio_temperatura(double* temperaturas, Plate* plate) {
     double *temperaturas_temporal = (double *)malloc(plate->R * plate->C
         * sizeof(double));
     if (!temperaturas_temporal) {
-        printf("Error: No se pudo asignar memoria para la matriz temporal.\n");
+        printf("Error: No se pudo asignar memoria para la matriz temporal.\n"); //NOLINT
         return;
     }
 
@@ -33,7 +33,8 @@ void cambio_temperatura(double* temperaturas, Plate* plate) {
                 uint64_t indice = i * plate->C + j;
                 // se crea un índice único para cada posición de la matriz
                 // sirve para ubicar los datos en un arreglo
-                if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
+                if (i == 0 || i == plate->R - 1 || j == 0 ||
+                                                         j == plate->C - 1) {
                     // es un borde y se copia como tal
                     temperaturas_temporal[indice] = temperaturas[indice];
                 } else {
@@ -67,6 +68,6 @@ void cambio_temperatura(double* temperaturas, Plate* plate) {
     double tiempoSegundos = iteraciones * plate->delta;
     plate->iteraciones = iteraciones;
     plate->tiempoSegundos = tiempoSegundos;
-    
+
     free(temperaturas_temporal);
 }

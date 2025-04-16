@@ -17,7 +17,6 @@ Plate crear_plate(const char *linea) {
 }
 
 double* leer_plate(const char *nombreJob, Plate *plate) {
-
     const char *nombreBin = plate->nombreArchivo;
 
     char rutaCompleta[512];
@@ -58,7 +57,8 @@ double* leer_plate(const char *nombreJob, Plate *plate) {
     plate->C = C;
 
     // pedir memoria para matriz que se llama temperaturas
-    double *temperaturas = (double *)malloc(plate->R * plate->C * sizeof(double));
+    double *temperaturas = (double *)malloc(plate->R *
+                                                     plate->C * sizeof(double));
     if (!temperaturas) {
         printf("Error: No se pudo asignar memoria para la matriz.\n");
         fclose(bin);
@@ -67,7 +67,7 @@ double* leer_plate(const char *nombreJob, Plate *plate) {
 
     // subir temperaturas a la matriz
     fread(temperaturas, sizeof(double), plate->R * plate->C, bin);
-    fclose(bin);
+    fclose(bin); //NOLINT
 
     return temperaturas;
 }

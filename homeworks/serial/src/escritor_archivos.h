@@ -68,8 +68,8 @@ void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C,
 void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
                          Plate plate, double tiempoSegundos, int iteraciones);
 
-void nombreBin (Plate* plate);
+void nombreBin(Plate* plate);
 
-void nombreTsv (Plate* plate);
+void nombreTsv(Plate* plate);
 
 #endif

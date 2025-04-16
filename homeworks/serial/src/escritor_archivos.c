@@ -92,7 +92,7 @@ char* format_time(const time_t seconds, char* text, const size_t capacity) {
     return text;
 }
 
-void nombreBin (Plate* plate){
+void nombreBin(Plate* plate) {
     char* nombre_con_iteraciones = calloc(512, sizeof(char));
 
     // quitar .bin
@@ -102,18 +102,18 @@ void nombreBin (Plate* plate){
     }
 
     // formato: "nombre-iteraciones.bin"
-    snprintf(nombre_con_iteraciones, 512,
-            "%.*s-%d.bin", len, plate->nombreArchivo, plate->iteraciones);
+    snprintf(nombre_con_iteraciones, 512, "%.*s-%d.bin", len, //NOLINT
+                                     plate->nombreArchivo, plate->iteraciones);
 
     plate->nombreBin = nombre_con_iteraciones;
 }
 
-void nombreTsv (Plate* plate){
+void nombreTsv(Plate* plate) {
     char* nombre_final_tsv = calloc(512, sizeof(char));
 
     // pegarle .tsv al nombre del job
     snprintf(nombre_final_tsv, 512, "%s%s", //NOLINT
              plate->nombreJob, ".tsv");
-    
+
     plate->nombreTsv = nombre_final_tsv;
 }

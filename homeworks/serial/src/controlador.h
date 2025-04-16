@@ -17,7 +17,7 @@ typedef struct shared_data {
 
 int run(int argc, char *argv[]);
 
-int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data);
+int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data); //NOLINT
 
 /**
  @brief Verifica la validez de los argumentos proporcionados al programa y 

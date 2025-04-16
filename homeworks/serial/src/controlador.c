@@ -34,7 +34,6 @@ int verificar_argumentos(int argc) {
 }
 
 int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
-
     if (jobFile == NULL) {
         printf("Error: No se pudo abrir. Hay un error con el nombre o path "
                 "de su archivo.\n");
@@ -64,23 +63,22 @@ int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
 
         shared_data->nombreJob = nombreJob;
         return 1;
-    }    
+    }
 }
 
 
 int run(int argc, char *argv[]) {
     // inicializa memoria compartida
-    shared_data_t* shared_data = (shared_data_t*) calloc(1, sizeof(shared_data_t));
+    shared_data_t* shared_data = (shared_data_t*) calloc(1,
+                                                         sizeof(shared_data_t));
 
     if (verificar_argumentos(argc)) {
-
         char *jobPath = argv[1];
 
         FILE *jobFile = fopen(jobPath, "r");
         // el parámetro r es para lectura (read)
-        
-        if(guardarJob(jobFile, jobPath, shared_data)) {
 
+        if (guardarJob(jobFile, jobPath, shared_data)) {
             char linea[256];
             // buffer para cada linea de job, máximo de 256 chars
 
@@ -88,9 +86,10 @@ int run(int argc, char *argv[]) {
                 // crear un plate para cada linea del txt
                 Plate plate = crear_plate(linea);
 
-                double *temperaturas = leer_plate(shared_data->nombreJob, &plate);
+                double *temperaturas = leer_plate(shared_data->nombreJob,
+                                                                     &plate);
 
-                if (temperaturas!=NULL) {
+                if (temperaturas != NULL) {
                     // simular la dispersión del calor
                     cambio_temperatura(temperaturas, &plate);
 
@@ -101,25 +100,26 @@ int run(int argc, char *argv[]) {
 
                     nombreTsv(&plate);
 
-                    generar_archivo_tsv("output", plate.nombreTsv, plate, plate.tiempoSegundos,
-                        plate.iteraciones);
-
-                } else{
+                    generar_archivo_tsv("output", plate.nombreTsv, plate,
+                         plate.tiempoSegundos, plate.iteraciones);
+                } else {
                     return 0;
                 }
 
                 // liberar memoria después de la simulación
                 free(plate.nombreBin);
+                free(plate.nombreTsv);
                 free(temperaturas);
             }
 
             fclose(jobFile); //NOLINT
-            return 0; 
+            // liberar memoria compartida
+            free(shared_data->nombreJob);
+            free(shared_data);
+            return 0;
         }
     }
 
-    // liberar memoria compartida
-    free(shared_data->nombreJob);
-    free(shared_data);
+    // hubieron errores en verificarArgumentos
     return 1;
 }
