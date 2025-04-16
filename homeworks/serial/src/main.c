@@ -6,7 +6,9 @@
 
 int main(int argc, char *argv[]) {
     // asegurar de que entren dos inputs del usuario
-    run(argc, argv);
+    if(run(argc, argv)){
+        return 1;
+    }
 
     printf("Fin del programa\n"); //NOLINT
 

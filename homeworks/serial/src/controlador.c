@@ -90,8 +90,12 @@ int run(int argc, char *argv[]) {
 
                 double *temperaturas = leer_plate(shared_data->nombreJob, &plate);
 
-                // simular la dispersión del calor
-                cambio_temperatura(temperaturas, plate);
+                if (temperaturas!=NULL) {
+                    // simular la dispersión del calor
+                    cambio_temperatura(temperaturas, plate);
+                } else{
+                    return 0;
+                }
 
                 // liberar memoria después de la simulación
                 free(temperaturas);
