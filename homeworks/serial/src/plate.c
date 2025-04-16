@@ -5,7 +5,6 @@
 #include <string.h>
 #include <plate.h>
 #include <inttypes.h>
-#include <controlador.h>
 
 Plate crear_plate(const char *linea) {
     Plate plate;

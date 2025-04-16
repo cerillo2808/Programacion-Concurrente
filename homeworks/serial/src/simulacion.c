@@ -5,11 +5,9 @@
 #include <string.h>
 #include <plate.h>
 #include <inttypes.h>
-#include <controlador.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <math.h>
-#include <escritor_archivos.h>
 #include <simulacion.h>
 
 void cambio_temperatura(double* temperaturas, Plate* plate) {
