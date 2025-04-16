@@ -6,10 +6,7 @@
 
 int main(int argc, char *argv[]) {
     // asegurar de que entren dos inputs del usuario
-    if (verificar_argumentos(argc, argv)) {
-        // retorno de 1 significa error
-        return 1;
-    }
+    run(argc, argv);
 
     printf("Fin del programa\n"); //NOLINT
 

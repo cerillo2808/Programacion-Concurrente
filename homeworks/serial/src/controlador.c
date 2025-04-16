@@ -12,23 +12,30 @@
 #include <escritor_archivos.h>
 #include <simulacion.h>
 
-int verificar_argumentos(int argc, char *argv[]) {
+int verificar_argumentos(int argc) {
     if (argc > 3) {
         // muchos argumentos
         printf("Error: Hay más argumentos de los necesarios. Ingrese la "
                 "dirección del archivo y la cantidad de hilos a utilizar.\n");
-        return 1;
+        return 0;
 
     } else if (argc <= 1) {
         // faltan argumentos
         printf("Error: Hay menos argumentos de los necesarios. Ingrese la "
                 "dirección del archivo y la cantidad de hilos a utilizar.\n");;
-        return 1;
+        return 0;
 
     } else {
         // hay al menos un argumento
         // TO-DO: verificar que se haya ingresado cantidad hilos (tarea 2)
 
+            return 1;
+    }
+}
+
+
+int run(int argc, char *argv[]) {
+    if (verificar_argumentos(argc)) {
         char *jobPath = argv[1];
 
         FILE *jobFile = fopen(jobPath, "r");
@@ -69,7 +76,8 @@ int verificar_argumentos(int argc, char *argv[]) {
                 }
             }
             fclose(jobFile); //NOLINT
-        }
+            return 0;
+        }    
     }
-    return 0;
+    return 1;
 }

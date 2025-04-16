@@ -11,6 +11,8 @@
 #include <time.h>
 #include <simulacion.h>
 
+int run(int argc, char *argv[]);
+
 /**
  @brief Verifica la validez de los argumentos proporcionados al programa y 
  procesa el archivo indicado
@@ -32,6 +34,6 @@
  un plate a partir de la línea leída. Si ocurre algún error durante el proceso,
   se retorna un código de error.
 */
-int verificar_argumentos(int argc, char *argv[]);
+int verificar_argumentos(int argc);
 
 #endif
