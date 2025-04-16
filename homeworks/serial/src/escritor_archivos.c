@@ -91,3 +91,29 @@ char* format_time(const time_t seconds, char* text, const size_t capacity) {
          gmt->tm_min, gmt->tm_sec);
     return text;
 }
+
+void nombreBin (Plate* plate){
+    char* nombre_con_iteraciones = calloc(512, sizeof(char));
+
+    // quitar .bin
+    int len = strlen(plate->nombreArchivo);
+    if (len > 4 && strcmp(plate->nombreArchivo + len - 4, ".bin") == 0) {
+        len -= 4;
+    }
+
+    // formato: "nombre-iteraciones.bin"
+    snprintf(nombre_con_iteraciones, 512,
+            "%.*s-%d.bin", len, plate->nombreArchivo, plate->iteraciones);
+
+    plate->nombreBin = nombre_con_iteraciones;
+}
+
+void nombreTsv (Plate* plate){
+    char* nombre_final_tsv = calloc(512, sizeof(char));
+
+    // pegarle .tsv al nombre del job
+    snprintf(nombre_final_tsv, 512, "%s%s", //NOLINT
+             plate->nombreJob, ".tsv");
+    
+    plate->nombreTsv = nombre_final_tsv;
+}

@@ -93,11 +93,23 @@ int run(int argc, char *argv[]) {
                 if (temperaturas!=NULL) {
                     // simular la dispersión del calor
                     cambio_temperatura(temperaturas, &plate);
+
+                    nombreBin(&plate);
+
+                    generar_archivo_binario(plate.nombreBin, plate.R, plate.C,
+                        temperaturas);
+
+                    nombreTsv(&plate);
+
+                    generar_archivo_tsv("output", plate.nombreTsv, plate, plate.tiempoSegundos,
+                        plate.iteraciones);
+
                 } else{
                     return 0;
                 }
 
                 // liberar memoria después de la simulación
+                free(plate.nombreBin);
                 free(temperaturas);
             }
 

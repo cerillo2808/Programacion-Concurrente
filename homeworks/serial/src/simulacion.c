@@ -67,27 +67,8 @@ void cambio_temperatura(double* temperaturas, Plate* plate) {
 
     // calcular el tiempo transcurrido
     double tiempoSegundos = iteraciones * plate->delta;
-
-    char nombre_con_iteraciones[512];
-
-    // quitar .bin
-    int len = strlen(plate->nombreArchivo);
-    if (len > 4 && strcmp(plate->nombreArchivo + len - 4, ".bin") == 0) {
-        len -= 4;
-    }
-
-    // formato: "nombre-iteraciones.bin"
-    snprintf(nombre_con_iteraciones, sizeof(nombre_con_iteraciones),
-            "%.*s-%d.bin", len, plate->nombreArchivo, iteraciones);
-
-    generar_archivo_binario(nombre_con_iteraciones, plate->R, plate->C,
-         temperaturas);
-    char nombre_final_tsv[512];
-    snprintf(nombre_final_tsv, sizeof(nombre_final_tsv), "%s%s", //NOLINT
-             plate->nombreJob, ".tsv");
-    generar_archivo_tsv("output", nombre_final_tsv, *plate, tiempoSegundos,
-                         iteraciones);
-
     plate->iteraciones = iteraciones;
+    plate->tiempoSegundos = tiempoSegundos;
+    
     free(temperaturas_temporal);
 }

@@ -50,6 +50,10 @@ typedef struct {
     // número de columnas
 
     int iteraciones;
+
+    char* nombreBin;
+    char* nombreTsv;
+    double tiempoSegundos;
 } Plate;
 
 /**
