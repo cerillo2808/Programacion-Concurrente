@@ -86,9 +86,15 @@ int run(int argc, char *argv[]) {
 
             while (fgets(linea, sizeof(linea), jobFile)) {
                 // crear un plate para cada linea del txt
-                if (crear_plate(linea, shared_data->nombreJob)) {
-                    return 1;
-                }
+                Plate plate = crear_plate(linea);
+
+                double *temperaturas = leer_plate(shared_data->nombreJob, &plate);
+
+                // simular la dispersión del calor
+                cambio_temperatura(temperaturas, plate);
+
+                // liberar memoria después de la simulación
+                free(temperaturas);
             }
 
             fclose(jobFile); //NOLINT
