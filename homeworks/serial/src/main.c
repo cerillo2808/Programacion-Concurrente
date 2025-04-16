@@ -6,8 +6,7 @@
 
 int main(int argc, char *argv[]) {
     // asegurar de que entren dos inputs del usuario
-    if (verificar_argumentos(argc, argv)) {
-        // retorno de 1 significa error
+    if (run(argc, argv)) {
         return 1;
     }
 

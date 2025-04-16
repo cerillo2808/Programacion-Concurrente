@@ -11,6 +11,14 @@
 #include <time.h>
 #include <simulacion.h>
 
+typedef struct shared_data {
+  char* nombreJob;
+} shared_data_t;
+
+int run(int argc, char *argv[]);
+
+int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data); //NOLINT
+
 /**
  @brief Verifica la validez de los argumentos proporcionados al programa y 
  procesa el archivo indicado
@@ -32,6 +40,6 @@
  un plate a partir de la línea leída. Si ocurre algún error durante el proceso,
   se retorna un código de error.
 */
-int verificar_argumentos(int argc, char *argv[]);
+int verificar_argumentos(int argc);
 
 #endif

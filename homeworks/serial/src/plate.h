@@ -48,6 +48,12 @@ typedef struct {
 
     uint64_t C;
     // número de columnas
+
+    int iteraciones;
+
+    char* nombreBin;
+    char* nombreTsv;
+    double tiempoSegundos;
 } Plate;
 
 /**
@@ -60,7 +66,7 @@ typedef struct {
    0 si la operación fue exitosa.
    1 si ocurre un error al crear la plate
 */
-int crear_plate(const char *linea, const char *nombreJob);
+Plate crear_plate(const char *linea);
 
 /**
  @brief Lee los datos de una placa desde un archivo binario y los almacena en la
@@ -74,6 +80,6 @@ int crear_plate(const char *linea, const char *nombreJob);
    0 si la operación fue exitosa.
    1 si ocurre un error al abrir o leer el archivo
 */
-int leer_plate(const char *nombreBin, Plate *plate, FILE *bin); // NOLINT
+double* leer_plate(const char *nombreJob, Plate *plate); // NOLINT
 
 #endif
