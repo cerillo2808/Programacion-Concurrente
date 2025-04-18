@@ -11,68 +11,15 @@
 #include <math.h>
 #include <escritor_archivos.h>
 #include <simulacion.h>
-
-int verificar_argumentos(int argc) {
-    if (argc > 3) {
-        // muchos argumentos
-        printf("Error: Hay más argumentos de los necesarios. Ingrese la "
-                "dirección del archivo y la cantidad de hilos a utilizar.\n");
-        return 0;
-
-    } else if (argc <= 1) {
-        // faltan argumentos
-        printf("Error: Hay menos argumentos de los necesarios. Ingrese la "
-                "dirección del archivo y la cantidad de hilos a utilizar.\n");;
-        return 0;
-
-    } else {
-        // hay al menos un argumento
-        // TO-DO: verificar que se haya ingresado cantidad hilos (tarea 2)
-
-            return 1;
-    }
-}
-
-int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
-    if (jobFile == NULL) {
-        printf("Error: No se pudo abrir. Hay un error con el nombre o path "
-                "de su archivo.\n");
-        return 0;
-    } else {
-        // guardar de forma job###
-        // el nombreJob puede ser de un máximo de 250 chars
-        char* nombreJob = calloc(250, sizeof(char));
-        // buscar el / del job
-        char *base = strrchr(jobPath, '/');
-        if (base) {
-            // saltarse el /
-            base++;
-        } else {
-            base = jobPath;
-        }
-
-        // se le pasa el tamaño 250 porque es la longitud de nombreJob
-        strncpy(nombreJob, base, 250);
-
-        // eliminar la extensión .txt
-        char *punto = strrchr(nombreJob, '.');
-        if (punto && strcmp(punto, ".txt") == 0) {
-            // el punto se vuelve caracter nulo
-            *punto = '\0';
-        }
-
-        shared_data->nombreJob = nombreJob;
-        return 1;
-    }
-}
-
+#include <unistd.h>
 
 int run(int argc, char *argv[]) {
     // inicializa memoria compartida
     shared_data_t* shared_data = (shared_data_t*) calloc(1,
                                                          sizeof(shared_data_t));
 
-    if (verificar_argumentos(argc)) {
+    if (verificar_argumentos(argc, argv, shared_data)) {
+
         char *jobPath = argv[1];
 
         FILE *jobFile = fopen(jobPath, "r");
@@ -122,4 +69,71 @@ int run(int argc, char *argv[]) {
 
     // hubieron errores en verificarArgumentos
     return 1;
+}
+
+int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data) {
+    if (argc > 3) {
+        // muchos argumentos
+        printf("Error: Hay más argumentos de los necesarios. Ingrese la "
+               "dirección del archivo y la cantidad de hilos a utilizar.\n");
+        return 0;
+
+    } else if (argc <= 1) {
+        // faltan argumentos
+        printf("Error: Hay menos argumentos de los necesarios. Ingrese la "
+               "dirección del archivo y la cantidad de hilos a utilizar.\n");
+        return 0;
+
+    } else {
+        if (argc == 2) {
+            int nucleos = sysconf(_SC_NPROCESSORS_ONLN);
+            shared_data->cantidadHilos = nucleos;
+            printf("No se ingresó cantidad de hilos, usando los %d núcleos de" 
+                " la máquina.\n", shared_data->cantidadHilos);
+        } else {
+            int cantidad = atoi(argv[2]);
+            if (cantidad <= 0) {
+                printf("Error: La cantidad de hilos debe ser un número "
+                                                        "entero positivo.\n");
+                return 0;
+            }
+
+            shared_data->cantidadHilos = cantidad;
+        }
+
+        return 1;
+    }
+}
+
+int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
+    if (jobFile == NULL) {
+        printf("Error: No se pudo abrir. Hay un error con el nombre o path "
+                "de su archivo.\n");
+        return 0;
+    } else {
+        // guardar de forma job###
+        // el nombreJob puede ser de un máximo de 250 chars
+        char* nombreJob = calloc(250, sizeof(char));
+        // buscar el / del job
+        char *base = strrchr(jobPath, '/');
+        if (base) {
+            // saltarse el /
+            base++;
+        } else {
+            base = jobPath;
+        }
+
+        // se le pasa el tamaño 250 porque es la longitud de nombreJob
+        strncpy(nombreJob, base, 250);
+
+        // eliminar la extensión .txt
+        char *punto = strrchr(nombreJob, '.');
+        if (punto && strcmp(punto, ".txt") == 0) {
+            // el punto se vuelve caracter nulo
+            *punto = '\0';
+        }
+
+        shared_data->nombreJob = nombreJob;
+        return 1;
+    }
 }

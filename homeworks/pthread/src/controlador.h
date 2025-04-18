@@ -16,6 +16,8 @@
 
  @param nombreJob Nombre del trabajo asociado a la simulación, extraído desde
   la ruta del archivo de entrada
+  @param cantidadHilos Cantidad de hilos que el usuario ingresa o la cantidad
+  de núcleos que tiene la computadora
 
  Esta estructura almacena información común que es utilizada en diferentes
   partes del programa. Principalmente, guarda el nombre base del archivo de
@@ -23,6 +25,7 @@
 */
 typedef struct shared_data {
   char* nombreJob;
+  int cantidadHilos;
 } shared_data_t;
 
 /**
@@ -76,6 +79,6 @@ int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data); //NOLI
  * @return int Retorna 1 si el número de argumentos es correcto, de lo contrario
  * retorna 0.
  */
-int verificar_argumentos(int argc);
+int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data);
 
 #endif
