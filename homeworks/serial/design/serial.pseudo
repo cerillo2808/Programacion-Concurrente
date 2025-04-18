@@ -1,20 +1,56 @@
 procedimiento main():
-  verificar_argumentos(inputs usuario)
+  run(inputs usuario)
 fin procedimiento
+
+procedimiento run(inputs usuario):
+    // inicializar memoria compartida
+    if (verificar_argumentos)
+        // si los argumentos son suficientes
+        if (guardar_job)
+            si el input del usuario es un archivo job valido
+            while (hayan lineas)
+                crear_plate(...)
+                // se crea una plate por cada archivo .bin que haya
+                temperaturas = leer_plate(shared_data, plate)
+                cambio_temperatura
+                // simulación
+                nombreBin(...)
+                // formatea el nombre del archivo
+                generar_archivo_binario(...)
+                nombreTsv(...)
+                // formatea el nombre del archivo
+                generar_archivo_tsv(...)
+            free(temperaturas)
+            // libera memoria que ocupa la simulación de un plate
+        fclose(jobFile)
+        free(shared_data)
+        // cierra el job, y libera memoria que ocupa el programa
+        return 0
+        // retorna que no hubo problemas
+    return 1
+    // retorna 1 cuando hubo algún error en ejecución
+
 
 procedimiento verificar_argumentos(inputs usuario):
-    if (input es archivo)
-        while (hayan lineas)
-            crear_plate(...)
-            // se crea una plate por cada archivo .bin que haya
+    if (hay 3 o más argumentos)
+        retorna 0
+        // el 0 significa false, o sea, hay un error
+    if (hay menos de 1 argumento)
+        retorna 0
+    retorna 1
+    // hay cantidad de argumentos correcta
 fin procedimiento
 
+procedimiento guardar_job(archivo, path, shared_data):
+    if (archivo es nulo)
+        retorna 0
+    else
+        guarda el path como job###
+        retorna 1
+fin procedimiento    
+
 procedimiento crear_plate(...):
-    for (todas las celdas)
-        matriz temperaturas = temperatura de celda
-        // se sube la temperatura de las cedas a una matriz
-    cambio_temperatura()
-    // se procede a empezar la simulación
+    guarda el contenido de la línea del job a los atributos del plate
 fin procedimiento
 
 procedimiento cambio_temperatura():
@@ -28,7 +64,14 @@ procedimiento cambio_temperatura():
             // la nueva temperatura se guarda en la matriz temporal
         matriz original = matriz temporal
         // después de cada iteración, se copia lo que está en la matriz temporal a la original
-    generar_archivo_binario()
-    generar_archivo_tsv()
-    // se generan los reportes
+fin procedimiento
+
+procedimiento nombreBin(...):
+    hace un char* con un nombre de forma plate###-k.bin, con k como el número de iteraciones
+    guarda el char* como atributo del plate
+fin procedimiento
+
+procedimiento nombreTsv(...):
+    hace un char* con el nombre job###.tsv
+    guarda el char* como atributo del plate
 fin procedimiento
