@@ -64,12 +64,29 @@ void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C,
  @return No tiene valor de retorno. El archivo TSV se actualiza con los datos
   proporcionados.
 */
-
 void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
                          Plate plate, double tiempoSegundos, int iteraciones);
 
+                         /**
+ @brief Genera el nombre del archivo binario de salida para una placa
+
+ @param plate Puntero a la estructura Plate que contiene los datos de la placa
+
+ Esta función crea un nombre de archivo binario con el formato
+  "nombre-iteraciones.bin", eliminando la extensión original `.bin` si está
+ presente. El resultado se guarda en el campo `nombreBin` de la estructura.
+*/
 void nombreBin(Plate* plate);
 
+/**
+ @brief Genera el nombre del archivo TSV de salida para una placa
+
+ @param plate Puntero a la estructura Plate que contiene los datos de la placa
+
+ Esta función crea un nombre de archivo TSV utilizando el nombre del trabajo
+  (almacenado en `nombreJob`), y le agrega la extensión `.tsv`. El nombre
+  resultante se guarda en el campo `nombreTsv` de la estructura.
+*/
 void nombreTsv(Plate* plate);
 
 #endif

@@ -19,6 +19,14 @@
   la iteración)
  @param R Número de filas de la placa
  @param C Número de columnas de la placa
+ @param iteraciones Cantidad de transferencias de calor para que la placa
+ llegue a equilibrio
+ @param nombreBin Nombre del archivo del binario, de forma: plate###.k.bin,
+ siendo la k la cantidad de iteraciones
+ @param nombreTsv Nombre del archivo del output, de forma: job###.tsv. Se guarda
+ en Plate porque cada placa ocupa actualizarlo después de la simulación
+ @param tiempoSegundos Lo que duró la simulación de la placa. Se calcula como
+ iteraciones*delta. Se mantiene como atributo para facilitar el output
 
  Esta estructura contiene todos los parámetros necesarios para simular el
   comportamiento térmico de una placa,
@@ -50,35 +58,48 @@ typedef struct {
     // número de columnas
 
     int iteraciones;
+    // cantidad de iteraciones necesarias para que la placa llegue a equilibrio
 
     char* nombreBin;
+    // nombre del archivo del binario, de forma: plate###-k.bin
+
     char* nombreTsv;
+    // nombre del archivo de output, de forma: job###.tsv
+
     double tiempoSegundos;
+    // calculado como iteraciones*delta
 } Plate;
 
 /**
- @brief Crea una plate utilizando la información proporcionada en @a linea y
-  @a nombreJob
- @param linea Cadena de caracteres que contiene la información para crear la
-  plate
- @param nombreJob Cadena de caracteres con el nombre del trabajo asociado
- @return Un código de error:
-   0 si la operación fue exitosa.
-   1 si ocurre un error al crear la plate
+ @brief Crea una nueva estructura Plate a partir de una línea de texto
+
+ @param linea Cadena de texto que contiene la información de la placa en el
+  formato esperado: nombreArchivo delta alfa h epsilon
+
+ @return Plate Estructura Plate inicializada con los datos extraídos de la
+  línea de texto
+
+ Esta función toma una línea de texto, la procesa utilizando `sscanf`, y
+  llena los campos de la estructura `Plate` con la información correspondiente.
+  Los campos `nombreArchivo`, `delta`, `alfa`, `h`, y `epsilon` se extraen
+  de la línea para configurar la placa de acuerdo a esos valores.
 */
 Plate crear_plate(const char *linea);
 
 /**
- @brief Lee los datos de una placa desde un archivo binario y los almacena en la
-  estructura @a plate
- @param nombreBin Cadena de caracteres que contiene el nombre del archivo
-  binario
- @param plate Puntero a la estructura Plate donde se almacenarán los datos
-  leídos
- @param bin Puntero al archivo binario abierto para lectura
- @return Un código de error:
-   0 si la operación fue exitosa.
-   1 si ocurre un error al abrir o leer el archivo
+ @brief Lee un archivo binario y carga la matriz de temperaturas en una placa
+
+ @param nombreJob Nombre del trabajo asociado a la simulación
+ @param plate Puntero a la estructura Plate que contiene los parámetros de la
+  placa a procesar
+
+ @return double* Puntero a un arreglo de temperaturas cargado desde el archivo
+  binario, o NULL si ocurre un error
+
+ Esta función abre el archivo binario correspondiente a la placa, lee las
+  dimensiones (filas y columnas) del archivo, y luego carga la matriz de
+  temperaturas en memoria. Si no se puede abrir el archivo o si hay un error
+  en la lectura, se imprime un mensaje de error y se retorna NULL.
 */
 double* leer_plate(const char *nombreJob, Plate *plate); // NOLINT
 

@@ -8,77 +8,77 @@
 
 void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C,
     double *temperaturas) {
-char rutaCompleta[512];
+    char rutaCompleta[512];
 
-// crear el directorio "output" si no existe
-mkdir("output", 0777);
+    // crear el directorio "output" si no existe
+    mkdir("output", 0777);
 
-// construir la ruta completa del archivo dentro de "output"
-snprintf(rutaCompleta, sizeof(rutaCompleta), "output/%s", nombre_archivo);
+    // construir la ruta completa del archivo dentro de "output"
+    snprintf(rutaCompleta, sizeof(rutaCompleta), "output/%s", nombre_archivo);
 
-FILE *archivo = fopen(rutaCompleta, "wb");
-if (archivo == NULL) {
-printf("Error al abrir el archivo bin para escritura.\n");
-return;
-}
+    FILE *archivo = fopen(rutaCompleta, "wb");
+    if (archivo == NULL) {
+        printf("Error al abrir el archivo bin para escritura.\n");
+        return;
+    }
 
-fwrite(&R, sizeof(uint64_t), 1, archivo);
-fwrite(&C, sizeof(uint64_t), 1, archivo);
-fwrite(temperaturas, sizeof(double), R * C, archivo);
+    fwrite(&R, sizeof(uint64_t), 1, archivo);
+    fwrite(&C, sizeof(uint64_t), 1, archivo);
+    fwrite(temperaturas, sizeof(double), R * C, archivo);
 
-fclose(archivo);
+    fclose(archivo);
 }
 
 void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
-Plate plate, double tiempoSegundos, int iteraciones) {
-char rutaCompleta[512];
-snprintf(rutaCompleta, sizeof(rutaCompleta), "%s/%s", directorio,
-nombreArchivo);
+    Plate plate, double tiempoSegundos, int iteraciones) {
+    char rutaCompleta[512];
+    snprintf(rutaCompleta, sizeof(rutaCompleta), "%s/%s", directorio,
+    nombreArchivo);
 
-FILE *tsvFile = fopen(rutaCompleta, "a");
-if (!tsvFile) {
-printf("Error: No se pudo abrir el archivo TSV para escritura en %s\n",
-rutaCompleta);
-return;
-}
+    FILE *tsvFile = fopen(rutaCompleta, "a");
+    if (!tsvFile) {
+        printf("Error: No se pudo abrir el archivo TSV para escritura en %s\n",
+        rutaCompleta);
+    return;
+    }
 
-char tiempo[512];
-format_time((time_t)tiempoSegundos, tiempo, sizeof(tiempo));
+    char tiempo[512];
+    format_time((time_t)tiempoSegundos, tiempo, sizeof(tiempo));
 
-fprintf(tsvFile, "%s\t", plate.nombreArchivo);
+    fprintf(tsvFile, "%s\t", plate.nombreArchivo);
 
-// formatear delta (sin decimales si es entero)
-if (plate.delta == (int64_t)plate.delta) {
-fprintf(tsvFile, "%ld\t", (int64_t)plate.delta);
-} else {
-fprintf(tsvFile, "%g\t", plate.delta);
-}
+    // formatear delta (sin decimales si es entero)
+    if (plate.delta == (int64_t)plate.delta) {
+        fprintf(tsvFile, "%ld\t", (int64_t)plate.delta);
+    } else {
+        fprintf(tsvFile, "%g\t", plate.delta);
+    }
 
-// formatear alfa (sin decimales si es entero)
-if (plate.alfa == (int64_t)plate.alfa) {
-fprintf(tsvFile, "%ld\t", (int64_t)plate.alfa);
-} else {
-fprintf(tsvFile, "%g\t", plate.alfa);
-}
+    // formatear alfa (sin decimales si es entero)
+    if (plate.alfa == (int64_t)plate.alfa) {
+        fprintf(tsvFile, "%ld\t", (int64_t)plate.alfa);
+    } else {
+        fprintf(tsvFile, "%g\t", plate.alfa);
+    }
 
-// formatear h (sin decimales si es entero)
-if (plate.h == (int64_t)plate.h) {
-fprintf(tsvFile, "%ld\t", (int64_t)plate.h);
-} else {
-fprintf(tsvFile, "%g\t", plate.h);
-}
+    // formatear h (sin decimales si es entero)
+    if (plate.h == (int64_t)plate.h) {
+        fprintf(tsvFile, "%ld\t", (int64_t)plate.h);
+    } else {
+        fprintf(tsvFile, "%g\t", plate.h);
+    }
 
-// formatear epsilon (notación científica si es muy pequeño)
-if (plate.epsilon < 0.0001) {
-fprintf(tsvFile, "%.1e\t", plate.epsilon);
-} else {
-fprintf(tsvFile, "%g\t", plate.epsilon);
-}
+    // formatear epsilon (notación científica si es muy pequeño)
+    if (plate.epsilon < 0.0001) {
+        fprintf(tsvFile, "%.1e\t", plate.epsilon);
+    } else {
+        fprintf(tsvFile, "%g\t", plate.epsilon);
+    }
 
-// escribir iteraciones y tiempo
-fprintf(tsvFile, "%d\t%s\n", iteraciones, tiempo);
+    // escribir iteraciones y tiempo
+    fprintf(tsvFile, "%d\t%s\n", iteraciones, tiempo);
 
-fclose(tsvFile); // NOLINT
+    fclose(tsvFile); // NOLINT
 }
 
 // Método copiado de la página del profesor Jeisson Hidalgo
@@ -105,6 +105,7 @@ void nombreBin(Plate* plate) {
     snprintf(nombre_con_iteraciones, 512, "%.*s-%d.bin", len, //NOLINT
                                      plate->nombreArchivo, plate->iteraciones);
 
+    // poner el resultado como atributo del plate
     plate->nombreBin = nombre_con_iteraciones;
 }
 
@@ -115,5 +116,6 @@ void nombreTsv(Plate* plate) {
     snprintf(nombre_final_tsv, 512, "%s%s", //NOLINT
              plate->nombreJob, ".tsv");
 
+    // poner el resultado como atributo del plate
     plate->nombreTsv = nombre_final_tsv;
 }

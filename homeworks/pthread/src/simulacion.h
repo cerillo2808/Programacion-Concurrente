@@ -20,12 +20,6 @@
  iteraciones es menor que el valor de epsilon especificado en la estructura
   plate.
 
- Al finalizar, genera dos archivos de salida:
-   1. Un archivo binario con el nombre del archivo original seguido de la
-    cantidad de iteraciones realizadas.
-   2. Un archivo .tsv con los resultados de la simulación, incluyendo el tiempo
-    transcurrido y el número de iteraciones.
-
  @return No tiene valor de retorno. Los resultados se guardan en los archivos
   generados.
 */
