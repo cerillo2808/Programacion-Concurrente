@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
+// declaro los structs que existen en controlador.h
+typedef struct shared_data shared_data_t;
+typedef struct private_data private_data_t;
+
 /**
  @brief Realiza la simulación de cambio de temperatura en una placa utilizando
   el método de diferencias finitas
@@ -23,6 +27,7 @@
  @return No tiene valor de retorno. Los resultados se guardan en los archivos
   generados.
 */
-void cambio_temperatura(double* temperaturas, Plate* plate);
+int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared_data);
+void* cambio_temperatura_hilos(void* arg);
 
 #endif

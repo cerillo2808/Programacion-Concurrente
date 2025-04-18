@@ -36,10 +36,30 @@ int run(int argc, char *argv[]) {
                 double *temperaturas = leer_plate(shared_data->nombreJob,
                                                                      &plate);
 
-                if (temperaturas != NULL) {
-                    // simular la dispersión del calor
-                    cambio_temperatura(temperaturas, &plate);
+                // inicializa private_data
+                private_data_t* private_data = (private_data_t*) calloc(
+                    shared_data->cantidadHilos, sizeof(private_data_t));
 
+                dividir_filas(private_data, shared_data, plate);
+
+                // asignarle las temperaturas a la memoria privada
+                for (int i = 0; i < shared_data->cantidadHilos; i++) {
+                    private_data[i].temperaturas = temperaturas;
+                }
+
+                // asignarle la plate a la memoria privada
+                for (int i = 0; i < shared_data->cantidadHilos; i++) {
+                    private_data[i].plate = &plate;
+                }
+
+                if (temperaturas != NULL) {
+
+                    // simular la dispersión del calor
+                    int iteraciones = cambio_temperatura(temperaturas, &plate, shared_data);
+                    if (iteraciones < 0) {
+                        printf("Error: Falló la simulación de transferencia de calor.\n");
+                        return 0;
+                    }
                     nombreBin(&plate);
 
                     generar_archivo_binario(plate.nombreBin, plate.R, plate.C,
@@ -57,6 +77,7 @@ int run(int argc, char *argv[]) {
                 free(plate.nombreBin);
                 free(plate.nombreTsv);
                 free(temperaturas);
+                free(private_data);
             }
 
             fclose(jobFile); //NOLINT
@@ -69,6 +90,22 @@ int run(int argc, char *argv[]) {
 
     // hubieron errores en verificarArgumentos
     return 1;
+}
+
+void dividir_filas(private_data_t* private_data, shared_data_t* shared_data,
+                                                                 Plate plate) {
+    // calcular los bloques de trabajo con mapeo estático
+    uint64_t filas_por_hilo = plate.R / shared_data->cantidadHilos;
+    uint64_t filas_extra = plate.R % shared_data->cantidadHilos;
+    uint64_t inicio = 0;
+    
+    // asignarle los bloques a la memoria privada de cada hilo
+    for (int i = 0; i < shared_data->cantidadHilos; i++) {
+        private_data[i].inicio = inicio;
+        private_data[i].final = inicio + filas_por_hilo +
+                                         ((uint64_t)i < filas_extra ? 1 : 0);
+        inicio = private_data[i].final;
+    }
 }
 
 int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data) {

@@ -10,6 +10,7 @@
 #include <inttypes.h>
 #include <time.h>
 #include <simulacion.h>
+#include <pthread.h>
 
 /**
  @brief Estructura que representa los datos compartidos del programa
@@ -26,7 +27,18 @@
 typedef struct shared_data {
   char* nombreJob;
   int cantidadHilos;
+  double cambio_maximo_global;
 } shared_data_t;
+
+typedef struct private_data {
+  uint64_t inicio;
+  uint64_t final;
+  double cambio_maximo_local;
+  double* temperaturas;
+  double* temperaturas_temporal;
+  Plate* plate;
+  shared_data_t shared_data;
+} private_data_t;
 
 /**
  * @brief Función principal de ejecución del programa.
@@ -80,5 +92,8 @@ int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data); //NOLI
  * retorna 0.
  */
 int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data);
+
+void dividir_filas(private_data_t* private_data, shared_data_t* shared_data,
+  Plate plate);
 
 #endif
