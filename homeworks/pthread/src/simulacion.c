@@ -14,7 +14,6 @@
 
 int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared_data) {
     int iteraciones = 0;
-    int equilibrio_alcanzado = 0;
 
     // Crear memoria para hilos
     pthread_t* hilos = malloc(shared_data->cantidadHilos * sizeof(pthread_t));
@@ -50,7 +49,6 @@ int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared
 
     do {
         iteraciones++;
-        equilibrio_alcanzado = 1;
 
         // Copiar temperaturas actuales a la matriz temporal
         memcpy(matriz_temporal, temperaturas, plate->R * plate->C * sizeof(double));
@@ -71,23 +69,20 @@ int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared
             }
         }
 
+        shared_data->cambio_maximo_global = 0.0;
+
         // Esperar hilos
         for (int i = 0; i < shared_data->cantidadHilos; i++) {
             pthread_join(hilos[i], NULL);
-        }
-
-        // Verificar equilibrio térmico
-        for (uint64_t i = 0; i < plate->R * plate->C; i++) {
-            if (fabs(temperaturas[i] - matriz_temporal[i]) >= plate->epsilon) {
-                equilibrio_alcanzado = 0;
-                break;
+            if (private_data[i].cambio_maximo_local > shared_data->cambio_maximo_global) {
+                shared_data->cambio_maximo_global = private_data[i].cambio_maximo_local;
             }
         }
 
         // Actualizar la matriz original
         memcpy(temperaturas, matriz_temporal, plate->R * plate->C * sizeof(double));
 
-    } while (!equilibrio_alcanzado);
+    } while (shared_data->cambio_maximo_global >= plate->epsilon);
 
     // Liberar recursos
     free(matriz_temporal);
@@ -106,6 +101,7 @@ void* cambio_temperatura_hilos(void* arg) {
     Plate* plate = private->plate;
     double* temp = private->temperaturas;
     double* temp_local = private->temperaturas_temporal;
+    double cambio_maximo_temporal = 0.0;
 
     uint64_t inicio = private->inicio;
     uint64_t final = private->final;
@@ -117,6 +113,7 @@ void* cambio_temperatura_hilos(void* arg) {
 
         if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
             temp_local[idx] = temp[idx];  // bordes fijos
+
         } else {
             double arriba = temp[(i - 1) * columnas + j];
             double abajo = temp[(i + 1) * columnas + j];
@@ -127,7 +124,13 @@ void* cambio_temperatura_hilos(void* arg) {
                 ((arriba + abajo + izq + der - 4.0 * temp[idx]) /
                 (plate->h * plate->h));
         }
-    }
+        double cambio = fabs(private->temperaturas_temporal[idx] - private->temperaturas[idx]);
 
+            if (cambio > cambio_maximo_temporal){
+                cambio_maximo_temporal = cambio;
+            }
+    }
+    private->cambio_maximo_local = cambio_maximo_temporal;
+    pthread_exit(NULL);
     return NULL;
 }
