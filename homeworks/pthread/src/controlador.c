@@ -105,9 +105,6 @@ void dividir_array(private_data_t* private_data, shared_data_t* shared_data, Pla
         private_data[i].final = inicio + elementos_por_hilo +
                                 ((uint64_t)i < elementos_extra ? 1 : 0);
         inicio = private_data[i].final;
-
-        // Depuración: imprimir los rangos asignados a cada hilo
-        printf("Hilo %d: inicio=%lu, final=%lu\n", i, private_data[i].inicio, private_data[i].final);
     }
 }
 
