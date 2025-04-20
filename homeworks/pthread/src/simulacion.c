@@ -32,7 +32,7 @@ int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared
     }
 
     // Asignar datos comunes
-    dividir_filas(private_data, shared_data, *plate);
+    dividir_array(private_data, shared_data, *plate);
     for (int i = 0; i < shared_data->cantidadHilos; i++) {
         private_data[i].plate = plate;
         private_data[i].temperaturas = temperaturas;
@@ -107,22 +107,25 @@ void* cambio_temperatura_hilos(void* arg) {
     double* temp = private->temperaturas;
     double* temp_local = private->temperaturas_temporal;
 
-    for (uint64_t i = private->inicio; i < private->final; i++) {
-        for (uint64_t j = 0; j < plate->C; j++) {
-            uint64_t idx = i * plate->C + j;
+    uint64_t inicio = private->inicio;
+    uint64_t final = private->final;
+    uint64_t columnas = plate->C;
 
-            if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
-                temp_local[idx] = temp[idx];  // bordes fijos
-            } else {
-                double arriba = temp[(i - 1) * plate->C + j];
-                double abajo = temp[(i + 1) * plate->C + j];
-                double izq = temp[i * plate->C + (j - 1)];
-                double der = temp[i * plate->C + (j + 1)];
+    for (uint64_t idx = inicio; idx < final; idx++) {
+        uint64_t i = idx / columnas;  // Fila correspondiente
+        uint64_t j = idx % columnas; // Columna correspondiente
 
-                temp_local[idx] = temp[idx] + plate->alfa * plate->delta *
-                    ((arriba + abajo + izq + der - 4.0 * temp[idx]) /
-                    (plate->h * plate->h));
-            }
+        if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
+            temp_local[idx] = temp[idx];  // bordes fijos
+        } else {
+            double arriba = temp[(i - 1) * columnas + j];
+            double abajo = temp[(i + 1) * columnas + j];
+            double izq = temp[i * columnas + (j - 1)];
+            double der = temp[i * columnas + (j + 1)];
+
+            temp_local[idx] = temp[idx] + plate->alfa * plate->delta *
+                ((arriba + abajo + izq + der - 4.0 * temp[idx]) /
+                (plate->h * plate->h));
         }
     }
 

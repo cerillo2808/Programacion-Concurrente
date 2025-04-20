@@ -40,8 +40,6 @@ int run(int argc, char *argv[]) {
                 private_data_t* private_data = (private_data_t*) calloc(
                     shared_data->cantidadHilos, sizeof(private_data_t));
 
-                dividir_filas(private_data, shared_data, plate);
-
                 // asignarle las temperaturas a la memoria privada
                 for (int i = 0; i < shared_data->cantidadHilos; i++) {
                     private_data[i].temperaturas = temperaturas;
@@ -92,19 +90,24 @@ int run(int argc, char *argv[]) {
     return 1;
 }
 
-void dividir_filas(private_data_t* private_data, shared_data_t* shared_data,
-                                                                 Plate plate) {
-    // calcular los bloques de trabajo con mapeo estático
-    uint64_t filas_por_hilo = plate.R / shared_data->cantidadHilos;
-    uint64_t filas_extra = plate.R % shared_data->cantidadHilos;
+void dividir_array(private_data_t* private_data, shared_data_t* shared_data, Plate plate) {
+    // Calcular el tamaño total del array
+    uint64_t total_elementos = plate.R * plate.C;
+
+    // Calcular los bloques de trabajo con mapeo estático
+    uint64_t elementos_por_hilo = total_elementos / shared_data->cantidadHilos;
+    uint64_t elementos_extra = total_elementos % shared_data->cantidadHilos;
     uint64_t inicio = 0;
-    
-    // asignarle los bloques a la memoria privada de cada hilo
+
+    // Asignar los bloques a la memoria privada de cada hilo
     for (int i = 0; i < shared_data->cantidadHilos; i++) {
         private_data[i].inicio = inicio;
-        private_data[i].final = inicio + filas_por_hilo +
-                                         ((uint64_t)i < filas_extra ? 1 : 0);
+        private_data[i].final = inicio + elementos_por_hilo +
+                                ((uint64_t)i < elementos_extra ? 1 : 0);
         inicio = private_data[i].final;
+
+        // Depuración: imprimir los rangos asignados a cada hilo
+        printf("Hilo %d: inicio=%lu, final=%lu\n", i, private_data[i].inicio, private_data[i].final);
     }
 }
 

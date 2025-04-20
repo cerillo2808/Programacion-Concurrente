@@ -93,7 +93,6 @@ int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data); //NOLI
  */
 int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data);
 
-void dividir_filas(private_data_t* private_data, shared_data_t* shared_data,
-  Plate plate);
+void dividir_array(private_data_t* private_data, shared_data_t* shared_data, Plate plate);
 
 #endif
