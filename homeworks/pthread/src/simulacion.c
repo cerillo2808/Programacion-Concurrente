@@ -65,7 +65,7 @@ int cambio_temperatura(double* temperaturas, Plate* plate,
         for (int i = 0; i < shared_data->cantidadHilos; i++) {
             if (pthread_create(&hilos[i], NULL, cambio_temperatura_hilos,
                                                      &private_data[i]) != 0) {
-                printf("Error: No se pudo crear el hilo %d\n", i);
+                printf("Error: No se pudo crear el hilo %d\n", i); //NOLINT
                 free(hilos);
                 free(private_data);
                 free(matriz_temporal);
@@ -80,7 +80,7 @@ int cambio_temperatura(double* temperaturas, Plate* plate,
             pthread_join(hilos[i], NULL);
             if (private_data[i].cambio_maximo_local >
                                          shared_data->cambio_maximo_global) {
-                shared_data->cambio_maximo_global = 
+                shared_data->cambio_maximo_global =
                                             private_data[i].cambio_maximo_local;
             }
         }
@@ -88,7 +88,6 @@ int cambio_temperatura(double* temperaturas, Plate* plate,
         // Actualizar la matriz original
         memcpy(temperaturas, matriz_temporal, plate->R * plate->C *
                                                              sizeof(double));
-
     } while (shared_data->cambio_maximo_global >= plate->epsilon);
 
     // Liberar recursos
@@ -115,8 +114,8 @@ void* cambio_temperatura_hilos(void* arg) {
     uint64_t columnas = plate->C;
 
     for (uint64_t idx = inicio; idx < final; idx++) {
-        uint64_t i = idx / columnas;  // Fila correspondiente
-        uint64_t j = idx % columnas; // Columna correspondiente
+        uint64_t i = idx / columnas;   // Fila correspondiente
+        uint64_t j = idx % columnas;  // Columna correspondiente
 
         if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
             temp_local[idx] = temp[idx];  // bordes fijos
@@ -134,7 +133,7 @@ void* cambio_temperatura_hilos(void* arg) {
         double cambio = fabs(private->temperaturas_temporal[idx] -
                                                  private->temperaturas[idx]);
 
-            if (cambio > cambio_maximo_temporal){
+            if (cambio > cambio_maximo_temporal) {
                 cambio_maximo_temporal = cambio;
             }
     }

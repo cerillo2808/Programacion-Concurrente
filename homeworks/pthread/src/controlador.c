@@ -19,7 +19,6 @@ int run(int argc, char *argv[]) {
                                                          sizeof(shared_data_t));
 
     if (verificar_argumentos(argc, argv, shared_data)) {
-
         char *jobPath = argv[1];
 
         FILE *jobFile = fopen(jobPath, "r");
@@ -51,7 +50,6 @@ int run(int argc, char *argv[]) {
                 }
 
                 if (temperaturas != NULL) {
-
                     // simular la dispersión del calor
                     int iteraciones = cambio_temperatura(temperaturas, &plate,
                                                                 shared_data);
@@ -128,7 +126,7 @@ int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data) {
         if (argc == 2) {
             int nucleos = sysconf(_SC_NPROCESSORS_ONLN);
             shared_data->cantidadHilos = nucleos;
-            printf("No se ingresó cantidad de hilos, usando los %d núcleos de" 
+            printf("No se ingresó cantidad de hilos, usando los %d núcleos de"
                 " la máquina.\n", shared_data->cantidadHilos);
         } else {
             int cantidad = atoi(argv[2]);
@@ -147,8 +145,8 @@ int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data) {
 
 int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
     if (jobFile == NULL) {
-        printf("Error: No se pudo abrir. Hay un error con el nombre o path "
-                "de su archivo.\n");
+        printf("Error: No se pudo abrir. Hay un error con el" //NOLINT
+                                             " nombre o path de su archivo.\n");
         return 0;
     } else {
         // guardar de forma job###
