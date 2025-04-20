@@ -35,20 +35,6 @@ int run(int argc, char *argv[]) {
                 double *temperaturas = leer_plate(shared_data->nombreJob,
                                                                      &plate);
 
-                // inicializa private_data
-                private_data_t* private_data = (private_data_t*) calloc(
-                    shared_data->cantidadHilos, sizeof(private_data_t));
-
-                // asignarle las temperaturas a la memoria privada
-                for (int i = 0; i < shared_data->cantidadHilos; i++) {
-                    private_data[i].temperaturas = temperaturas;
-                }
-
-                // asignarle la plate a la memoria privada
-                for (int i = 0; i < shared_data->cantidadHilos; i++) {
-                    private_data[i].plate = &plate;
-                }
-
                 if (temperaturas != NULL) {
                     // simular la dispersión del calor
                     int iteraciones = cambio_temperatura(temperaturas, &plate,
@@ -75,7 +61,6 @@ int run(int argc, char *argv[]) {
                 free(plate.nombreBin);
                 free(plate.nombreTsv);
                 free(temperaturas);
-                free(private_data);
             }
 
             fclose(jobFile); //NOLINT
