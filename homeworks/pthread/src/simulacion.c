@@ -114,11 +114,14 @@ void* cambio_temperatura_hilos(void* arg) {
     uint64_t columnas = plate->C;
 
     for (uint64_t idx = inicio; idx < final; idx++) {
-        uint64_t i = idx / columnas;   // Fila correspondiente
-        uint64_t j = idx % columnas;  // Columna correspondiente
+        // Fila correspondiente
+        uint64_t i = idx / columnas;
+        // Columna correspondiente
+        uint64_t j = idx % columnas;   
 
         if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
-            temp_local[idx] = temp[idx];  // bordes fijos
+            temp_local[idx] = temp[idx];
+            // los bordes no cambian, se copian directamente
 
         } else {
             double arriba = temp[(i - 1) * columnas + j];
@@ -138,6 +141,5 @@ void* cambio_temperatura_hilos(void* arg) {
             }
     }
     private->cambio_maximo_local = cambio_maximo_temporal;
-    pthread_exit(NULL);
     return NULL;
 }
