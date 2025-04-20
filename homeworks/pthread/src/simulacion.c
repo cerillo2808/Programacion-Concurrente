@@ -12,7 +12,8 @@
 #include <pthread.h>
 #include <controlador.h>
 
-int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared_data) {
+int cambio_temperatura(double* temperaturas, Plate* plate,
+                                                 shared_data_t* shared_data) {
     int iteraciones = 0;
 
     // Crear memoria para hilos
@@ -23,7 +24,8 @@ int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared
     }
 
     // Crear memoria para private_data
-    private_data_t* private_data = calloc(shared_data->cantidadHilos, sizeof(private_data_t));
+    private_data_t* private_data = calloc(shared_data->cantidadHilos,
+                                                     sizeof(private_data_t));
     if (private_data == NULL) {
         printf("Error: No se pudo asignar memoria para datos privados.\n");
         free(hilos);
@@ -51,7 +53,8 @@ int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared
         iteraciones++;
 
         // Copiar temperaturas actuales a la matriz temporal
-        memcpy(matriz_temporal, temperaturas, plate->R * plate->C * sizeof(double));
+        memcpy(matriz_temporal, temperaturas, plate->R * plate->C *
+                                                             sizeof(double));
 
         // Asignar puntero a la matriz temporal
         for (int i = 0; i < shared_data->cantidadHilos; i++) {
@@ -60,7 +63,8 @@ int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared
 
         // Crear hilos
         for (int i = 0; i < shared_data->cantidadHilos; i++) {
-            if (pthread_create(&hilos[i], NULL, cambio_temperatura_hilos, &private_data[i]) != 0) {
+            if (pthread_create(&hilos[i], NULL, cambio_temperatura_hilos,
+                                                     &private_data[i]) != 0) {
                 printf("Error: No se pudo crear el hilo %d\n", i);
                 free(hilos);
                 free(private_data);
@@ -74,13 +78,16 @@ int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared
         // Esperar hilos
         for (int i = 0; i < shared_data->cantidadHilos; i++) {
             pthread_join(hilos[i], NULL);
-            if (private_data[i].cambio_maximo_local > shared_data->cambio_maximo_global) {
-                shared_data->cambio_maximo_global = private_data[i].cambio_maximo_local;
+            if (private_data[i].cambio_maximo_local >
+                                         shared_data->cambio_maximo_global) {
+                shared_data->cambio_maximo_global = 
+                                            private_data[i].cambio_maximo_local;
             }
         }
 
         // Actualizar la matriz original
-        memcpy(temperaturas, matriz_temporal, plate->R * plate->C * sizeof(double));
+        memcpy(temperaturas, matriz_temporal, plate->R * plate->C *
+                                                             sizeof(double));
 
     } while (shared_data->cambio_maximo_global >= plate->epsilon);
 
@@ -124,7 +131,8 @@ void* cambio_temperatura_hilos(void* arg) {
                 ((arriba + abajo + izq + der - 4.0 * temp[idx]) /
                 (plate->h * plate->h));
         }
-        double cambio = fabs(private->temperaturas_temporal[idx] - private->temperaturas[idx]);
+        double cambio = fabs(private->temperaturas_temporal[idx] -
+                                                 private->temperaturas[idx]);
 
             if (cambio > cambio_maximo_temporal){
                 cambio_maximo_temporal = cambio;

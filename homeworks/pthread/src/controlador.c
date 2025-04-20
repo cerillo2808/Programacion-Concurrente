@@ -53,9 +53,11 @@ int run(int argc, char *argv[]) {
                 if (temperaturas != NULL) {
 
                     // simular la dispersión del calor
-                    int iteraciones = cambio_temperatura(temperaturas, &plate, shared_data);
+                    int iteraciones = cambio_temperatura(temperaturas, &plate,
+                                                                shared_data);
                     if (iteraciones < 0) {
-                        printf("Error: Falló la simulación de transferencia de calor.\n");
+                        printf("Error: Falló la simulación de transferencia de"
+                                                                " calor.\n");
                         return 0;
                     }
                     nombreBin(&plate);
@@ -90,7 +92,8 @@ int run(int argc, char *argv[]) {
     return 1;
 }
 
-void dividir_array(private_data_t* private_data, shared_data_t* shared_data, Plate plate) {
+void dividir_array(private_data_t* private_data, shared_data_t* shared_data,
+                                                                 Plate plate) {
     // Calcular el tamaño total del array
     uint64_t total_elementos = plate.R * plate.C;
 

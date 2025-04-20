@@ -27,7 +27,8 @@ typedef struct private_data private_data_t;
  @return No tiene valor de retorno. Los resultados se guardan en los archivos
   generados.
 */
-int cambio_temperatura(double* temperaturas, Plate* plate, shared_data_t* shared_data);
+int cambio_temperatura(double* temperaturas, Plate* plate,
+                                                   shared_data_t* shared_data);
 void* cambio_temperatura_hilos(void* arg);
 
 #endif
