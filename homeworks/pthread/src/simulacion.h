@@ -12,23 +12,41 @@ typedef struct shared_data shared_data_t;
 typedef struct private_data private_data_t;
 
 /**
- @brief Realiza la simulación de cambio de temperatura en una placa utilizando
-  el método de diferencias finitas
- @param temperaturas Arreglo de temperaturas actuales en la placa
- @param plate Estructura que contiene los parámetros de la placa, como
-  dimensiones y constantes de simulación
- Esta función realiza iteraciones de simulación para calcular el cambio de
-  temperatura en cada punto de la placa, 
- utilizando un método de diferencias finitas. La simulación se repite hasta que
-  el cambio máximo entre las 
- iteraciones es menor que el valor de epsilon especificado en la estructura
-  plate.
-
- @return No tiene valor de retorno. Los resultados se guardan en los archivos
-  generados.
-*/
+ * @brief Ejecuta la simulación de difusión térmica en una lámina utilizando
+ * múltiples hilos, hasta que el cambio máximo entre iteraciones sea menor
+ * que el umbral epsilon.
+ *
+ * @param temperaturas Puntero a la matriz de temperaturas de la lámina. Este
+ * arreglo se actualizará con los nuevos valores tras la simulación.
+ *
+ * @param plate Puntero a la estructura Plate, que contiene los parámetros
+ * físicos de la simulación como dimensiones, epsilon, y delta de tiempo.
+ *
+ * @param shared_data Puntero a la estructura shared_data_t, que contiene
+ * datos compartidos como la cantidad de hilos y el cambio máximo global.
+ *
+ * @return El número total de iteraciones realizadas durante la simulación.
+ * Retorna -1 si ocurre un error al asignar memoria o crear hilos.
+ */
 int cambio_temperatura(double* temperaturas, Plate* plate,
                                                    shared_data_t* shared_data);
+
+/**
+ * @brief Función ejecutada por cada hilo para calcular la difusión térmica
+ * en una sección de la lámina asignada.
+ *
+ * Cada hilo procesa un subconjunto de celdas de la matriz de temperaturas.
+ * Las celdas de borde se copian sin cambios, mientras que las internas se
+ * actualizan según el modelo de difusión. Al finalizar, se guarda el cambio
+ * máximo local detectado por el hilo.
+ *
+ * @param arg Puntero a una estructura private_data_t que contiene los datos
+ * necesarios para la simulación de este hilo, incluyendo los índices de
+ * inicio y fin, las matrices de temperatura y los parámetros físicos.
+ *
+ * @return Siempre retorna NULL. El resultado se almacena en la estructura
+ * private_data_t proporcionada.
+ */
 void* cambio_temperatura_hilos(void* arg);
 
 #endif

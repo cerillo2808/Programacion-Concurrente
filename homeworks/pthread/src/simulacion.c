@@ -117,7 +117,7 @@ void* cambio_temperatura_hilos(void* arg) {
         // Fila correspondiente
         uint64_t i = idx / columnas;
         // Columna correspondiente
-        uint64_t j = idx % columnas;   
+        uint64_t j = idx % columnas;
 
         if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
             temp_local[idx] = temp[idx];

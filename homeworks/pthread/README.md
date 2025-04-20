@@ -68,4 +68,6 @@ Puede ver los diagramas de diseño del presente programa en el siguiente [enlace
 # Créditos
 Makefile hecho por [Jeisson Hidalgo-Céspedes](https://jeisson.ecci.ucr.ac.cr/misc/Makefile).
 
+Formatear comentarios a estilo doxygen por ChatGPT.
+
 // Copyright 2025 Liqing Yosery Zheng Lu <liqing.zheng@ucr.ac.cr>

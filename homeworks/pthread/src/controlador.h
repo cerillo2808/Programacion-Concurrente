@@ -19,6 +19,8 @@
   la ruta del archivo de entrada
   @param cantidadHilos Cantidad de hilos que el usuario ingresa o la cantidad
   de núcleos que tiene la computadora
+  @param cambio_maximo_global Mayor cambio de temperatura detectado entre
+ iteraciones durante la simulación. Se usa como condición de convergencia.
 
  Esta estructura almacena información común que es utilizada en diferentes
   partes del programa. Principalmente, guarda el nombre base del archivo de
@@ -30,6 +32,25 @@ typedef struct shared_data {
   double cambio_maximo_global;
 } shared_data_t;
 
+/**
+ @brief Estructura que contiene los datos privados de cada hilo
+
+ @param inicio Índice inicial del rango de celdas que debe procesar el hilo
+ @param final Índice final (no inclusivo) del rango de celdas que debe
+ procesar el hilo
+ @param cambio_maximo_local Máximo cambio de temperatura encontrado por el
+ hilo en su rango asignado
+ @param temperaturas Puntero a la matriz original de temperaturas
+ @param temperaturas_temporal Puntero a la matriz temporal donde el hilo
+ almacena los nuevos valores calculados
+ @param plate Puntero a la estructura que contiene los parámetros físicos de
+ la simulación
+ @param shared_data Copia local de los datos compartidos del programa, útil
+ para acceso rápido dentro del hilo
+
+ Esta estructura encapsula toda la información necesaria para que cada hilo
+ ejecute su porción de la simulación térmica de manera independiente.
+*/
 typedef struct private_data {
   uint64_t inicio;
   uint64_t final;
@@ -93,6 +114,20 @@ int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data); //NOLI
  */
 int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data);
 
+/**
+ @brief Asigna de forma estática un rango de índices a cada hilo
+
+ @param private_data Arreglo de estructuras privadas que almacenan los
+ rangos asignados a cada hilo
+ @param shared_data Puntero a la estructura que contiene la cantidad de hilos
+ disponibles para la simulación
+ @param plate Estructura que contiene las dimensiones de la lámina que
+ determinan el tamaño total del arreglo de temperatura
+
+ Esta función distribuye equitativamente los índices del arreglo de
+ temperatura entre los hilos disponibles. Si el número de elementos no es
+ divisible de forma exacta, algunos hilos recibirán un elemento adicional.
+*/
 void dividir_array(private_data_t* private_data, shared_data_t* shared_data,
                                                                  Plate plate);
 
