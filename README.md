@@ -70,8 +70,18 @@ Según Dijkstra, un semáforo es un entero con signo que se puede incrementar co
 ### 17. Candado de lectura y escritura
 
 ### 18. Descomposición
+Identificación de tareas que se pueden hacer de manera indendiente, y que por ende, de manera paralela. Tiene una granularidad, que es la cantidad y tamaño de las tareas. 
+1. Granularidad fina: Hay muchas tareas pequeñas. Entre más trabajadores mejor, pero hay poca sincronización, poca comunicación.
+2. Granularidad gruesa: Pocas tareas grandes. Mejora la sincronización, porque los trabajadores pueden comunicarse entre ellos más frecuentemente.
+
+Hay diferentes técnicas para definir las unidades de descomposición.
+1. Recursiva: El problema se divide en subproblemas que son procesadas de manera concurrente.
+2. De datos: Se parte de manera equitativa el trabajo, el tiempo para conseguir la solución se vuelve más corta.
+3. Exploratoria: Los trabajadores buscan resolver el mismo problema, pero de diferentes maneras. No todos los trabajadores van a contribuir a la solución, porque en cuanto un trabajador lo logre, avisa a los demás para que se detengan. El tiempo para conseguir la solución no es lineal con la cantidad de trabajadores.
+4. Especulativa: Usando probabilidad, se procesa de manera concurrente la tarea actual y la tarea que se necesitará procesar en un futuro.
 
 ### 19. Mapeo
+
 
 ### 20. Incremento de velocidad (speedup)
 
