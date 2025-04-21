@@ -81,9 +81,12 @@ Hay diferentes técnicas para definir las unidades de descomposición.
 4. Especulativa: Usando probabilidad, se procesa de manera concurrente la tarea actual y la tarea que se necesitará procesar en un futuro.
 
 ### 19. Mapeo
-
+Técnica para descomponer el trabajo. La meta principal es asignar a cada trabajador una carga equitativa. Hay dos categorías prinicpales.
+1. Estático: Conocido como por bloque. A cada trabajador le asigna un rango, o bloque, de trabajos que tiene que realizar. Estos rangos son fijos.
+2. Dinámico: Se asigna la carga de trabajo en tiempo de ejecución. Toma en cuenta de que no todas las tareas toman la misma cantidad de tiempo. Cuando un trabajador se desocupa, empieza la siguiente tarea a realizar.
 
 ### 20. Incremento de velocidad (speedup)
+La división del tiempo serial entre el tiempo paralelo. Es la razón para saber qué tan rápido es la versión paralela.
 
 ### 21. Eficiencia
 
@@ -97,6 +100,7 @@ Hay diferentes técnicas para definir las unidades de descomposición.
 | # | Nombre | Descripción
 |---|---|---
 | 1 | [serial](homeworks/serial)| Simulación de calor
+| 2 | [pthread](homeworks/pthread) | Procesamiento paralelo de la simulación de calor
 
 # Pthreads
 | # | Semana | Tipo | Nombre | Descripción
