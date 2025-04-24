@@ -48,14 +48,14 @@ void Util::sleepFor(int milliseconds) {
 
 std::vector<std::string> Util::split(const std::string& text,
   const std::string& delim, bool trimEmpty) {
-  std::vector<std::string> tokens;
+  std::vector<std::string> tokens; //NOLINT
   // Util::tokenize(text, tokens, static_cast<size_t(std::string::*)(const
   // std::string&, size_t)>(&std::string::find_first_of), delim, trimEmpty);
   Util::tokenize(text, tokens, delim, trimEmpty);
   return tokens;
 }
 
-std::string Util::decodeURI(const std::string& uri) {
+std::string Util::decodeURI(const std::string& uri) { //NOLINT
   std::stringstream result;
   const size_t len = uri.length();
   // Traverse all chars in URI
