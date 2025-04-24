@@ -9,7 +9,7 @@ DispatcherTest::DispatcherTest(int dispatcherDelay)
 
 int DispatcherTest::run() {
   // Dispatch all the network messages we receive to their respective queues
-  this->consumeForever();
+  this->consumeLoop();
 
   // If we exited from the forever loop, the finish message was received
   // For this simulation is OK to propagate it to all the queues

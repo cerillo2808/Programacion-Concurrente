@@ -9,13 +9,14 @@
 #include "common.hpp"
 
 // Forward declarations
+class AssemblerTest;
 class ConsumerTest;
 class DispatcherTest;
 class ProducerTest;
 
 /**
  * @brief Controller class that simulates the message passing between
- * producer and cosumers through a dispatcher
+ * producer and consumers through a dispatcher.
  */
 class ProducerConsumerTest {
   DISABLE_COPY(ProducerConsumerTest);
@@ -31,6 +32,8 @@ class ProducerConsumerTest {
   int dispatcherDelay = 0;
   /// Delay of consumer to consume a package, negative for max random
   int consumerDelay = 0;
+  /// Probability of assembler to lose packages
+  double packageLossProbability = 0.0;
 
  private:
   /// Producer of the simulated network messages
@@ -39,6 +42,8 @@ class ProducerConsumerTest {
   DispatcherTest* dispatcher = nullptr;
   /// Consumers of the simulated network messages
   std::vector<ConsumerTest*> consumers;
+  /// Assembler that can lose network packages
+  AssemblerTest* assembler = nullptr;
 
  public:
   /// Constructor

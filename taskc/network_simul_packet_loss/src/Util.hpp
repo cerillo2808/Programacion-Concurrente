@@ -110,6 +110,15 @@ class Util {
    */
   static std::vector<std::string> split(const std::string& text,
     const std::string& delim = " ", bool trimEmpty = false);
+
+ public:  // Web operations
+  /**
+   * @brief Replace %xx hexadecimal codes by their ASCII symbols
+   * 
+   * @param uri A text containing escaped chars, e.g: "38%2C44%2c-90"
+   * @return A new text with original chars, e.g: "38,44,-90"
+   */
+  static std::string decodeURI(const std::string& uri);
 };
 
 #endif  // UTIL_HPP

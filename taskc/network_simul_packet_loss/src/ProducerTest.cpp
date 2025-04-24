@@ -13,7 +13,7 @@ ProducerTest::ProducerTest(size_t packageCount, int productorDelay
 
 int ProducerTest::run() {
   // Produce each asked message
-  for ( size_t index = 0; index < this->packageCount; ++index ) {
+  for (size_t index = 0; index < this->packageCount; ++index) {
     this->produce(this->createMessage(index));
   }
 

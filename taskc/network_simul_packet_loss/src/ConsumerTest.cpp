@@ -9,7 +9,7 @@ ConsumerTest::ConsumerTest(int consumerDelay)
 
 int ConsumerTest::run() {
   // Start the forever loop to consume all the messages that arrive
-  this->consumeForever();
+  this->consumeLoop();
 
   // If the forever loop finished, no more messages will arrive
   // Print statistics

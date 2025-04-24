@@ -4,6 +4,7 @@
 #define CONSUMER_HPP
 
 #include <cassert>
+#include <climits>
 
 #include "Queue.hpp"
 #include "Thread.hpp"
@@ -33,14 +34,14 @@ class Consumer : public virtual Thread {
   /// @see stopCondition
   explicit Consumer(Queue<DataType>* consumingQueue = nullptr
     , const DataType& stopCondition = DataType()
-    , bool createOwnQueue = false)
+    , bool createOwnQueue = false, unsigned queueCapacity = SEM_VALUE_MAX)
     : consumingQueue(consumingQueue)
     , stopCondition(stopCondition)
     , ownsQueue(createOwnQueue) {
     // Error if asked to create own queue and provided an existing one to use
     assert(!(createOwnQueue && consumingQueue));
     if (createOwnQueue) {
-      this->createOwnQueue();
+      this->createOwnQueue(queueCapacity);
     }
   }
 
@@ -62,21 +63,21 @@ class Consumer : public virtual Thread {
   }
 
   /// Creates a new empty queue owned by this consumer
-  void createOwnQueue() {
+  void createOwnQueue(unsigned capacity = SEM_VALUE_MAX) {
     assert(this->consumingQueue == nullptr);
-    this->consumingQueue = new Queue<DataType>();
+    this->consumingQueue = new Queue<DataType>(capacity);
     this->ownsQueue = true;
   }
 
   /// Consumes from its queue, util the stop condition is popped
   /// For each data consumed, the @a consume method will be called
-  virtual void consumeForever() {
+  virtual void consumeLoop() {
     assert(this->consumingQueue);
     while (true) {
       // Get the next data to consume, or block while queue is empty
       const DataType& data = this->consumingQueue->dequeue();
       // If data is the stop condition, stop the loop
-      if ( data == this->stopCondition ) {
+      if (data == this->stopCondition) {
         break;
       }
       // Process this data

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "ProducerConsumerTest.hpp"
+#include "AssemblerTest.hpp"
 #include "ConsumerTest.hpp"
 #include "DispatcherTest.hpp"
 #include "ProducerTest.hpp"
@@ -16,6 +17,7 @@ const char* const usage =
   "  prod_delay  delay of producer to create a package\n"
   "  disp_delay  delay of dispatcher to dispatch a package\n"
   "  cons_delay  delay of consumer to consume a package\n"
+  "  loss_prob   probability to loss packages [0, 100]\n"
   "\n"
   "Delays are in milliseconds, negatives are maximums for random delays\n";
 
@@ -25,6 +27,7 @@ ProducerConsumerTest::~ProducerConsumerTest() {
   for (ConsumerTest* consumer : this->consumers) {
     delete consumer;
   }
+  delete this->assembler;
 }
 
 int ProducerConsumerTest::start(int argc, char* argv[]) {
@@ -45,8 +48,8 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
 }
 
 int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
-  // 5 + 1 arguments are mandatory
-  if (argc != 6) {
+  // 6 + 1 arguments are mandatory
+  if (argc != 7) {
     std::cout << usage;
     return EXIT_FAILURE;
   }
@@ -56,13 +59,14 @@ int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
   this->productorDelay = std::atoi(argv[index++]);
   this->dispatcherDelay = std::atoi(argv[index++]);
   this->consumerDelay = std::atoi(argv[index++]);
+  this->packageLossProbability = std::atof(argv[index++]);
   // TODO(any): Validate that given arguments are fine
   return EXIT_SUCCESS;
 }
 
 void ProducerConsumerTest::createThreads() {
   this->producer = new ProducerTest(this->packageCount, this->productorDelay
-    , this->consumerCount);
+    , this->consumerCount + 1);
   this->dispatcher = new DispatcherTest(this->dispatcherDelay);
   this->dispatcher->createOwnQueue();
   // Create each consumer
@@ -72,6 +76,9 @@ void ProducerConsumerTest::createThreads() {
     assert(this->consumers[index]);
     this->consumers[index]->createOwnQueue();
   }
+  this->assembler = new AssemblerTest(this->consumerDelay,
+      this->packageLossProbability, this->consumerCount + 1);
+  this->assembler->createOwnQueue();
 }
 
 void ProducerConsumerTest::connectQueues() {
@@ -82,6 +89,10 @@ void ProducerConsumerTest::connectQueues() {
     this->dispatcher->registerRedirect(index + 1
       , this->consumers[index]->getConsumingQueue());
   }
+  this->dispatcher->registerRedirect(this->consumerCount + 1
+      , this->assembler->getConsumingQueue());
+  // Assembler returns packages that were not lost to the dispatcher
+  this->assembler->setProducingQueue(this->dispatcher->getConsumingQueue());
 }
 
 void ProducerConsumerTest::startThreads() {
@@ -90,6 +101,7 @@ void ProducerConsumerTest::startThreads() {
   for (size_t index = 0; index < this->consumerCount; ++index) {
     this->consumers[index]->startThread();
   }
+  this->assembler->startThread();
 }
 
 void ProducerConsumerTest::joinThreads() {
@@ -98,4 +110,5 @@ void ProducerConsumerTest::joinThreads() {
   for (size_t index = 0; index < this->consumerCount; ++index) {
     this->consumers[index]->waitToFinish();
   }
+  this->assembler->waitToFinish();
 }

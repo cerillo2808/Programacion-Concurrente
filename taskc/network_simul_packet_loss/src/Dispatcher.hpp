@@ -47,7 +47,7 @@ class Dispatcher : public Consumer<DataType> {
   void consume(DataType data) override {
     const KeyType& key = this->extractKey(data);
     const auto& itr = this->toQueues.find(key);
-    if ( itr == this->toQueues.end() ) {
+    if (itr == this->toQueues.end()) {
       throw std::runtime_error("dispatcher: queue's key not found");
     }
     itr->second->enqueue(data);

@@ -3,6 +3,7 @@
 #include <chrono>
 #include <mutex>
 #include <random>
+#include <sstream>
 #include <thread>
 
 #include "Util.hpp"
@@ -52,4 +53,28 @@ std::vector<std::string> Util::split(const std::string& text,
   // std::string&, size_t)>(&std::string::find_first_of), delim, trimEmpty);
   Util::tokenize(text, tokens, delim, trimEmpty);
   return tokens;
+}
+
+std::string Util::decodeURI(const std::string& uri) {
+  std::stringstream result;
+  const size_t len = uri.length();
+  // Traverse all chars in URI
+  for (size_t pos = 0; pos < len; ++pos) {
+    switch (uri[pos]) {
+      case '%':
+        // Decode %xx hexadecimal substrings to their respective ASCII char
+        if (pos + 2 < len) {
+          const char hex[] { uri[pos + 1], uri[pos + 2], '\0' };  // e.g: "2C"
+          result << static_cast<char>(std::strtol(hex, nullptr, 16));  // ','
+          pos += 2;  // Skip two chars, ++pos in for moves to char after %xx
+        }
+        break;
+      case '+':  // Web ask to scape white spaces with + chars
+        result << ' ';
+        break;
+      default:  // All other chars are un-scaped
+        result << uri[pos];
+    }
+  }
+  return result.str();
 }
