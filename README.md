@@ -124,3 +124,4 @@ La división del tiempo serial entre el tiempo paralelo. Es la razón para saber
 | 17 | 5 | Ejemplo | [prod_cons_bound](examples/pthreads/prod_cons_bound/) | Productor y consumidor regulan sus acciones a través de semáforos. El buffer que tienen es limitado.
 | 18 | 5 | Ejemplo | [prod_cons_unbound](examples/pthreads/prod_cons_unbound/) | El buffer se asume como ilimitado.
 | 19 | 6 | Taskc | [network_simul_packet_loss](taskc/network_simul_packet_loss/) | Simulación de red con pérdida de paquetes.
+| 20 | 6 | Taskc | [network_simul_packet_loss2](taskc/network_simul_packet_loss2/) | Modificación de network_simul_packet_loss con porcentaje de pérdida afectando a todos los paquetes.

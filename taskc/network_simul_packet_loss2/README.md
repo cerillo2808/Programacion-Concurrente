@@ -10,3 +10,11 @@ Modifique su solución al [network_simul_packet_loss](../network_simul_packet_lo
 (e) controlador de la simulación?
 
 # Comentarios
+
+En total, modifiqué 6 líneas.
+- Repartidor: 1
+- Consumidor: 1
+- Ensamblador: 2
+- Controlador: 1
+
+La modularización de los archivos es muy importante para poder hacer cambios relevantes sin tener que modificar mucho código.
