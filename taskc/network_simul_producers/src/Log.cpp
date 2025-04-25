@@ -26,7 +26,7 @@ void Log::start(const std::string& logFilename) {
   // If filename is empty, use stdout
   if (logFilename.empty()) {
     // Adapted from https://stackoverflow.com/a/366969
-    this->output.rdbuf(std::cout.rdbuf());
+    this->output.rdbuf(std::cout.rdbuf()); //NOLINT
     this->filename = "(stdout)";
   } else {
     assert(this->file.is_open() == false);
@@ -45,7 +45,7 @@ void Log::stop() {
 }
 
 void Log::write(Log::MessageType type, const std::string& category
-  , const std::string& text) {
+  , const std::string& text) { //NOLINT
   this->mutex.lock();
 
   this->output << MESSAGE_TYPE_TEXT[type]
