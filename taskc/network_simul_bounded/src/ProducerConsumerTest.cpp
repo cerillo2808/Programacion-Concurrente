@@ -51,7 +51,7 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
 
 int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
   // 7 + 1 arguments are mandatory
-  if (argc != 8) {
+  if (argc < 8) {
     std::cout << usage;
     return EXIT_FAILURE;
   }
@@ -64,6 +64,9 @@ int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
   this->dispatcherDelay = std::atoi(argv[index++]);
   this->consumerDelay = std::atoi(argv[index++]);
   this->packageLossProbability = std::atof(argv[index++]);
+  if (argc >= 9) {
+    this->queueCapacity = std::strtoul(argv[index++], nullptr, 10);
+  }
   // TODO(any): Validate that given arguments are fine
   return EXIT_SUCCESS;
 }
@@ -81,17 +84,17 @@ void ProducerConsumerTest::createThreads() {
     assert(this->producers[index]);
   }
   this->dispatcher = new DispatcherTest(this->dispatcherDelay);
-  this->dispatcher->createOwnQueue();
+  this->dispatcher->createOwnQueue(this->queueCapacity);
   // Create each consumer
   this->consumers.resize(this->consumerCount);
   for (size_t index = 0; index < this->consumerCount; ++index) {
     this->consumers[index] = new ConsumerTest(this->consumerDelay);
     assert(this->consumers[index]);
-    this->consumers[index]->createOwnQueue();
+    this->consumers[index]->createOwnQueue(this->queueCapacity);
   }
   this->assembler = new AssemblerTest(this->consumerDelay,
       this->packageLossProbability, this->consumerCount);
-  this->assembler->createOwnQueue();
+  this->assembler->createOwnQueue(this->queueCapacity);
 }
 
 void ProducerConsumerTest::connectQueues() {

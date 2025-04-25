@@ -5,8 +5,7 @@
 #include "Util.hpp"
 
 ProducerTest::ProducerTest(size_t packageCount, int productorDelay
-  , size_t consumerCount, const size_t producerNumber
-  , const size_t producerCount,
+  , size_t consumerCount, const size_t producerNumber, const size_t producerCount,
   long long& remainingPackageToProduce,
   std::mutex& canAccessRemainingPackageToProduce)
   : packageCount(packageCount)

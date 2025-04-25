@@ -3,6 +3,7 @@
 #ifndef PRODUCERCONSUMERTEST_HPP
 #define PRODUCERCONSUMERTEST_HPP
 
+#include <climits>
 #include <cstddef>
 #include <mutex>
 #include <vector>
@@ -37,6 +38,8 @@ class ProducerConsumerTest {
   int consumerDelay = 0;
   /// Probability of assembler to lose packages
   double packageLossProbability = 0.0;
+  /// Default capacity of all queues
+  unsigned queueCapacity = SEM_VALUE_MAX;
 
  private:
   /// Shared counter for producers
