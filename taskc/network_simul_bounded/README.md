@@ -4,3 +4,4 @@ Modifique la simulación de red para recibir en un argumento de línea de comand
 Corra su simulación de red con diferentes límites en las colas ¿Se afecta el tiempo de ejecución?
 
 # Comentarios
+Sí, el programa dura mucho más si el límite de la cola es grande.
