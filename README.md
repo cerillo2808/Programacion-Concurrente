@@ -125,3 +125,4 @@ La división del tiempo serial entre el tiempo paralelo. Es la razón para saber
 | 18 | 5 | Ejemplo | [prod_cons_unbound](examples/pthreads/prod_cons_unbound/) | El buffer se asume como ilimitado.
 | 19 | 6 | Taskc | [network_simul_packet_loss](taskc/network_simul_packet_loss/) | Simulación de red con pérdida de paquetes.
 | 20 | 6 | Taskc | [network_simul_packet_loss2](taskc/network_simul_packet_loss2/) | Modificación de network_simul_packet_loss con porcentaje de pérdida afectando a todos los paquetes.
+| 21 | 6 | Taskc | [network_simul_producers](taskc/network_simul_packet_loss2/) | Modificación de network_simul_packet_loss para que el usuario pueda ingresar cantidad de productores que trabajan concurrentemente.
