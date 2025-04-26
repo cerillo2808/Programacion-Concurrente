@@ -64,10 +64,13 @@ Según Dijkstra, un semáforo es un entero con signo que se puede incrementar co
 3. Los hilos desbloqueados por el semáforo siguen una tendencia indeterminística. No se sabe en qué orden los hilos van a ser desbloqueados.
 
 ### 15. Barrera
+Mecanismo de sincronización para hacer que múltiples hilos lleguen a un mismo destino antes de continuar ejecutándose. Útil para procesos en donde hilos necesitan compartirse información pero aún no han terminado su tarea.
 
 ### 16. Variable de condición
+Mecanismo de sincronización para que múltiples hilos esperen hasta que se cumpla una condición específica. Necesita ser utilizado con mútex para evitar condiciones de carrera.
 
 ### 17. Candado de lectura y escritura
+Múltiples hilos pueden leer una misma variable a la vez, pero sólo una puede escribir a la vez. Esto evita condiciones de carrera, pero no limita tanto a la concurrencia porque permite la lectura.
 
 ### 18. Descomposición
 Identificación de tareas que se pueden hacer de manera indendiente, y que por ende, de manera paralela. Tiene una granularidad, que es la cantidad y tamaño de las tareas. 
