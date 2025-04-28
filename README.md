@@ -89,9 +89,10 @@ Técnica para descomponer el trabajo. La meta principal es asignar a cada trabaj
 2. Dinámico: Se asigna la carga de trabajo en tiempo de ejecución. Toma en cuenta de que no todas las tareas toman la misma cantidad de tiempo. Cuando un trabajador se desocupa, empieza la siguiente tarea a realizar.
 
 ### 20. Incremento de velocidad (speedup)
-La división del tiempo serial entre el tiempo paralelo. Es la razón para saber qué tan rápido es la versión paralela.
+La división del tiempo serial entre el tiempo paralelo. Es la razón para saber qué tan más acelerado es la versión paralela. Sólo considera los tiempos de ejecución, no los recursos que se utilizaron.
 
 ### 21. Eficiencia
+Es el speedup, pero considera los recursos que se utilizaron para lograr un mejor desempeño. Siempre es un valor entre 0 (no eficiente). y 1 (muy eficiente). Se calcula como speedup entre cantidad de hilos.
 
 ### 22. Comunicación punto a punto entre procesos
 
