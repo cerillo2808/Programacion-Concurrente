@@ -66,11 +66,11 @@ end procedure
 
 1. ¿Cuál es el valor más grande que la variable compartida count podría llegar a obtener? ¿En qué rutas de ejecución se alcanza este valor?
 
-R/
+R/ 
 
 2. ¿Cuál es el menor valor que la variable compartida count podría llegar a obtener? ¿En qué rutas de ejecución se alcanza este valor?
 
-R/
+R/ 
 
 ## 3. Signaling
 Haga que la instrucción `a1` se ejecute siempre antes que la instrucción `b1`. Esto es, que un hilo envíe una señal (aviso) a otro (signaling).
