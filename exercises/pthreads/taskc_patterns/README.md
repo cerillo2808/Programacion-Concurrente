@@ -5,9 +5,12 @@
   - [1. Rutas de ejecución](#1-rutas-de-ejecución)
     - [Respuesta](#respuesta)
   - [2. Rutas de ejecución extremas](#2-rutas-de-ejecución-extremas)
+    - [Respuestas](#respuestas)
   - [3. Signaling](#3-signaling)
     - [3.1. 2 hilos](#31-2-hilos)
+      - [Respuesta](#respuesta-1)
     - [3.2. 3 hilos](#32-3-hilos)
+      - [Respuesta](#respuesta-2)
     - [3.3. w hilos](#33-w-hilos)
   - [4. Encuentro (rendezvous)](#4-encuentro-rendezvous)
     - [4.1. Ejercicio: Encuentro de ajedrez](#41-ejercicio-encuentro-de-ajedrez)
@@ -63,6 +66,7 @@ procedure secondary()
   end for
 end procedure
 ````
+### Respuestas
 
 1. ¿Cuál es el valor más grande que la variable compartida count podría llegar a obtener? ¿En qué rutas de ejecución se alcanza este valor?
 
@@ -93,6 +97,25 @@ procedure thread_b()
 end procedure
 ````
 
+#### Respuesta
+````
+procedure main()
+    shared a1_ready := create_semaphore(0) // can_run_b1
+    create_thread(thread_a)
+    create_thread(thread_b)
+end procedure
+
+procedure thread_a()
+    statement a1
+    signal(a1_ready)
+end procedure
+
+procedure thread_b()
+    wait(a1_ready)
+    statement b1
+end procedure
+````
+
 ### 3.2. 3 hilos
 Haga que la instrucción `a1` se ejecute siempre antes que la instrucción `b1` y ésta siempre se ejecute antes que la instrucción `c1`. Este orden de ejecución puede abreviarse como `a1 < b1 < c1`.
 
@@ -115,6 +138,9 @@ procedure thread_c()
   statement c1
 end procedure
 ````
+
+#### Respuesta
+Resuelto la clase pasada en: [signaling_3](/exercises/pthreads/signaling_3)
 
 ### 3.3. w hilos
 Generalice el patrón de aviso (signaling) para dada una cantidad arbitraria `w` de hilos que ejecutan la instrucción `a`, lo hagan en el orden del número de hilo. Por ejemplo, si `ai` es la ejecución de la instrucción `statement a` por parte del hilo con número `i`, entonces se asegure que siempre se ejecute la secuencia `a0 < a1 < a2 < a3 < …​ < aw`.
