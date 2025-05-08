@@ -132,3 +132,4 @@ Es el speedup, pero considera los recursos que se utilizaron para lograr un mejo
 | 21 | 6 | Taskc | [network_simul_producers](taskc/network_simul_packet_loss2/) | Modificación de network_simul_packet_loss para que el usuario pueda ingresar cantidad de productores que trabajan concurrentemente.
 | 22 | 6 | Taskc | [network_simul_bounded](taskc/network_simul_bounded/) | Modificación de network_simul_packet_loss para que el usuario pueda introducir la máxima cantidad de paquetes en cada cola.
 | 23 | 8 | Ejercicio | [signaling_3](exercises/pthreads/signaling_3/) | Red de petri y pseudocódigo para que tres hilos se ejecuten en un orden específico.
+| 24 | 8 | Ejercicio | [taskc_patterns](exercises/pthreads/taskc_patterns/readme.adoc) | Patrones básicos de concurrencia de tareas.
