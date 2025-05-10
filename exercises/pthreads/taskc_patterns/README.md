@@ -43,11 +43,31 @@ end procedure
 ````
 
 ### Respuesta
-Ruta 1
+Ruta 1 <br>
+Salida estándar: 5 <br>
+Valor final: 7
 ````
-instr 1
-instr 2
-instr ...
+x :=5
+print(x)
+x :=7
+````
+
+Ruta 2 <br>
+Salida estándar: 7 <br>
+Valor final: 7
+````
+x :=5
+x :=7
+print(x)
+````
+
+Ruta 3 <br>
+Salida estándar: 5 <br>
+Valor final: 5
+````
+x :=7
+x :=5
+print(x)
 ````
 
 ## 2. Rutas de ejecución extremas
@@ -70,11 +90,11 @@ end procedure
 
 1. ¿Cuál es el valor más grande que la variable compartida count podría llegar a obtener? ¿En qué rutas de ejecución se alcanza este valor?
 
-R/ 
+R/ Cada hilo hace 101 incrementos, y hay 100 hilos. En total, la variable compartida podría llegar a 101*100=10100. Se alcanza este valor cuando los hilos se ejecutan en orden, o bien, cuando no hay condiciones de carrera.
 
 2. ¿Cuál es el menor valor que la variable compartida count podría llegar a obtener? ¿En qué rutas de ejecución se alcanza este valor?
 
-R/ 
+R/ El menor valor es 101 y sucedería cuando todos los hilos se ejecutan a la vez y sobreescriben el mismo valor.
 
 ## 3. Signaling
 Haga que la instrucción `a1` se ejecute siempre antes que la instrucción `b1`. Esto es, que un hilo envíe una señal (aviso) a otro (signaling).
@@ -158,7 +178,21 @@ end procedure
 
 Una solución a este problema se había hecho antes en el curso ¿recuerda en cuál ejemplo?
 
-R/
+R/ [hello_order_semaphor](/examples/pthreads/hello_order_semaphor/), donde se usa un arreglo de semáforos.
+````
+procedure main()
+  shared semaphores[0..w-1] := [1, 0, 0, ..., 0] // el semáforo 0 inicia desbloqueado
+  input shared thread_count
+  create_threads(thread_count, secondary)
+end procedure
+
+procedure secondary(thread_number)
+  wait(semaphores[thread_number])
+  statement a
+  if thread_number + 1 < thread_count
+    signal(semaphores[thread_number + 1])
+end procedure
+````
 
 ## 4. Encuentro (rendezvous)
 Haga que la instrucción `a1` y `b1` se ejecuten siempre antes que las instrucciones `a2` y `b2`. Este problema tiene el nombre francés rendezvous  que significa encuentro en un punto de ejecución, y ninguno de los dos hilos pueden continuar su ejecución hasta que el otro haya llegado. Nota: Puede crear varias soluciones a este problema.
@@ -176,6 +210,30 @@ end procedure
 
 procedure thread_b()
   statement b1
+  statement b2
+end procedure
+````
+
+#### Respuesta
+````
+procedure main()
+  create_thread(thread_a)
+  create_thread(thread_b)
+  shared sem_a := create_semaphore(0)
+  shared sem_b := create_semaphore(0)
+end procedure
+
+procedure thread_a()
+  statement a1
+  signal(sem_a)       // a1_done
+  wait(sem_b)         // wait_b1
+  statement a2
+end procedure
+
+procedure thread_b()
+  statement b1
+  signal(sem_b)       // b1_done
+  wait(sem_a)         // wait_a1
   statement b2
 end procedure
 ````
@@ -213,6 +271,57 @@ procedure referee()
   set_clock()
 end procedure
 ````
+
+#### Respuesta
+````
+procedure main()
+  shared players_ready_count := 0
+  shared mutex := semaphore(1)
+  shared players_ready := semaphore(0)     // usado por referee
+  shared clock_ready := semaphore(0)       // usado por jugadores
+
+  create_thread(player1)
+  create_thread(player2)
+  create_thread(referee)
+end procedure
+
+procedure player1()
+  enter_room()
+
+  wait(mutex)
+  players_ready_count := players_ready_count + 1
+  if players_ready_count = 2 then
+    signal(players_ready) // avisa al referee que ambos jugadores han llegado
+  end if
+  signal(mutex)
+
+  wait(clock_ready) // espera a que el árbitro haya puesto el reloj
+  play_chess()
+end procedure
+
+procedure player2()
+  enter_room()
+
+  wait(mutex)
+  players_ready_count := players_ready_count + 1
+  if players_ready_count = 2 then
+    signal(players_ready)
+  end if
+  signal(mutex)
+
+  wait(clock_ready)
+  play_chess()
+end procedure
+
+procedure referee()
+  enter_room()
+  wait(players_ready)  // espera hasta que ambos jugadores estén listos
+  set_clock()
+  signal(clock_ready)
+  signal(clock_ready)  // señal para ambos jugadores
+end procedure
+````
+
 ## 5. Exclusión mutua con semáforos (mutex)
 ### 5.1 Asimétrica [sem_mutex_asym]
 Agregue semáforos al pseudocódigo siguiente para forzar a que los incrementos en los hilos se hagan con exclusión mutua.
@@ -235,6 +344,29 @@ end procedure
 
 > Un semáforo inicializado en 1 y que nunca supera este valor, es un semáforo binario. Es equivalente a un mutex excepto que no tiene dueño (ownership). Cuando el semáforo tiene el valor 1 indica que el mutex está disponible, y el valor 0 que está bloqueado. Se diferencia en que un mutex nunca supera el valor 1, mientras que un semáforo técnicamente puede hacerlo, y de que un mutex sólo puede ser incrementado por el mismo thread que lo decrementó.
 
+#### Respuesta
+````
+procedure main()
+  shared count := 0
+  shared mutex := semaphore(1)  // semáforo binario para exclusión mutua
+
+  create_thread(thread_a)
+  create_thread(thread_b)
+end procedure
+
+procedure thread_a()
+  wait(mutex)
+  count := count + 1
+  signal(mutex)
+end procedure
+
+procedure thread_b()
+  wait(mutex)
+  count := count + 1
+  signal(mutex)
+end procedure
+````
+
 ### 5.2 Simétrica [sem_mutex_sym]
 Note que en la actividad anterior ambos threads ejecutaban el código en subrutinas distintas, a lo que se le llama una solución asimétrica (separación de asuntos o concurrencia de tareas). Sin embargo, el código de las subrutinas era el mismo y por tanto podría convertirse en una solución simétrica. En una solución simétrica los hilos ejecutan el mismo código, es decir, la misma subrutina.
 
@@ -250,6 +382,23 @@ end procedure
 procedure secondary()
   // Critical section
   count := count + 1
+end procedure
+````
+
+#### Respuesta
+````
+procedure main()
+  shared count := 0
+  shared mutex := semaphore(1)  // Semáforo binario
+  input const thread_count
+
+  create_threads(thread_count, secondary)
+end procedure
+
+procedure secondary()
+  wait(mutex)                  // Entra a la sección crítica
+  count := count + 1
+  signal(mutex)                // Sale de la sección crítica
 end procedure
 ````
 
@@ -294,6 +443,30 @@ procedure secondary()
   Statement B
 end procedure
 ````
+
+#### Respuesta
+````
+procedure main()
+  shared count := 0
+  shared can_access_count := semaphore(1)
+  shared barrier := semaphore(0)
+  input shared const thread_count
+  create_threads(thread_count, secondary)
+end procedure
+
+procedure secondary()
+  Statement A
+  wait(can_access_count)
+  count := count + 1
+  if count = thread_count then
+    for i := 1 to thread_count do
+      signal(barrier)
+  signal(can_access_count)
+  wait(barrier)
+  Statement B
+end procedure
+````
+
 ### 7.2. Barrera reusable con semáforos [sem_barrier_reusable]
 Haga que su solución a la actividad [sem_barrier] sea reusable. Es decir, que la barrera quede lista para volver a usarse, por ejemplo, dentro de un ciclo. Debe asegurarse de que el contador quede en 0, y los threads que salen de la barrera no se combinen con otros que aún están en ella.
 
@@ -321,4 +494,40 @@ procedure secondary()
     Statement B
   end while
 end procedure
+````
+
+#### Respuesta
+````
+procedure main()
+  shared count := 0
+  shared mutex := semaphore(1)
+  shared turnstile1 := semaphore(0)
+  shared turnstile2 := semaphore(1)  // cerrado inicialmente
+  input shared const thread_count
+
+  create_threads(thread_count, secondary)
+end procedure
+
+procedure secondary()
+  while true do
+    Statement A
+    wait(mutex)
+    count := count + 1
+    if count == thread_count then
+      wait(turnstile2)            // cerrar turnstile2
+      signal(turnstile1)          // abrir turnstile1
+    signal(mutex)
+    wait(turnstile1)              // pasar torniquete 1
+    signal(turnstile1)            // permitir al siguiente pasar
+    Statement B
+    wait(mutex)
+    count := count - 1
+    if count == 0 then
+      wait(turnstile1)            // cerrar turnstile1
+      signal(turnstile2)          // abrir turnstile2
+    signal(mutex)
+    wait(turnstile2)              // pasar torniquete 2
+    signal(turnstile2)            // permitir al siguiente salir
+end procedure
+
 ````
