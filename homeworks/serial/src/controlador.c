@@ -91,7 +91,8 @@ int run(int argc, char *argv[]) {
 
                 if (temperaturas != NULL) {
                     // simular la dispersión del calor
-                    cambio_temperatura(temperaturas, &plate);
+                    // se le pone una particion de 1 porque no se está usando
+                    cambio_temperatura(temperaturas, &plate, 1);
 
                     nombreBin(&plate);
 

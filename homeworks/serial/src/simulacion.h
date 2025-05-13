@@ -23,6 +23,6 @@
  @return No tiene valor de retorno. Los resultados se guardan en los archivos
   generados.
 */
-void cambio_temperatura(double* temperaturas, Plate* plate);
+void cambio_temperatura(double* temperaturas, Plate* plate, int particiones);
 
 #endif
