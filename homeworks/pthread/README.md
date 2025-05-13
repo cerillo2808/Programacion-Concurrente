@@ -45,22 +45,22 @@ El programa generará una carpeta llamada `output`. Dentro de la carpeta estará
 # Ejemplo de Uso
 
 ## Compilación
-![alt text](image-2.png)
+![alt text](design/imagenes/image-2.png)
 
 ## Ejecución
 
 ### Si no se ingresa una cantidad de hilos
-![alt text](image.png)
+![alt text](design/imagenes/image.png)
 
 ### Si se ingresa una cantidad de hilos específica
-![alt text](image-1.png)
+![alt text](design/imagenes/image-1.png)
 
 ## Output
 ### Contenido del archivo job###.tsv
-![alt text](image-3.png)
+![alt text](design/imagenes/image-3.png)
 
 ### Contenido de la carpeta output
-![alt text](image-4.png)
+![alt text](design/imagenes/image-4.png)
 
 # Detalles Técnicos
 Puede ver los diagramas de diseño del presente programa en el siguiente [enlace](/homeworks/pthread/design/README.md).

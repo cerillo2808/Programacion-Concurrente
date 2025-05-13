@@ -1,8 +1,8 @@
 # Mapa de Memoria
-![alt text](tarea2_memoria.drawio.png)
+![alt text](imagenes/tarea2_memoria.drawio.png)
 
 # Diagrama de Clases (UML)
-![alt text](<Tarea 2 Clases UML.png>)
+![alt text](<imagenes/Tarea 2 Clases UML.png>)
 
 # Duraciones
 | # hilos | minutos| 
