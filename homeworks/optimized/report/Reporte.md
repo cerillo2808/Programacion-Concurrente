@@ -1,0 +1,56 @@
+# Reporte de optimizaciones
+
+## Optimizaciones seriales
+
+| Iter. | Etiqueta  | Duración (s) | _Speedup_ | Descripción corta                        |
+|-------|-----------|--------------|-----------|------------------------------------------|
+| 0     | Serial0   |              | 1.00      | Versión serial inicial (Tarea01)         |
+| 1     |           |              |           |                                          |
+| 2     |           |              |           |                                          |
+
+### Versión serial original (Tarea01)
+
+> _Describa aquí qué aspectos tenía la versión serial no eficientes que podrían o fueron optimizados luego.  
+> También aspectos que usted considera eficientes, los cuales explicarían por qué no amerita una optimización._
+
+### Iteración 1
+
+> _Para cada iteración del ciclo de optimización, cree una subsección como esta.  
+> Resuma en máximo un párrafo en qué consiste la optimización.  
+> Su objetivo es que quien lea este documento entienda claramente qué se intentó mejorar.  
+> Provea trocitos de código fuente o pseudocódigo que ayude a entender la optimización potencial.  
+> Indique si el intento logró incrementar el desempeño.  
+> En caso de no lograrlo, conjeture la causa.  
+> Eso ayudaría a ahorrar tiempo a otras personas que tengan la misma inquietud._
+
+## Optimizaciones concurrentes
+
+| Iter. | Etiqueta  | Duración (s) | _Speedup_ | Eficiencia | Descripción corta                      |
+|-------|-----------|--------------|-----------|------------|----------------------------------------|
+| -     | SerialI   |              | 1.00      | 1.00       | Versión serial final                   |
+| 1     | Conc0     |              |           |            | Versión concurrente inicial (Tarea02) |
+| 2     |           |              |           |            |                                        |
+| 3     |           |              |           |            | Versión concurrente final             |
+
+### Versión concurrente inicial (Tarea02)
+
+> _Describa aquí qué aspectos tenía la versión concurrente (Tarea02) no eficientes que podrían o fueron optimizados luego.  
+> También aspectos que usted considera eficientes, los cuales explicarían por qué no amerita una optimización._
+
+### Iteración 1
+
+> _Para cada iteración del ciclo de optimización, cree una subsección como esta.  
+> Resuma en máximo un párrafo en qué consiste la optimización.  
+> Su objetivo es que quien lea este documento entienda claramente qué se intentó mejorar.  
+> Provea trocitos de código fuente o pseudocódigo que ayude a entender la optimización potencial.  
+> Indique si el intento logró incrementar el desempeño.
+> En caso de no lograrlo, conjeture la causa.  
+> Eso ayudaría a ahorrar tiempo a otras personas que tengan la misma inquietud._
+
+### Comparación de optimizaciones
+
+_(pendiente)_
+
+### Comparación del grado de concurrencia
+
+_(pendiente)_
