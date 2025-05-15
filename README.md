@@ -8,6 +8,7 @@ Grupo 02
 1. [Glossary](#glossary)
 2. [Tareas](#tareas)
 3. [Pthreads](#pthreads)
+4. [OpenMP](#openmp)
 
 # Glossary
 
@@ -134,3 +135,8 @@ Es el speedup, pero considera los recursos que se utilizaron para lograr un mejo
 | 23 | 8 | Ejercicio | [signaling_3](exercises/pthreads/signaling_3/) | Red de petri y pseudocódigo para que tres hilos se ejecuten en un orden específico.
 | 24 | 8 | Ejercicio | [taskc_patterns](exercises/pthreads/taskc_patterns/README.md) | Patrones básicos de concurrencia de tareas.
 | 25 | 9 | Common | [ComandosCluster](common/ComandosCluster.md) | Comandos básicos para usar el clúster Poás.
+
+# OpenMP
+| # | Semana | Tipo | Nombre | Descripción
+|---|---|---|---|---
+| 1 | 9 | Ejemplo | [several_for_stages](examples/openmp/several_for_stages/) | El usuario pueda indicar la cantidad de etapas como tercer argumento de línea de comandos.
