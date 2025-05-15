@@ -1,7 +1,7 @@
 # Comandos para usar el clúster Poás
 
-## Reglas
-NO ejecutar cosas en la computadora principal. Usar un nodo!!!
+## Regla de oro
+NO ejecutar cosas en la computadora principal. Usar la cola!!!
 
 ## Conectarse por ssh
 `ssh -Y C38680@10.84.19.15`
@@ -32,8 +32,11 @@ El . es el directorio actual. El ~ es el home/usuario.
 ## Ejecutar cosas en la cola
 Ver cuáles hay disponibles con `scontrol show partition` <br>
 
-Meterse a batch-job-example-mpi para saber qué comandos hay.ss
+Para ver cosas de la cola: `squeue` <br>
 
+Meterse a batch-job-example-mpi para saber qué comandos hay y editar los nodos a utilizar. <br>
 
+`sbatch batch-ejecutable` <br>
 
-
+## Cancelar un trabajo
+`scancel id_trabajo`, y el id se ve con squeue.
