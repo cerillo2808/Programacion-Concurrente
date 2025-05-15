@@ -36,7 +36,7 @@ Para ver cosas de la cola: `squeue` <br>
 
 Meterse a batch-job-example-mpi para saber qué comandos hay y editar los nodos a utilizar. <br>
 
-`sbatch batch-ejecutable` <br>
+`sbatch batch-job-example.mpi` <br>
 
 ## Cancelar un trabajo
 `scancel id_trabajo`, y el id se ve con squeue.
