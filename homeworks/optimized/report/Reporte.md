@@ -4,7 +4,7 @@
 
 | Iter. | Etiqueta  | Duración (s) | _Speedup_ | Descripción corta                        |
 |-------|-----------|--------------|-----------|------------------------------------------|
-| 0     | Serial0   |              | 1.00      | Versión serial inicial (Tarea01)         |
+| 0     | Serial0   | 47.9300      | 1.00      | Versión serial inicial (Tarea01)         |
 | 1     |           |              |           |                                          |
 | 2     |           |              |           |                                          |
 
@@ -12,6 +12,12 @@
 
 > _Describa aquí qué aspectos tenía la versión serial no eficientes que podrían o fueron optimizados luego.  
 > También aspectos que usted considera eficientes, los cuales explicarían por qué no amerita una optimización._
+
+Perf para el serial en job001b
+![alt text](../img/image.png)
+Kcachegrind para el serial job001b
+[link](../auto_files/callgrind.out.3136474)
+
 
 ### Iteración 1
 
