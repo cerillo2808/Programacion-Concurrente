@@ -34,9 +34,17 @@ Kcachegrind para el serial job001b
 | Iter. | Etiqueta  | Duración (s) | _Speedup_ | Eficiencia | Descripción corta                      |
 |-------|-----------|--------------|-----------|------------|----------------------------------------|
 | -     | SerialI   |              | 1.00      | 1.00       | Versión serial final                   |
-| 1     | Conc0     |              |           |            | Versión concurrente inicial (Tarea02) |
+| 1     | Conc0     | 214.5283 |           |            | Versión concurrente inicial (Tarea02) |
 | 2     |           |              |           |            |                                        |
-| 3     |           |              |           |            | Versión concurrente final             |
+| 3     |           |              |           |            | 
+
+Perf para versión concurrente (tarea 2) en job001b
+![alt text](../img/image2.png)
+
+Kcachegrind para el concurrente (tarea 2) en job001b
+[link](TODO)
+
+Versión concurrente final             
 
 ### Versión concurrente inicial (Tarea02)
 
