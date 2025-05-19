@@ -46,7 +46,12 @@ Perf para versión concurrente (tarea 2) en job001b
 ![alt text](../img/image2.png)
 
 Kcachegrind para el concurrente (tarea 2) en job001b
-[link](TODO)
+[link](../auto_files/callgrind.out.2209469)
+
+Se puede ver del reporte que lo que más se dura haciendo es creando los hilos por cada iteración de la simulación.
+![alt text](../img/kcachegrind%20pthread%208%20hilos.png)
+
+Con un sólo hilo el reporte de kcachegrind da casi igual. Sin embargo, se le corre perf para sacar el speedup.
 
 Versión concurrente final             
 
