@@ -18,6 +18,10 @@ Perf para el serial en job001b
 Kcachegrind para el serial job001b
 [link](../auto_files/callgrind.out.3136474)
 
+Según kcachegrind, el proceso que dura casi el 100% es el run, y en el run reporta que el proceso que dura más es la simulación a la hora de copiar la matriz.
+![alt text](../img/kcachegrind%20serial%20main.png)
+![alt text](../img/kchachegrind%20serial%20run.png)
+
 
 ### Iteración 1
 
