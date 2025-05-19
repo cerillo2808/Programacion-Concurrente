@@ -106,6 +106,7 @@ Es el speedup, pero considera los recursos que se utilizaron para lograr un mejo
 |---|---|---
 | 1 | [serial](homeworks/serial)| Simulación de calor
 | 2 | [pthread](homeworks/pthread) | Procesamiento paralelo de la simulación de calor
+| 3 | [optimized](homeworks/optimized/) | Intentos de optimización con el reporte del proceso
 
 # Pthreads
 | # | Semana | Tipo | Nombre | Descripción
@@ -140,3 +141,4 @@ Es el speedup, pero considera los recursos que se utilizaron para lograr un mejo
 | # | Semana | Tipo | Nombre | Descripción
 |---|---|---|---|---
 | 1 | 9 | Ejemplo | [several_for_stages](examples/openmp/several_for_stages/) | El usuario pueda indicar la cantidad de etapas como tercer argumento de línea de comandos.
+| 2 | 10 | Ejemplo | [shuffle_sentence](examples/openmp/shuffle_sentence/) | Se controla el orden en que se ejecutan tasks de omp.
