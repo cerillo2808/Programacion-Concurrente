@@ -34,6 +34,11 @@ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bi
        0.091507000 seconds user
        0.003053000 seconds sys
 
+// Versión serial, tarea 1, job020b
+
+slurmstepd: error: *** JOB 1980 ON compute-6 CANCELLED AT 2025-05-21T10:05:03 DUE TO TIME LIMIT ***
+// el límite fue una hora y media.
+
 // Versión serial, intento de optimización 1, job001b
 
  Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bin/serial concurrente25a-yosery_zheng/homeworks/serial/tests/job001b/job001.txt':
