@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
         #pragma omp single
         {
             // TODO(you): First task: read and print first word of the sentence
-            #pragma omp task depend(out: word)
+            #pragma omp task
             {
                 std::cin >> word;
                 std::cout << word;
@@ -36,8 +36,10 @@ int main(int argc, char* argv[]) {
                 }
             }
 
+            #pragma omp taskwait
+
             // TODO(you): Third task: finish the sentence
-            #pragma omp task final(true)
+            #pragma omp task
             {
                 std::cout << '.' << std::endl;
             }
