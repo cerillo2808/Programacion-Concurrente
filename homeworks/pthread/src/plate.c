@@ -16,12 +16,12 @@ Plate crear_plate(const char *linea) {
     return plate;
 }
 
-double* leer_plate(const char *nombreJob, Plate *plate) {
+double* leer_plate(const char *nombreJob, Plate *plate, const char *nombreCarpeta) { //NOLINT
     const char *nombreBin = plate->nombreArchivo;
 
     char rutaCompleta[512];
     // la ruta completa sólo puede medir 512 como máximo
-    snprintf(rutaCompleta, sizeof(rutaCompleta), "tests/%sb/%s", nombreJob,
+    snprintf(rutaCompleta, sizeof(rutaCompleta), "%s%s", nombreCarpeta,
              plate->nombreArchivo);
     // agregarle a nombre de archivo el path completo
 

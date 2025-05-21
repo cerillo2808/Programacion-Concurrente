@@ -101,6 +101,6 @@ Plate crear_plate(const char *linea);
   temperaturas en memoria. Si no se puede abrir el archivo o si hay un error
   en la lectura, se imprime un mensaje de error y se retorna NULL.
 */
-double* leer_plate(const char *nombreJob, Plate *plate); // NOLINT
+double* leer_plate(const char *nombreJob, Plate *plate, const char *nombreCarpeta); // NOLINT
 
 #endif

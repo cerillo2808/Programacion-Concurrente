@@ -28,12 +28,16 @@ int run(int argc, char *argv[]) {
             char linea[256];
             // buffer para cada linea de job, máximo de 256 chars
 
+            size_t length = strlen(jobPath);
+            // quita el job00x.txt
+            ((char*)jobPath)[length - 10] = '\0';
+
             while (fgets(linea, sizeof(linea), jobFile)) {
                 // crear un plate para cada linea del txt
                 Plate plate = crear_plate(linea);
 
                 double *temperaturas = leer_plate(shared_data->nombreJob,
-                                                                     &plate);
+                                                            &plate, jobPath);
 
                 if (temperaturas != NULL) {
                     // simular la dispersión del calor
