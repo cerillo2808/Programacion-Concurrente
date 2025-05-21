@@ -4,14 +4,18 @@
 
 | Iter. | Etiqueta  | Duración (s) | _Speedup_ | Descripción corta                        |
 |-------|-----------|--------------|-----------|------------------------------------------|
-| 0     | Serial0   | 47.9300      | 1.00      | Versión serial inicial (Tarea01)         |
-| 1     |           |              |           |                                          |
+| 0     | Serial0   | 47.629947625 | 1.00      | Versión serial inicial (Tarea01)         |
+| -     | Serial1   | 49.283765940 | 0.96      | Usa el path completo, no el relativo     |
 | 2     |           |              |           |                                          |
 
 ### Versión serial original (Tarea01)
 
 > _Describa aquí qué aspectos tenía la versión serial no eficientes que podrían o fueron optimizados luego.  
 > También aspectos que usted considera eficientes, los cuales explicarían por qué no amerita una optimización._
+
+Lo que hace el programa en su forma serial es leer el archivo job###.txt, crear el objeto plate, y simular la transferencia de calor por cada plate creado. La simulación se ejecuta celda por celda, lo cual podría ralentizar mucho el tiempo de ejecución si es una matriz grande. Luego, por ser serial, tiene que repetir todo el proceso anteriormente mencionado por cada línea que existe del job###.txt.
+
+Lo que podría ser optimizado es asignar un hilo por cada línea del job###.txt e ir procesando los plates de manera concurrente, sin embargo, podría no funcionar tan bien porque hay plates más grandes que otros, causando que algunos hilos terminen su ejecución temprano, sean desperdiciados y un solo hilo sea el encargado de ejecutar un plate grande.
 
 Perf para el serial en job001b
 ![alt text](../img/image.png)

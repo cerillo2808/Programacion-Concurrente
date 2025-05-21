@@ -1,6 +1,6 @@
 // Versión serial, tarea 1, job001b
 
-Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bin/serial concurrente25a-yosery_zheng/homeworks/serial/tests/job001b/job001.txt$'
+Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bin/serial concurrente25a-yosery_zheng/homeworks/serial/tests/job001b/job001.txt':
 
           47137.87 msec task-clock:u              #    0.990 CPUs utilized          
                  0      context-switches:u        #    0.000 /sec                   
@@ -15,6 +15,42 @@ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bi
 
      47.095112000 seconds user
       0.002836000 seconds sys
+
+// Versión serial, tarea 1, job002b
+
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bin/serial concurrente25a-yosery_zheng/homeworks/serial/tests/job002b/job002.txt':
+
+             93.29 msec task-clock:u              #    0.172 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+                63      page-faults:u             #  675.296 /sec                   
+       333,230,704      cycles:u                  #    3.572 GHz                    
+       291,190,628      instructions:u            #    0.87  insn per cycle         
+        30,458,521      branches:u                #  326.484 M/sec                  
+            35,149      branch-misses:u           #    0.12% of all branches        
+
+       0.541617742 seconds time elapsed
+
+       0.091507000 seconds user
+       0.003053000 seconds sys
+
+// Versión serial, intento de optimización 1, job001b
+
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bin/serial concurrente25a-yosery_zheng/homeworks/serial/tests/job001b/job001.txt':
+
+         48,737.98 msec task-clock:u              #    0.989 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+                65      page-faults:u             #    1.334 /sec                   
+   183,908,857,850      cycles:u                  #    3.773 GHz                    
+   255,993,477,328      instructions:u            #    1.39  insn per cycle         
+    12,733,310,091      branches:u                #  261.261 M/sec                  
+        16,615,957      branch-misses:u           #    0.13% of all branches        
+
+      49.283765940 seconds time elapsed
+
+      48.677248000 seconds user
+       0.001948000 seconds sys
 
 // Versión paralela, tarea 2, job001b, 8 hilos
 
