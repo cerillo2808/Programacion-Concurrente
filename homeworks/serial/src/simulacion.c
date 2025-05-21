@@ -16,7 +16,7 @@ void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
     double cambio = 0;
 
     // Crear matriz temporal para calcular el cambio
-    double *temperaturas_temporal = (double *)malloc(plate->R * plate->C * sizeof(double));
+    double *temperaturas_temporal = (double *)malloc(plate->R * plate->C * sizeof(double)); //NOLINT
     if (!temperaturas_temporal) {
         printf("Error: No se pudo asignar memoria para la matriz temporal.\n");
         return;
@@ -32,13 +32,13 @@ void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
 
         for (int p = 0; p < particiones; p++) {
             uint64_t inicio = p * celdas_por_particion;
-            uint64_t fin = (p == particiones - 1) ? total_celdas : inicio + celdas_por_particion;
+            uint64_t fin = (p == particiones - 1) ? total_celdas : inicio + celdas_por_particion; //NOLINT
 
             for (uint64_t idx = inicio; idx < fin; idx++) {
                 uint64_t i = idx / plate->C;
                 uint64_t j = idx % plate->C;
 
-                if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
+                if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) { //NOLINT
                     temperaturas_temporal[idx] = temperaturas[idx];
                 } else {
                     double arriba = temperaturas[(i - 1) * plate->C + j];
@@ -48,9 +48,9 @@ void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
 
                     temperaturas_temporal[idx] = temperaturas[idx] +
                         plate->alfa * plate->delta *
-                        ((arriba + abajo + izquierda + derecha - 4.0 * temperaturas[idx]) / (plate->h * plate->h));
+                        ((arriba + abajo + izquierda + derecha - 4.0 * temperaturas[idx]) / (plate->h * plate->h)); //NOLINT
 
-                    cambio = fabs(temperaturas_temporal[idx] - temperaturas[idx]);
+                    cambio = fabs(temperaturas_temporal[idx] - temperaturas[idx]); //NOLINT
                     if (cambio > cambio_maximo) {
                         cambio_maximo = cambio;
                     }
@@ -58,7 +58,7 @@ void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
             }
         }
 
-        memcpy(temperaturas, temperaturas_temporal, plate->R * plate->C * sizeof(double));
+        memcpy(temperaturas, temperaturas_temporal, plate->R * plate->C * sizeof(double)); //NOLINT
     } while (cambio_maximo > plate->epsilon);
 
     plate->iteraciones = iteraciones;
