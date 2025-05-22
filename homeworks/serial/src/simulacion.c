@@ -30,22 +30,6 @@ void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
         iteraciones++;
         cambio_maximo = 0.0;
 
-         // Copiar filas de borde
-        for (size_t j = 0; j < plate->C; j++) {
-            temperaturas_temporal[0 * plate->C + j] =
-                                                temperaturas[0 * plate->C + j];
-            temperaturas_temporal[(plate->R - 1) * plate->C + j] =
-                                    temperaturas[(plate->R - 1) * plate->C + j];
-        }
-
-        // Copiar columnas de borde
-        for (size_t i = 1; i < plate->R - 1; i++) {
-            temperaturas_temporal[i * plate->C + 0] =
-                                                temperaturas[i * plate->C + 0];
-            temperaturas_temporal[i * plate->C + (plate->C - 1)]
-            = temperaturas[i * plate->C + (plate->C - 1)];
-        }
-
         for (int p = 0; p < particiones; p++) {
             uint64_t inicio = p * celdas_por_particion;
             uint64_t fin = (p == particiones - 1) ? total_celdas : inicio + celdas_por_particion; //NOLINT

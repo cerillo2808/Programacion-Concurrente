@@ -7,7 +7,7 @@ Las duraciones reportadas fueron la más rápida de tres ejecuciones diferentes 
 | Iter. | Etiqueta  | Duración (s) | _Speedup_ | Descripción corta                        |
 |-------|-----------|--------------|-----------|------------------------------------------|
 | 0     | Serial0   | 47.629947625 | 1.00      | Versión serial inicial (Tarea01)         |
-| 1     | Serial1   | 48.614582334 | 0.98      | Usa el path completo, no el relativo     |
+| 1     | Serial1   | 48.614582334 | 0.98      | Usa el path completo, no el relativo (Versión final serial) |
 | 2     | Serial2   | 49.283765940 | 0.96      | Omite bordes a la hora de recorrer la matriz |
 
 ### Versión serial original (Tarea01)
@@ -50,10 +50,16 @@ Perf para Serial2 en job001b
 
 | Iter. | Etiqueta  | Duración (s) | _Speedup_ | Eficiencia | Descripción corta                      |
 |-------|-----------|--------------|-----------|------------|----------------------------------------|
-| -     | SerialI   |              | 1.00      | 1.00       | Versión serial final                   |
-| 1     | Conc0     | 214.5283 |           |            | Versión concurrente inicial (Tarea02) |
+| -     | SerialI   | 48.614582334 | 1.00      | 1.00       | Versión serial final                   |
+| 1     | Conc0     | 213.318203812| 0.23      | 0.06       | Versión concurrente inicial (Tarea02)  |
 | 2     |           |              |           |            |                                        |
-| 3     |           |              |           |            | 
+| 3     |           |              |           |            |   
+
+### Versión concurrente inicial (Tarea02)
+
+La optimización concurrente que se le hizo a la versión serial fue introducirle hilos al bucle que simula la transferencia de calor. Para hacer el bucle _thread safe_, se dividió la matriz de temperaturas en particiones. Sin embargo, para poder terminar una iteración, se ocupa de todas las diferentes particiones para saber si hubo un cambio máximo diferente para poder compararlo con epsilon y saber si terminar la simulación o no. Con el fin de comunicar las diferentes partes de la matriz de temperaturas, los hilos deben esperar a que todos los hilos se terminen, ser destruidos y vueltos a crear por cada iteración. En plates grandes resulta ser muy ineficiente, ya que entre más iteraciones, más lento se vuelve. Otra observación es la cantidad de hilos. Entre más hilos se utilicen, más lento se vuelve debido a que son más procesos que causan esperas, las cuales se vuelven cuellos de botella.
+
+Para optimizar la tarea 2, aparte de lo obvio, lo cual sería orientarse a bajar el tiempo de espera entre hilos, es intentar otro tipo de concurrencia. En vez de usar hilos para el bucle de simulación, que prueba ser más rápido de forma serial, es usarlos en los diferentes plates. Entonces, cada línea del archivo job###.txt es procesado de manera paralela.
 
 Perf para versión concurrente (tarea 2) en job001b
 ![alt text](../img/image2.png)
@@ -61,19 +67,10 @@ Perf para versión concurrente (tarea 2) en job001b
 Kcachegrind para el concurrente (tarea 2) en job001b
 [link](../auto_files/callgrind.out.2209469)
 
-Se puede ver del reporte que lo que más se dura haciendo es creando los hilos por cada iteración de la simulación.
+Se puede ver del reporte que lo que más se dura haciendo es creando los hilos por cada iteración de la simulación. Por lo que una optimización interesante sería orientada a la creación y destrucción repetitiva de los hilos.
 ![alt text](../img/kcachegrind%20pthread%208%20hilos.png)
 
-Con un sólo hilo el reporte de kcachegrind da casi igual. Sin embargo, se le corre perf para sacar el speedup.
-
-Versión concurrente final             
-
-### Versión concurrente inicial (Tarea02)
-
-> _Describa aquí qué aspectos tenía la versión concurrente (Tarea02) no eficientes que podrían o fueron optimizados luego.  
-> También aspectos que usted considera eficientes, los cuales explicarían por qué no amerita una optimización._
-
-Lo que podría ser optimizado es asignar un hilo por cada línea del job###.txt e ir procesando los plates de manera concurrente, sin embargo, podría no funcionar tan bien porque hay plates más grandes que otros, causando que algunos hilos terminen su ejecución temprano, sean desperdiciados y un solo hilo sea el encargado de ejecutar un plate grande.
+Con un sólo hilo el reporte de kcachegrind da casi igual. Sin embargo, se le corre perf para sacar el speedup.   
 
 ### Iteración 1
 
@@ -84,6 +81,10 @@ Lo que podría ser optimizado es asignar un hilo por cada línea del job###.txt 
 > Indique si el intento logró incrementar el desempeño.
 > En caso de no lograrlo, conjeture la causa.  
 > Eso ayudaría a ahorrar tiempo a otras personas que tengan la misma inquietud._
+
+Lo que podría ser optimizado es asignar un hilo por cada línea del job###.txt e ir procesando los plates de manera concurrente, sin embargo, podría no funcionar tan bien porque hay plates más grandes que otros, causando que algunos hilos terminen su ejecución temprano, sean desperdiciados y un solo hilo sea el encargado de ejecutar un plate grande.
+
+### Iteración 2
 
 ### Comparación de optimizaciones
 

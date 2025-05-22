@@ -75,20 +75,19 @@ slurmstepd: error: *** JOB 1980 ON compute-6 CANCELLED AT 2025-05-21T10:05:03 DU
       48.150954000 seconds user
        0.002993000 seconds sys
 
-// Versión paralela, tarea 2, job001b, 8 hilos
+// Versión paralela, tarea 2, job001b, 4 hilos
 
-Performance counter stats for './concurrente25a-yosery_zheng/homeworks/pthread/bin/pthread concurrente25a-yosery_zheng/homeworks/serial/tests/job001b/job001.txt 8$'
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/pthread/bin/$
+         289274.21 msec task-clock:u              #    1.356 CPUs utilized
+                 0      context-switches:u        #    0.000 /sec
+                 0      cpu-migrations:u          #    0.000 /sec
+                79      page-faults:u             #    0.273 /sec
+      221944665264      cycles:u                  #    0.767 GHz
+      266458425428      instructions:u            #    1.20  insn per cycle
+       16817604238      branches:u                #   58.137 M/sec
+          69318358      branch-misses:u           #    0.41% of all branches
 
-          47137.87 msec task-clock:u              #    0.990 CPUs utilized          
-                 0      context-switches:u        #    0.000 /sec                   
-                 0      cpu-migrations:u          #    0.000 /sec                   
-                64      page-faults:u             #    1.358 /sec                   
-      177998647759      cycles:u                  #    3.776 GHz                    
-      255993476228      instructions:u            #    1.44  insn per cycle         
-       12733308553      branches:u                #  270.129 M/sec                  
-          16398676      branch-misses:u           #    0.13% of all branches        
+     213.318203812 seconds time elapsed
 
-     47.629947625 seconds time elapsed
-
-     47.095112000 seconds user
-      0.002836000 seconds sys
+      71.860395000 seconds user
+     305.434730000 seconds sys
