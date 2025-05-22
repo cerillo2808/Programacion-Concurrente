@@ -1,6 +1,18 @@
 # Reporte de optimizaciones
-
 Las duraciones reportadas fueron la más rápida de tres ejecuciones diferentes en la misma máquina (clúster Poás) y el mismo caso de prueba (job001b). Las salidas de perf están en en el archivo [perf.txt](../auto_files/perf.txt). Otros archivos .out de corridas interesantes en kcachegrind se encuentran en la carpeta [auto_files](../auto_files/). Para correrlos, ejecute en su máquina `kcachegrind nombre.out`, sin embargo, no es muy necesario ya que para efectos del presente reporte, se adjuntan pantallazos relevantes que se encuentran en la carpeta [img](../img/).
+
+
+## Tabla de contenidos
+
+- [Optimizaciones seriales](#optimizaciones-seriales)
+  - [Versión serial original (Tarea01)](#versión-serial-original-tarea01)
+  - [Iteración 1](#iteración-1)
+  - [Iteración 2](#iteración-2)
+- [Optimizaciones concurrentes](#optimizaciones-concurrentes)
+  - [Versión concurrente inicial (Tarea02)](#versión-concurrente-inicial-tarea02)
+  - [Iteración 1](#iteración-1-1)
+- [Comparación de optimizaciones](#comparación-de-optimizaciones)
+- [Comparación del grado de concurrencia](#comparación-del-grado-de-concurrencia)
 
 ## Optimizaciones seriales
 
@@ -52,7 +64,7 @@ Perf para Serial2 en job001b
 |-------|-----------|--------------|-----------|------------|----------------------------------------|
 | -     | SerialI   | 48.614582334 | 1.00      | 1.00       | Versión serial final                   |
 | 1     | Conc0     | 213.318203812| 0.23      | 0.06       | Versión concurrente inicial (Tarea02)  |
-| 2     | Conc1     |              |           |            | Paraleliza los plates, no la matriz    |
+| 2     | Conc1     | 48.128695684 | 1.01      | 0.13       | Paraleliza los plates, no la matriz    |
 
 ### Versión concurrente inicial (Tarea02)
 
@@ -75,12 +87,25 @@ Con un sólo hilo el reporte de kcachegrind da casi igual. Sin embargo, se le co
 
 Lo que se pretende optimizar es asignar un hilo por cada línea del job###.txt e ir procesando los plates de manera concurrente, sin embargo, podría no funcionar tan bien porque hay plates más grandes que otros, causando que algunos hilos terminen su ejecución temprano, sean desperdiciados y un solo hilo sea el encargado de ejecutar un plate grande. 
 
+Perf para versión concurrente (tarea 2) en job001b
+![alt text](../img/image5.png)
 
+Aumentó el speedup por un poco, pero sigue sin ser eficiente. El tiempo de ejecución de esta versión paralela es más rápida que la versión serial, sin embargo, debido a que se están usando hilos, se esperaría aún más velocidad que no está sucediendo.
 
 ### Comparación de optimizaciones
+En la siguiente tabla, la parte relevante es el lado izquierdo.
+![alt text](../img/excel.png)
+Cabe destacar que en la ejecución de la tarea 2, en el caso de prueba job001b, sale el número dos mil ciento treinta y tres. La confusión se debe a problemas de formato con Excel. También, en los datos en los que sale 5400+ significa que superaron el límite de tiempo de ejecución por el clúster Poás, el cual es una hora y media, o bien, cinco mil cuatrocientos segundos. <br>
 
-_(pendiente)_
+
+![alt text](../img/grafico_optimizaciones.png) <br>
+En el gráfico, por temas de presentación, se acotó el eje Y a 500. Cabe recalcar que todos los tiempos de ejecución del caso de prueba job020b fueron terminados por el clúster Poás, por lo que todos terminan en más de 5400 segundos.
+
+Por otro lado, se puede apreciar que la optimización concurrente es levemente más rápida que la versión final serial. La tarea 2 tiene un tiempo de ejecución más elevado debido a las consecuencias de una mala paralelización.
+
 
 ### Comparación del grado de concurrencia
-
-_(pendiente)_
+En la siguiente tabla, la parte relevante es el lado derecho.
+![alt text](../img/excel.png) <br>
+![alt text](../img/grafico_concurrencia.png) <br>
+Se puede observar que la cantidad de hilos no afecta demasiado al tiempo de ejecución y lo anterior puede ser debido a que la eficiencia no está cerca de 1. Sin embargo, no es 0 tampoco, por lo que con más hilos sí se ejecuta en menos tiempo. El caso más interesante hubiera sido job020b, sin embargo, por el timeout del clúster, no se logró recolectar datos.
