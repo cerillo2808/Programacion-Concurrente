@@ -52,8 +52,7 @@ Perf para Serial2 en job001b
 |-------|-----------|--------------|-----------|------------|----------------------------------------|
 | -     | SerialI   | 48.614582334 | 1.00      | 1.00       | Versión serial final                   |
 | 1     | Conc0     | 213.318203812| 0.23      | 0.06       | Versión concurrente inicial (Tarea02)  |
-| 2     |           |              |           |            |                                        |
-| 3     |           |              |           |            |   
+| 2     | Conc1     |              |           |            | Paraleliza los plates, no la matriz    |
 
 ### Versión concurrente inicial (Tarea02)
 
@@ -74,17 +73,9 @@ Con un sólo hilo el reporte de kcachegrind da casi igual. Sin embargo, se le co
 
 ### Iteración 1
 
-> _Para cada iteración del ciclo de optimización, cree una subsección como esta.  
-> Resuma en máximo un párrafo en qué consiste la optimización.  
-> Su objetivo es que quien lea este documento entienda claramente qué se intentó mejorar.  
-> Provea trocitos de código fuente o pseudocódigo que ayude a entender la optimización potencial.  
-> Indique si el intento logró incrementar el desempeño.
-> En caso de no lograrlo, conjeture la causa.  
-> Eso ayudaría a ahorrar tiempo a otras personas que tengan la misma inquietud._
+Lo que se pretende optimizar es asignar un hilo por cada línea del job###.txt e ir procesando los plates de manera concurrente, sin embargo, podría no funcionar tan bien porque hay plates más grandes que otros, causando que algunos hilos terminen su ejecución temprano, sean desperdiciados y un solo hilo sea el encargado de ejecutar un plate grande. 
 
-Lo que podría ser optimizado es asignar un hilo por cada línea del job###.txt e ir procesando los plates de manera concurrente, sin embargo, podría no funcionar tan bien porque hay plates más grandes que otros, causando que algunos hilos terminen su ejecución temprano, sean desperdiciados y un solo hilo sea el encargado de ejecutar un plate grande.
 
-### Iteración 2
 
 ### Comparación de optimizaciones
 
