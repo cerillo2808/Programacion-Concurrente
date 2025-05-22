@@ -18,7 +18,7 @@ void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
     // Crear matriz temporal para calcular el cambio
     double *temperaturas_temporal = (double *)malloc(plate->R * plate->C * sizeof(double)); //NOLINT
     if (!temperaturas_temporal) {
-        printf("Error: No se pudo asignar memoria para la matriz temporal.\n");
+        printf("Error: No se pudo asignar memoria para la matriz temporal.\n"); //NOLINT
         return;
     }
 
@@ -29,6 +29,22 @@ void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
     do {
         iteraciones++;
         cambio_maximo = 0.0;
+
+         // Copiar filas de borde
+        for (size_t j = 0; j < plate->C; j++) {
+            temperaturas_temporal[0 * plate->C + j] =
+                                                temperaturas[0 * plate->C + j];
+            temperaturas_temporal[(plate->R - 1) * plate->C + j] =
+                                    temperaturas[(plate->R - 1) * plate->C + j];
+        }
+
+        // Copiar columnas de borde
+        for (size_t i = 1; i < plate->R - 1; i++) {
+            temperaturas_temporal[i * plate->C + 0] =
+                                                temperaturas[i * plate->C + 0];
+            temperaturas_temporal[i * plate->C + (plate->C - 1)]
+            = temperaturas[i * plate->C + (plate->C - 1)];
+        }
 
         for (int p = 0; p < particiones; p++) {
             uint64_t inicio = p * celdas_por_particion;
