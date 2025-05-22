@@ -9,137 +9,60 @@
 #include <sys/types.h>
 #include <math.h>
 #include <simulacion.h>
-#include <pthread.h>
-#include <controlador.h>
 
-int cambio_temperatura(double* temperaturas, Plate* plate,
-                                                 shared_data_t* shared_data) {
+void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
     int iteraciones = 0;
+    double cambio_maximo = 0;
+    double cambio = 0;
 
-    // Crear memoria para hilos
-    pthread_t* hilos = malloc(shared_data->cantidadHilos * sizeof(pthread_t));
-    if (hilos == NULL) {
-        printf("Error: No se pudo asignar memoria para los hilos.\n");
-        return -1;
+    // Crear matriz temporal para calcular el cambio
+    double *temperaturas_temporal = (double *)malloc(plate->R * plate->C * sizeof(double)); //NOLINT
+    if (!temperaturas_temporal) {
+        printf("Error: No se pudo asignar memoria para la matriz temporal.\n"); //NOLINT
+        return;
     }
 
-    // Crear memoria para private_data
-    private_data_t* private_data = calloc(shared_data->cantidadHilos,
-                                                     sizeof(private_data_t));
-    if (private_data == NULL) {
-        printf("Error: No se pudo asignar memoria para datos privados.\n");
-        free(hilos);
-        return -1;
-    }
-
-    // Asignar datos comunes
-    dividir_array(private_data, shared_data, *plate);
-    for (int i = 0; i < shared_data->cantidadHilos; i++) {
-        private_data[i].plate = plate;
-        private_data[i].temperaturas = temperaturas;
-        private_data[i].shared_data = *shared_data;
-    }
-
-    // Bucle de simulación
-    double* matriz_temporal = malloc(plate->R * plate->C * sizeof(double));
-    if (matriz_temporal == NULL) {
-        printf("Error: No se pudo asignar memoria para la matriz temporal.\n");
-        free(hilos);
-        free(private_data);
-        return -1;
-    }
+    // Calcular el tamaño de cada partición
+    uint64_t total_celdas = plate->R * plate->C;
+    uint64_t celdas_por_particion = total_celdas / particiones;
 
     do {
         iteraciones++;
+        cambio_maximo = 0.0;
 
-        // Copiar temperaturas actuales a la matriz temporal
-        memcpy(matriz_temporal, temperaturas, plate->R * plate->C *
-                                                             sizeof(double));
+        for (int p = 0; p < particiones; p++) {
+            uint64_t inicio = p * celdas_por_particion;
+            uint64_t fin = (p == particiones - 1) ? total_celdas : inicio + celdas_por_particion; //NOLINT
 
-        // Asignar puntero a la matriz temporal
-        for (int i = 0; i < shared_data->cantidadHilos; i++) {
-            private_data[i].temperaturas_temporal = matriz_temporal;
-        }
+            for (uint64_t idx = inicio; idx < fin; idx++) {
+                uint64_t i = idx / plate->C;
+                uint64_t j = idx % plate->C;
 
-        // Crear hilos
-        for (int i = 0; i < shared_data->cantidadHilos; i++) {
-            if (pthread_create(&hilos[i], NULL, cambio_temperatura_hilos,
-                                                     &private_data[i]) != 0) {
-                printf("Error: No se pudo crear el hilo %d\n", i); //NOLINT
-                free(hilos);
-                free(private_data);
-                free(matriz_temporal);
-                return -1;
+                if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) { //NOLINT
+                    temperaturas_temporal[idx] = temperaturas[idx];
+                } else {
+                    double arriba = temperaturas[(i - 1) * plate->C + j];
+                    double abajo = temperaturas[(i + 1) * plate->C + j];
+                    double izquierda = temperaturas[i * plate->C + (j - 1)];
+                    double derecha = temperaturas[i * plate->C + (j + 1)];
+
+                    temperaturas_temporal[idx] = temperaturas[idx] +
+                        plate->alfa * plate->delta *
+                        ((arriba + abajo + izquierda + derecha - 4.0 * temperaturas[idx]) / (plate->h * plate->h)); //NOLINT
+
+                    cambio = fabs(temperaturas_temporal[idx] - temperaturas[idx]); //NOLINT
+                    if (cambio > cambio_maximo) {
+                        cambio_maximo = cambio;
+                    }
+                }
             }
         }
 
-        shared_data->cambio_maximo_global = 0.0;
+        memcpy(temperaturas, temperaturas_temporal, plate->R * plate->C * sizeof(double)); //NOLINT
+    } while (cambio_maximo > plate->epsilon);
 
-        // Esperar hilos
-        for (int i = 0; i < shared_data->cantidadHilos; i++) {
-            pthread_join(hilos[i], NULL);
-            if (private_data[i].cambio_maximo_local >
-                                         shared_data->cambio_maximo_global) {
-                shared_data->cambio_maximo_global =
-                                            private_data[i].cambio_maximo_local;
-            }
-        }
-
-        // Actualizar la matriz original
-        memcpy(temperaturas, matriz_temporal, plate->R * plate->C *
-                                                             sizeof(double));
-    } while (shared_data->cambio_maximo_global >= plate->epsilon);
-
-    // Liberar recursos
-    free(matriz_temporal);
-    free(hilos);
-    free(private_data);
-
-    // Asignar resultados al plate
     plate->iteraciones = iteraciones;
     plate->tiempoSegundos = iteraciones * plate->delta;
 
-    return iteraciones;
-}
-
-void* cambio_temperatura_hilos(void* arg) {
-    private_data_t* private = (private_data_t*) arg;
-    Plate* plate = private->plate;
-    double* temp = private->temperaturas;
-    double* temp_local = private->temperaturas_temporal;
-    double cambio_maximo_temporal = 0.0;
-
-    uint64_t inicio = private->inicio;
-    uint64_t final = private->final;
-    uint64_t columnas = plate->C;
-
-    for (uint64_t idx = inicio; idx < final; idx++) {
-        // Fila correspondiente
-        uint64_t i = idx / columnas;
-        // Columna correspondiente
-        uint64_t j = idx % columnas;
-
-        if (i == 0 || i == plate->R - 1 || j == 0 || j == plate->C - 1) {
-            temp_local[idx] = temp[idx];
-            // los bordes no cambian, se copian directamente
-
-        } else {
-            double arriba = temp[(i - 1) * columnas + j];
-            double abajo = temp[(i + 1) * columnas + j];
-            double izq = temp[i * columnas + (j - 1)];
-            double der = temp[i * columnas + (j + 1)];
-
-            temp_local[idx] = temp[idx] + plate->alfa * plate->delta *
-                ((arriba + abajo + izq + der - 4.0 * temp[idx]) /
-                (plate->h * plate->h));
-        }
-        double cambio = fabs(private->temperaturas_temporal[idx] -
-                                                 private->temperaturas[idx]);
-
-            if (cambio > cambio_maximo_temporal) {
-                cambio_maximo_temporal = cambio;
-            }
-    }
-    private->cambio_maximo_local = cambio_maximo_temporal;
-    return NULL;
+    free(temperaturas_temporal);
 }
