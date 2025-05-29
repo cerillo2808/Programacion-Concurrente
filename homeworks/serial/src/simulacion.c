@@ -18,7 +18,7 @@ void cambio_temperatura(double* temperaturas, Plate* plate, int particiones) {
     // Crear matriz temporal para calcular el cambio
     double *temperaturas_temporal = (double *)malloc(plate->R * plate->C * sizeof(double)); //NOLINT
     if (!temperaturas_temporal) {
-        printf("Error: No se pudo asignar memoria para la matriz temporal.\n");
+        printf("Error: No se pudo asignar memoria para la matriz temporal.\n"); //NOLINT
         return;
     }
 

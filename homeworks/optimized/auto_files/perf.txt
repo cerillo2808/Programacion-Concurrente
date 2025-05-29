@@ -34,6 +34,11 @@ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bi
        0.091507000 seconds user
        0.003053000 seconds sys
 
+// Versión serial, tarea 1, job020b
+
+slurmstepd: error: *** JOB 1980 ON compute-6 CANCELLED AT 2025-05-21T10:05:03 DUE TO TIME LIMIT ***
+// el límite fue una hora y media.
+
 // Versión serial, intento de optimización 1, job001b
 
  Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bin/serial concurrente25a-yosery_zheng/homeworks/serial/tests/job001b/job001.txt':
@@ -52,20 +57,73 @@ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bi
       48.677248000 seconds user
        0.001948000 seconds sys
 
-// Versión paralela, tarea 2, job001b, 8 hilos
+// Versión serial, intento de optimización 2, job001b
 
-Performance counter stats for './concurrente25a-yosery_zheng/homeworks/pthread/bin/pthread concurrente25a-yosery_zheng/homeworks/serial/tests/job001b/job001.txt 8$'
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/serial/bin/serial concurrente25a-yosery_zheng/homeworks/serial/tests/job001b/job001.txt':
 
-          47137.87 msec task-clock:u              #    0.990 CPUs utilized          
-                 0      context-switches:u        #    0.000 /sec                   
-                 0      cpu-migrations:u          #    0.000 /sec                   
-                64      page-faults:u             #    1.358 /sec                   
-      177998647759      cycles:u                  #    3.776 GHz                    
-      255993476228      instructions:u            #    1.44  insn per cycle         
-       12733308553      branches:u                #  270.129 M/sec                  
-          16398676      branch-misses:u           #    0.13% of all branches        
+          48195.68 msec task-clock:u              #    0.991 CPUs utilized
+                 0      context-switches:u        #    0.000 /sec
+                 0      cpu-migrations:u          #    0.000 /sec
+                65      page-faults:u             #    1.349 /sec
+      181560905924      cycles:u                  #    3.767 GHz
+      262113178046      instructions:u            #    1.44  insn per cycle
+       12898864018      branches:u                #  267.635 M/sec
+          20156731      branch-misses:u           #    0.16% of all branches
 
-     47.629947625 seconds time elapsed
+      48.614582334 seconds time elapsed
 
-     47.095112000 seconds user
-      0.002836000 seconds sys
+      48.150954000 seconds user
+       0.002993000 seconds sys
+
+// Versión paralela, tarea 2, job001b, 4 hilos
+
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/pthread/bin/$
+         289274.21 msec task-clock:u              #    1.356 CPUs utilized
+                 0      context-switches:u        #    0.000 /sec
+                 0      cpu-migrations:u          #    0.000 /sec
+                79      page-faults:u             #    0.273 /sec
+      221944665264      cycles:u                  #    0.767 GHz
+      266458425428      instructions:u            #    1.20  insn per cycle
+       16817604238      branches:u                #   58.137 M/sec
+          69318358      branch-misses:u           #    0.41% of all branches
+
+     213.318203812 seconds time elapsed
+
+      71.860395000 seconds user
+     305.434730000 seconds sys
+
+// Versión paralela, optimización paralela 1, 8 hilos, job001b
+
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/pthread/bin/$
+          47972.36 msec task-clock:u              #    0.997 CPUs utilized
+                 0      context-switches:u        #    0.000 /sec
+                 0      cpu-migrations:u          #    0.000 /sec
+               118      page-faults:u             #    2.460 /sec
+      180723709767      cycles:u                  #    3.767 GHz
+      255993620602      instructions:u            #    1.42  insn per cycle
+       12733338524      branches:u                #  265.431 M/sec
+          88886359      branch-misses:u           #    0.70% of all branches
+
+      48.128695684 seconds time elapsed
+
+      47.930042000 seconds user
+       0.001000000 seconds sys
+
+// Versión paralela, optimización paralela 1, 8 hilos, job002b
+
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/pthread/bin/pthread concurrente25a-yosery_zheng/homeworks/pthread/tests/job002b/job002.txt 8':
+
+             97.87 msec task-clock:u              #    0.160 CPUs utilized
+                 0      context-switches:u        #    0.000 /sec
+                 0      cpu-migrations:u          #    0.000 /sec
+               129      page-faults:u             #    1.318 K/sec
+         333469945      cycles:u                  #    3.407 GHz
+         291362072      instructions:u            #    0.87  insn per cycle
+          30493931      branches:u                #  311.569 M/sec
+             22050      branch-misses:u           #    0.07% of all branches
+
+       0.612042378 seconds time elapsed
+
+       0.092187000 seconds user
+       0.006882000 seconds sys
+
