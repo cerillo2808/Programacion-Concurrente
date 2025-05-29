@@ -142,3 +142,4 @@ Es el speedup, pero considera los recursos que se utilizaron para lograr un mejo
 |---|---|---|---|---
 | 1 | 9 | Ejemplo | [several_for_stages](examples/openmp/several_for_stages/) | El usuario pueda indicar la cantidad de etapas como tercer argumento de línea de comandos.
 | 2 | 10 | Ejemplo | [shuffle_sentence](examples/openmp/shuffle_sentence/) | Se controla el orden en que se ejecutan tasks de omp.
+| 3 | 9 | Ejemplo | [omp_team](examples/openmp/omp_team/) | Equipo de hilos secundarios saludan concurrentemente con OpenMP.
