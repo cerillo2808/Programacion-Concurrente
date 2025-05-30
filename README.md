@@ -9,6 +9,7 @@ Grupo 02
 2. [Tareas](#tareas)
 3. [Pthreads](#pthreads)
 4. [OpenMP](#openmp)
+5. [MPI](#mpi)
 
 # Glossary
 
@@ -145,3 +146,7 @@ Es el speedup, pero considera los recursos que se utilizaron para lograr un mejo
 | 3 | 9 | Ejemplo | [omp_team](examples/openmp/omp_team/) | Equipo de hilos secundarios saludan concurrentemente con OpenMP.
 | 4 | 9 | Ejemplo | [omp_for](examples/openmp/omp_for/) | Comparación de diferentes mapeos.
 
+# MPI
+| # | Semana | Tipo | Nombre | Descripción
+|---|---|---|---|---
+| 1 | 11 | Ejemplo | [hello](examples/mpi/hello/) | Hello usando MPI y ejecutándolo desde el clúster Poás.
