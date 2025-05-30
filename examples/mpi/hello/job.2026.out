@@ -1,0 +1,8 @@
+Hello from main thread of process 1Hello from main thread of process 2 of 8 on compute-6
+Hello from main thread of process Hello from main thread of process 0 of 8 on compute-6
+ of 8 on compute-6
+3 of 8 on compute-6
+Hello from main thread of process 6 of 8 on compute-7
+Hello from main thread of process Hello from main thread of process 4 of 8 on compute-7
+Hello from main thread of process 5 of 8 on compute-7
+7 of 8 on compute-7
