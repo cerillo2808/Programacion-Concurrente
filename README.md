@@ -97,6 +97,7 @@ La división del tiempo serial entre el tiempo paralelo. Es la razón para saber
 Es el speedup, pero considera los recursos que se utilizaron para lograr un mejor desempeño. Siempre es un valor entre 0 (no eficiente). y 1 (muy eficiente). Se calcula como speedup entre cantidad de hilos.
 
 ### 22. Comunicación punto a punto entre procesos
+Método de intercambio de datos directamente entre dos procesos. Puede lograrse con mensajes o buffers compartidos.
 
 ### 23. Comunicación colectiva entre procesos
 
@@ -150,3 +151,4 @@ Es el speedup, pero considera los recursos que se utilizaron para lograr un mejo
 | # | Semana | Tipo | Nombre | Descripción
 |---|---|---|---|---
 | 1 | 11 | Ejemplo | [hello](examples/mpi/hello/) | Hello usando MPI y ejecutándolo desde el clúster Poás.
+| 2 | 12 | Ejercicio | [mpi_ring](exercises/mpi/mpi_ring/) | Usar comunicación punto a punto con MPI

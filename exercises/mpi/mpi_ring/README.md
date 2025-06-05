@@ -1,0 +1,2 @@
+# Enunciado
+Cree un programa que lance 4 procesos (debe de asegurarse de que sean exactamente 4, de lo contrario, notificar al usuario y terminar el programa). Cada proceso debe de generar un número entero aleatorio entre [0-100[, luego, mediante comunicación punto a punto distribuya esos datos de forma circular, de manera que los 4 tengan la suma de todos los valores generados.
