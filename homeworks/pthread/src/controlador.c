@@ -12,7 +12,6 @@
 #include <escritor_archivos.h>
 #include <simulacion.h>
 #include <unistd.h>
-#include <pthread.h>
 
 int run(int argc, char *argv[]) {
     // inicializa memoria compartida
@@ -26,39 +25,50 @@ int run(int argc, char *argv[]) {
         // el parámetro r es para lectura (read)
 
         if (guardarJob(jobFile, jobPath, shared_data)) {
-            // Leer todas las líneas del archivo
-            char lineas[1024][256];
-            int num_lines = 0;
+            char linea[256];
+            // buffer para cada linea de job, máximo de 256 chars
+
             size_t length = strlen(jobPath);
             // quita el job00x.txt
             ((char*)jobPath)[length - 10] = '\0';
-            while (fgets(lineas[num_lines], sizeof(lineas[num_lines]),
-                                                                 jobFile)) {
-                num_lines++;
-            }
-            fclose(jobFile);
 
-            // Crear un hilo por cada plate
-            resultado_plate_t* resultados =
-                                calloc(num_lines, sizeof(resultado_plate_t));
-            pthread_t* hilos = malloc(num_lines * sizeof(pthread_t));
-            plate_thread_data_t* datos =
-                             malloc(num_lines * sizeof(plate_thread_data_t));
-            for (int i = 0; i < num_lines; i++) {
-                strncpy(datos[i].linea, lineas[i], 256);
-                strncpy(datos[i].jobPath, jobPath, 256);
-                datos[i].shared_data = shared_data;
-                datos[i].result = &resultados[i];
-                pthread_create(&hilos[i], NULL, procesar_plate_thread
-                                                                , &datos[i]);
+            while (fgets(linea, sizeof(linea), jobFile)) {
+                // crear un plate para cada linea del txt
+                Plate plate = crear_plate(linea);
+
+                double *temperaturas = leer_plate(shared_data->nombreJob,
+                                                            &plate, jobPath);
+
+                if (temperaturas != NULL) {
+                    // simular la dispersión del calor
+                    int iteraciones = cambio_temperatura(temperaturas, &plate,
+                                                                shared_data);
+                    if (iteraciones < 0) {
+                        printf("Error: Falló la simulación de transferencia de"
+                                                                " calor.\n");
+                        return 0;
+                    }
+                    nombreBin(&plate);
+
+                    generar_archivo_binario(plate.nombreBin, plate.R, plate.C,
+                        temperaturas);
+
+                    nombreTsv(&plate);
+
+                    generar_archivo_tsv("output", plate.nombreTsv, plate,
+                         plate.tiempoSegundos, plate.iteraciones);
+                } else {
+                    return 0;
+                }
+
+                // liberar memoria después de la simulación
+                free(plate.nombreBin);
+                free(plate.nombreTsv);
+                free(temperaturas);
             }
-            // Esperar a que todos los hilos terminen
-            for (int i = 0; i < num_lines; i++) {
-                pthread_join(hilos[i], NULL);
-            }
-            free(hilos);
-            free(datos);
-            free(resultados);
+
+            fclose(jobFile); //NOLINT
+            // liberar memoria compartida
             free(shared_data->nombreJob);
             free(shared_data);
             return 0;
@@ -153,24 +163,4 @@ int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
         shared_data->nombreJob = nombreJob;
         return 1;
     }
-}
-
-void* procesar_plate_thread(void* arg) {
-    plate_thread_data_t* data = (plate_thread_data_t*)arg;
-    Plate plate = crear_plate(data->linea);
-    double *temperaturas = leer_plate(data->shared_data->nombreJob, &plate,
-                                                             data->jobPath);
-    if (temperaturas != NULL) {
-        cambio_temperatura(temperaturas, &plate, 1);  // Usar 1 partición
-        nombreBin(&plate);
-        generar_archivo_binario(plate.nombreBin, plate.R, plate.C,
-                                                                 temperaturas);
-        nombreTsv(&plate);
-        generar_archivo_tsv("output", plate.nombreTsv, plate,
-                         plate.tiempoSegundos, plate.iteraciones);
-        free(plate.nombreBin);
-        free(plate.nombreTsv);
-        free(temperaturas);
-    }
-    pthread_exit(NULL);
 }
