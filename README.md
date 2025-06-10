@@ -109,6 +109,7 @@ Método de intercambio de datos directamente entre dos procesos. Puede lograrse 
 | 1 | [serial](homeworks/serial)| Simulación de calor
 | 2 | [pthread](homeworks/pthread) | Procesamiento paralelo de la simulación de calor
 | 3 | [optimized](homeworks/optimized/) | Intentos de optimización con el reporte del proceso
+| 4 | [omp_mpi](homeworks/omp_mpi/) | Comparación de la versión más optimizada en OpenMP contra MPI
 
 # Pthreads
 | # | Semana | Tipo | Nombre | Descripción
