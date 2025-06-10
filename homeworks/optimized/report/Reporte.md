@@ -65,6 +65,7 @@ Perf para Serial2 en job001b
 | -     | SerialI   | 48.614582334 | 1.00      | 1.00       | Versión serial final                   |
 | 1     | Conc0     | 213.318203812| 0.23      | 0.06       | Versión concurrente inicial (Tarea02)  |
 | 2     | Conc1     | 48.128695684 | 1.01      | 0.13       | Paraleliza los plates, no la matriz    |
+| 3     | Dinamico  | 23.531234561 | 2.07      | 0.26       | Mapeo dinámico sobre solución Conc1    |
 
 ### Versión concurrente inicial (Tarea02)
 
@@ -92,6 +93,12 @@ Perf para versión concurrente (tarea 2) en job001b
 
 Aumentó el speedup por un poco, pero sigue sin ser eficiente. El tiempo de ejecución de esta versión paralela es más rápida que la versión serial, sin embargo, debido a que se están usando hilos, se esperaría aún más velocidad que no está sucediendo.
 
+### Mapeo dinámico
+
+Se pretende hacer que cada hilo después de procesar su respectiva plate, se libere para procesar otras plates en caso de ser necesitadas.
+
+El speedup aumenta bastante, y es más notable entre menos hilos se usen.
+
 ### Comparación de optimizaciones
 En la siguiente tabla, la parte relevante es el lado izquierdo.
 ![alt text](../img/excel.png)
@@ -102,7 +109,6 @@ Cabe destacar que en la ejecución de la tarea 2, en el caso de prueba job001b, 
 En el gráfico, por temas de presentación, se acotó el eje Y a 500. Cabe recalcar que todos los tiempos de ejecución del caso de prueba job020b fueron terminados por el clúster Poás, por lo que todos terminan en más de 5400 segundos.
 
 Por otro lado, se puede apreciar que la optimización concurrente es levemente más rápida que la versión final serial. La tarea 2 tiene un tiempo de ejecución más elevado debido a las consecuencias de una mala paralelización.
-
 
 ### Comparación del grado de concurrencia
 En la siguiente tabla, la parte relevante es el lado derecho.

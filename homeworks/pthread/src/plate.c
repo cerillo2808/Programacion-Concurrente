@@ -32,7 +32,6 @@ double* leer_plate(const char *nombreJob, Plate *plate, const char *nombreCarpet
 
     if (!bin) {
         printf("Error: No se pudo abrir el archivo binario '%s'.\n", nombreBin);
-        printf("Intentando abrir: %s\n", rutaCompleta);
         return NULL;
     }
 

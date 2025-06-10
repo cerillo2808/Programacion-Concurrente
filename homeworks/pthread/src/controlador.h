@@ -62,38 +62,6 @@ typedef struct private_data {
 } private_data_t;
 
 /**
- * @brief Estructura para guardar los resultados de cada plate
- * @param nombreTsv Nombre del archivo TSV asociado a la simulación
- * @param plate Estructura Plate que contiene los parámetros de la simulación
- * @param tiempoSegundos Tiempo total de la simulación en segundos
- * @param iteraciones
- * @param valido Indica si el resultado es válido (1) o no (0)
- */
-// Estructura para guardar los resultados de cada plate
-typedef struct {
-    char nombreTsv[256];
-    Plate plate;
-    double tiempoSegundos;
-    int iteraciones;
-    int valido;   // 1 si el resultado es válido
-} resultado_plate_t;
-
-/**
- * @brief Estructura para pasar datos a cada hilo de plate
- * @param linea Línea de texto que contiene la configuración de la plate
- * @param jobPath Ruta del archivo de trabajo
- * @param shared_data Puntero a la estructura de datos compartidos
- * @param result Puntero a la estructura de resultados de la plate
- */
-// Estructura para pasar datos a cada hilo de plate
-typedef struct {
-    char linea[256];
-    char jobPath[256];
-    shared_data_t* shared_data;
-    resultado_plate_t* result;
-} plate_thread_data_t;
-
-/**
  * @brief Función principal de ejecución del programa.
  * 
  * Esta función orquesta la simulación de dispersión térmica a partir de un
@@ -162,11 +130,5 @@ int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data);
 */
 void dividir_array(private_data_t* private_data, shared_data_t* shared_data,
                                                                  Plate plate);
-
-/**
- * @brief Función ejecutada por cada hilo para calcular la difusión térmica
- * en una sección de la lámina asignada.
- */
-void* procesar_plate_thread(void* arg);
 
 #endif
