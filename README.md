@@ -154,3 +154,5 @@ Método de intercambio de datos directamente entre dos procesos. Puede lograrse 
 | 1 | 11 | Ejemplo | [hello](examples/mpi/hello/) | Hello usando MPI y ejecutándolo desde el clúster Poás.
 | 2 | 12 | Ejercicio | [mpi_ring](exercises/mpi/mpi_ring/) | Usar comunicación punto a punto con MPI
 | 3 | 12 | Ejercicio | [hybrid_distr_arg](exercises/mpi/hybrid_distr_arg/) | Distribuye el rango del input entre los procesos de manera equitativa.
+| 4 | 13 | Ejercicio | [send_recv_ord_itm](exercises/mpi/send_recv_ord_itm/) | Seguridad condicional con comunicación punto a punto.
+| 5 | 13 | Ejercicio | [send_recv_ord_sem](exercises/mpi/send_recv_ord_sem/) | Saludar determinísticamente.
