@@ -158,3 +158,4 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 4 | 13 | Ejercicio | [send_recv_ord_itm](exercises/mpi/send_recv_ord_itm/) | Seguridad condicional con comunicación punto a punto.
 | 5 | 13 | Ejercicio | [send_recv_ord_sem](exercises/mpi/send_recv_ord_sem/) | Saludar determinísticamente.
 | 6 | 13 | Ejemplo | [send_recv_urd](examples/mpi/send_recv_urd/) | send_recv_ord_itm pero usa un proceso intermediario.
+| 7 | 13 | Ejercicio | [ping_pong_perfect](exercises/mpi/ping_pong_perfect/) | Simulación de ping pong con MPI.
