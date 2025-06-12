@@ -100,6 +100,7 @@ Es el speedup, pero considera los recursos que se utilizaron para lograr un mejo
 Método de intercambio de datos directamente entre dos procesos. Puede lograrse con mensajes o buffers compartidos.
 
 ### 23. Comunicación colectiva entre procesos
+No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los arreglos. 
 
 ### 24. Reducción
 
@@ -156,3 +157,4 @@ Método de intercambio de datos directamente entre dos procesos. Puede lograrse 
 | 3 | 12 | Ejercicio | [hybrid_distr_arg](exercises/mpi/hybrid_distr_arg/) | Distribuye el rango del input entre los procesos de manera equitativa.
 | 4 | 13 | Ejercicio | [send_recv_ord_itm](exercises/mpi/send_recv_ord_itm/) | Seguridad condicional con comunicación punto a punto.
 | 5 | 13 | Ejercicio | [send_recv_ord_sem](exercises/mpi/send_recv_ord_sem/) | Saludar determinísticamente.
+| 6 | 13 | Ejemplo | [send_recv_urd](examples/mpi/send_recv_urd/) | send_recv_ord_itm pero usa un proceso intermediario.

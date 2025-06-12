@@ -1,3 +1,4 @@
+
 // Copyright 2021 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr> CC-BY 4.0
 
 #include <mpi.h>
@@ -6,7 +7,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <vector>
-
 
 #define fail(msg) throw std::runtime_error(msg)
 
@@ -55,14 +55,14 @@ void greet(int process_number, int process_count
       fail("could not send message");
     }
   } else {
-      std::cout << process_number << " said " << buffer.str() << std::endl;
-      for (int source = 1; source < process_count; ++source) {
-        std::vector<char> message(MESSAGE_CAPACITY);
-        if (MPI_Recv(&message[0], MESSAGE_CAPACITY, MPI_CHAR, source
+    std::cout << buffer.str() << std::endl;
+    for (int current = 1; current < process_count; ++current) {
+      std::vector<char> message(MESSAGE_CAPACITY);
+      if (MPI_Recv(&message[0], MESSAGE_CAPACITY, MPI_CHAR, MPI_ANY_SOURCE
         , /*tag*/ 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE) != MPI_SUCCESS ) {
         fail("could not receive message");
       }
-      std::cout << source << " sent " << &message[0] << std::endl;
+      std::cout << &message[0] << std::endl;
     }
   }
 }
