@@ -11,6 +11,11 @@ Las duraciones reportadas fueron la más rápida de tres ejecuciones diferentes 
 - [Optimizaciones concurrentes](#optimizaciones-concurrentes)
   - [Versión concurrente inicial (Tarea02)](#versión-concurrente-inicial-tarea02)
   - [Iteración 1](#iteración-1-1)
+  - [Mapeo dinámico](#mapeo-dinámico)
+- [Comparación de rendimiento distruibuido](#comparación-de-rendimiento-distribuido)
+  - [OMP-Pthreads](#omp---pthreads)
+  - [MPI-Pthreads](#mpi---pthreads)
+  - [OMP-MPI](#omp---mpi)
 - [Comparación de optimizaciones](#comparación-de-optimizaciones)
 - [Comparación del grado de concurrencia](#comparación-del-grado-de-concurrencia)
 
@@ -65,7 +70,7 @@ Perf para Serial2 en job001b
 | -     | SerialI   | 48.614582334 | 1.00      | 1.00       | Versión serial final                   |
 | 1     | Conc0     | 213.318203812| 0.23      | 0.06       | Versión concurrente inicial (Tarea02)  |
 | 2     | Conc1     | 48.128695684 | 1.01      | 0.13       | Paraleliza los plates, no la matriz    |
-| 3     | Dinamico  | 23.531234561 | 2.07      | 0.26       | Mapeo dinámico sobre solución Conc1    |
+| 3     | Dinamico  | 48.086974270 | 1.01      | 0.13       | Mapeo dinámico sobre solución Conc1    |
 
 ### Versión concurrente inicial (Tarea02)
 
@@ -97,7 +102,16 @@ Aumentó el speedup por un poco, pero sigue sin ser eficiente. El tiempo de ejec
 
 Se pretende hacer que cada hilo después de procesar su respectiva plate, se libere para procesar otras plates en caso de ser necesitadas.
 
-El speedup aumenta bastante, y es más notable entre menos hilos se usen.
+Perf para versión dinámica en job001b
+![alt text](../img/dinamico.png)
+
+Se aumentó aún más el speedup, aunque por poco. Sin embargo, es la optimización más rápida.
+
+### Comparación de rendimiento distribuido
+
+#### OMP - Pthreads
+#### MPI - Pthreads
+#### OMP - MPI
 
 ### Comparación de optimizaciones
 En la siguiente tabla, la parte relevante es el lado izquierdo.
