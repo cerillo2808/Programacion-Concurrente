@@ -65,12 +65,5 @@ void greet(int process_number, int process_count
       std::cout << source << " sent " << &message[0] << std::endl;
   }
 
-
-
-
-
-
-
-
   }
 }
