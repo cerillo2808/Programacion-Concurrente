@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <mpi.h>
 #include <plate.h>
 #include <inttypes.h>
 #include <controlador.h>
@@ -12,179 +13,186 @@
 #include <escritor_archivos.h>
 #include <simulacion.h>
 #include <unistd.h>
-#include <pthread.h>
 
-int run(int argc, char *argv[]) {
-    // inicializa memoria compartida
-    shared_data_t* shared_data = (shared_data_t*) calloc(1,
-                                                         sizeof(shared_data_t));
-
-    if (verificar_argumentos(argc, argv, shared_data)) {
-        char *jobPath = argv[1];
-
-        FILE *jobFile = fopen(jobPath, "r");
-        // el parámetro r es para lectura (read)
-
-        if (guardarJob(jobFile, jobPath, shared_data)) {
-            // Leer todas las líneas del archivo
-            char lineas[1024][256];
-            int num_lines = 0;
-            size_t length = strlen(jobPath);
-            // quita el job00x.txt
-            ((char*)jobPath)[length - 10] = '\0';
-            while (fgets(lineas[num_lines], sizeof(lineas[num_lines]),
-                                                                 jobFile)) {
-                num_lines++;
-            }
-            fclose(jobFile);
-
-            // Estructura de datos compartida para reparto dinámico
-            dynamic_thread_data_t datos;
-            datos.lineas = lineas;
-            datos.num_lines = num_lines;
-            datos.next_line = 0;
-            pthread_mutex_init(&datos.mutex, NULL);
-            strncpy(datos.jobPath, jobPath, 256);
-            datos.shared_data = shared_data;
-
-            int n_hilos = shared_data->cantidadHilos;
-            pthread_t* hilos = malloc(n_hilos * sizeof(pthread_t));
-            for (int i = 0; i < n_hilos; i++) {
-                pthread_create(&hilos[i], NULL, procesar_plate_thread_dinamico,
-                                                                 &datos);
-            }
-
-            // Esperar a que todos los hilos terminen
-            for (int i = 0; i < n_hilos; i++) {
-                pthread_join(hilos[i], NULL);
-            }
-            pthread_mutex_destroy(&datos.mutex);
-            free(hilos);
-            free(shared_data->nombreJob);
-            free(shared_data);
-            return 0;
-        }
-    }
-
-    // hubieron errores en verificarArgumentos
-    return 1;
-}
-
-void dividir_array(private_data_t* private_data, shared_data_t* shared_data,
-                                                                 Plate plate) {
-    // Calcular el tamaño total del array
-    uint64_t total_elementos = plate.R * plate.C;
-
-    // Calcular los bloques de trabajo con mapeo estático
-    uint64_t elementos_por_hilo = total_elementos / shared_data->cantidadHilos;
-    uint64_t elementos_extra = total_elementos % shared_data->cantidadHilos;
-    uint64_t inicio = 0;
-
-    // Asignar los bloques a la memoria privada de cada hilo
-    for (int i = 0; i < shared_data->cantidadHilos; i++) {
-        private_data[i].inicio = inicio;
-        private_data[i].final = inicio + elementos_por_hilo +
-                                ((uint64_t)i < elementos_extra ? 1 : 0);
-        inicio = private_data[i].final;
-    }
-}
-
-int verificar_argumentos(int argc, char* argv[], shared_data_t* shared_data) {
-    if (argc > 3) {
-        // muchos argumentos
-        printf("Error: Hay más argumentos de los necesarios. Ingrese la "
-               "dirección del archivo y la cantidad de hilos a utilizar.\n");
-        return 0;
-
-    } else if (argc <= 1) {
-        // faltan argumentos
-        printf("Error: Hay menos argumentos de los necesarios. Ingrese la "
-               "dirección del archivo y la cantidad de hilos a utilizar.\n");
-        return 0;
-
-    } else {
-        if (argc == 2) {
-            int nucleos = sysconf(_SC_NPROCESSORS_ONLN);
-            shared_data->cantidadHilos = nucleos;
-            printf("No se ingresó cantidad de hilos, usando los %d núcleos de"
-                " la máquina.\n", shared_data->cantidadHilos);
+int run_mpi(int argc, char *argv[]) {
+    int rank, size;
+    
+    // Inicializar MPI
+    // MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    
+    // Inicializar memoria compartida
+    shared_data_mpi_t* shared_data = (shared_data_mpi_t*) calloc(1, sizeof(shared_data_mpi_t));
+    shared_data->rank = rank;
+    shared_data->size = size;
+    
+    int result = 0;
+    char **lineas = NULL;
+    int num_lines = 0;
+    char jobPath[512];
+    
+    // Solo el proceso 0 verifica argumentos y lee el archivo
+    if (rank == 0) {
+        if (!verificar_argumentos_mpi(argc, argv, shared_data)) {
+            result = 1;
         } else {
-            int cantidad = atoi(argv[2]);
-            if (cantidad <= 0) {
-                printf("Error: La cantidad de hilos debe ser un número "
-                                                        "entero positivo.\n");
-                return 0;
+            strcpy(jobPath, argv[1]);
+            FILE *jobFile = fopen(jobPath, "r");
+            
+            if (!guardarJob_mpi(jobFile, jobPath, shared_data)) {
+                result = 1;
+            } else {
+                // Leer todas las líneas del archivo
+                char temp_lineas[1024][256];
+                size_t length = strlen(jobPath);
+                // Quitar el job00x.txt
+                jobPath[length - 10] = '\0';
+                
+                while (fgets(temp_lineas[num_lines], sizeof(temp_lineas[num_lines]), jobFile)) {
+                    // Remover salto de línea
+                    temp_lineas[num_lines][strcspn(temp_lineas[num_lines], "\n")] = 0;
+                    num_lines++;
+                }
+                fclose(jobFile);
+                
+                // Allocar memoria para las líneas
+                lineas = (char**)malloc(num_lines * sizeof(char*));
+                for (int i = 0; i < num_lines; i++) {
+                    lineas[i] = (char*)malloc(256 * sizeof(char));
+                    strcpy(lineas[i], temp_lineas[i]);
+                }
             }
-
-            shared_data->cantidadHilos = cantidad;
         }
-
+    }
+    
+    // Broadcast del resultado de verificación
+    MPI_Bcast(&result, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    if (result != 0) {
+        if (shared_data->nombreJob) free(shared_data->nombreJob);
+        free(shared_data);
+        MPI_Finalize();
         return 1;
     }
-}
-
-int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
-    if (jobFile == NULL) {
-        printf("Error: No se pudo abrir. Hay un error con el" //NOLINT
-                                             " nombre o path de su archivo.\n");
-        return 0;
-    } else {
-        // guardar de forma job###
-        // el nombreJob puede ser de un máximo de 250 chars
-        char* nombreJob = calloc(250, sizeof(char));
-        // buscar el / del job
-        char *base = strrchr(jobPath, '/');
-        if (base) {
-            // saltarse el /
-            base++;
-        } else {
-            base = jobPath;
-        }
-
-        // se le pasa el tamaño 250 porque es la longitud de nombreJob
-        strncpy(nombreJob, base, 250);
-
-        // eliminar la extensión .txt
-        char *punto = strrchr(nombreJob, '.');
-        if (punto && strcmp(punto, ".txt") == 0) {
-            // el punto se vuelve caracter nulo
-            *punto = '\0';
-        }
-
-        shared_data->nombreJob = nombreJob;
-        return 1;
+    
+    // Broadcast de datos necesarios
+    MPI_Bcast(&num_lines, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(jobPath, 512, MPI_CHAR, 0, MPI_COMM_WORLD);
+    
+    // Broadcast del nombre del job
+    int nombreJob_len = 0;
+    if (rank == 0) {
+        nombreJob_len = strlen(shared_data->nombreJob) + 1;
     }
-}
-
-void* procesar_plate_thread_dinamico(void* arg) {
-    dynamic_thread_data_t* data = (dynamic_thread_data_t*)arg;
-    while (1) {
-        int idx;
-        // Sección crítica para obtener el siguiente trabajo
-        pthread_mutex_lock(&data->mutex);
-        if (data->next_line >= data->num_lines) {
-            pthread_mutex_unlock(&data->mutex);
-            break;
+    MPI_Bcast(&nombreJob_len, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    
+    if (rank != 0) {
+        shared_data->nombreJob = (char*)malloc(nombreJob_len);
+    }
+    MPI_Bcast(shared_data->nombreJob, nombreJob_len, MPI_CHAR, 0, MPI_COMM_WORLD);
+    
+    // Los procesos distintos de 0 necesitan allocar memoria para las líneas
+    if (rank != 0) {
+        lineas = (char**)malloc(num_lines * sizeof(char*));
+        for (int i = 0; i < num_lines; i++) {
+            lineas[i] = (char*)malloc(256 * sizeof(char));
         }
-        idx = data->next_line++;
-        pthread_mutex_unlock(&data->mutex);
-
-        // Procesar la línea idx
-        Plate plate = crear_plate(data->lineas[idx]);
-        double *temperaturas = leer_plate(data->shared_data->nombreJob,
-                                                 &plate, data->jobPath);
+    }
+    
+    // Broadcast de todas las líneas
+    for (int i = 0; i < num_lines; i++) {
+        MPI_Bcast(lineas[i], 256, MPI_CHAR, 0, MPI_COMM_WORLD);
+    }
+    
+    // Distribución de trabajo usando mapeo estático
+    distribuir_trabajo_mpi(shared_data, num_lines);
+    
+    // Procesar las plates asignadas a este proceso
+    for (int i = shared_data->inicio; i < shared_data->fin; i++) {
+        Plate plate = crear_plate(lineas[i]);
+        double *temperaturas = leer_plate(shared_data->nombreJob, &plate, jobPath);
+        
         if (temperaturas != NULL) {
-            cambio_temperatura(temperaturas, &plate, 1);
-            nombreBin(&plate);
-            generar_archivo_binario(plate.nombreBin, plate.R, plate.C,
-                                                                 temperaturas);
-            nombreTsv(&plate);
-            generar_archivo_tsv("output", plate.nombreTsv, plate,
-                                     plate.tiempoSegundos, plate.iteraciones);
-            free(plate.nombreBin);
-            free(plate.nombreTsv);
+            // Realizar simulación con MPI
+            cambio_temperatura_mpi(temperaturas, &plate, shared_data);
+            
+            // Solo el proceso 0 genera archivos de salida
+            if (rank == 0) {
+                nombreBin(&plate);
+                generar_archivo_binario(plate.nombreBin, plate.R, plate.C, temperaturas);
+                nombreTsv(&plate);
+                generar_archivo_tsv("output", plate.nombreTsv, plate, plate.tiempoSegundos, plate.iteraciones);
+                free(plate.nombreBin);
+                free(plate.nombreTsv);
+            }
+            
             free(temperaturas);
         }
     }
-    pthread_exit(NULL);
+    
+    // Limpiar memoria
+    if (lineas) {
+        for (int i = 0; i < num_lines; i++) {
+            free(lineas[i]);
+        }
+        free(lineas);
+    }
+    
+    free(shared_data->nombreJob);
+    free(shared_data);
+    
+    MPI_Finalize();
+    return 0;
+}
+
+void distribuir_trabajo_mpi(shared_data_mpi_t* shared_data, int num_lines) {
+    int elementos_por_proceso = num_lines / shared_data->size;
+    int elementos_extra = num_lines % shared_data->size;
+    
+    shared_data->inicio = shared_data->rank * elementos_por_proceso + 
+                         (shared_data->rank < elementos_extra ? shared_data->rank : elementos_extra);
+    shared_data->fin = shared_data->inicio + elementos_por_proceso + 
+                      (shared_data->rank < elementos_extra ? 1 : 0);
+}
+
+int verificar_argumentos_mpi(int argc, char* argv[], shared_data_mpi_t* shared_data) {
+    if (argc > 2) {
+        // MPI maneja la cantidad de procesos externamente
+        printf("Error: Demasiados argumentos. Solo ingrese la dirección del archivo.\n");
+        return 0;
+    } else if (argc <= 1) {
+        printf("Error: Falta el argumento del archivo. Ingrese la dirección del archivo.\n");
+        return 0;
+    }
+    
+    return 1;
+}
+
+int guardarJob_mpi(FILE* jobFile, char* jobPath, shared_data_mpi_t* shared_data) {
+    if (jobFile == NULL) {
+        printf("Error: No se pudo abrir. Hay un error con el nombre o path de su archivo.\n");
+        return 0;
+    } else {
+        // Guardar de forma job###
+        char* nombreJob = calloc(250, sizeof(char));
+        
+        // Buscar el / del job
+        char *base = strrchr(jobPath, '/');
+        if (base) {
+            base++; // Saltarse el /
+        } else {
+            base = jobPath;
+        }
+        
+        strncpy(nombreJob, base, 250);
+        
+        // Eliminar la extensión .txt
+        char *punto = strrchr(nombreJob, '.');
+        if (punto && strcmp(punto, ".txt") == 0) {
+            *punto = '\0';
+        }
+        
+        shared_data->nombreJob = nombreJob;
+        return 1;
+    }
 }
