@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     int score_player_1 = 0;
     int score_player_2 = 0;
 
-    int bola = 0;
+    int bola = 1;
 
     // Rondas jugadas
     int round = 0;
@@ -67,49 +67,66 @@ int main(int argc, char* argv[]) {
                 score_player_2++;
             }
 
-            // Proceso 0 envía la bola al proceso 1
-            std::cout << process_rank << " serves" << std::endl;
-            MPI_Send(&bola, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-
-            // Imprimir resultado de la ronda
             std::cout << round << ": " << random_value << " " << bola << std::endl;
+
+            // Proceso 0 envía la bola al proceso 1
+            MPI_Send(&bola, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+            MPI_Send(&score_player_1, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+            MPI_Send(&score_player_2, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+
+            if (score_player_1 >= victory_score || score_player_2 >= victory_score) {
+                break;
+            }
 
             // Proceso 0 recibe la bola de vuelta con etiqueta 1
             MPI_Recv(&bola, 1, MPI_INT, 1, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(&score_player_1, 1, MPI_INT, 1, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(&score_player_2, 1, MPI_INT, 1, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-        } else if (process_rank == 1) {
-            // Proceso 1 espera la bola del proceso 0
-            MPI_Recv(&bola, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); //NOLINT
 
-            // Simular acierto del jugador 2
-            double random_value = dist(gen);
-            bool hit = random_value <= accuracy_player_2;
-
-            if (hit) {
-                bola = 0; // Jugador 2 gana la ronda
-                score_player_2++;
+            // Imprimir resultado final
+            if (score_player_1 > score_player_2) {
+                std::cout << "0 wins " << score_player_1 << " to " << score_player_2 << std::endl;
+            } else if (score_player_2 > score_player_1) {
+                std::cout << "1 wins " << score_player_2 << " to " << score_player_1 << std::endl;
             } else {
-                bola = 1; // Jugador 1 gana la ronda
-                score_player_1++;
+                std::cout << "It's a tie " << score_player_1 << " to " << score_player_2 << std::endl;
             }
 
-            // Proceso 1 envía la bola de vuelta al proceso 0
-            std::cout << process_rank << " serves" << std::endl;
-            MPI_Send(&bola, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
+            // Avisar a jugador 2 que terminó
+            int end_signal = -1;
+            MPI_Send(&end_signal, 1, MPI_INT, 1, 2, MPI_COMM_WORLD);
 
-            // Imprimir resultado de la ronda
-            std::cout << round << ": " << random_value << " " << bola << std::endl;
-        }
-    }
+        } else if (process_rank == 1) {
+           while (true) {
+                // Esperar bola y puntajes de jugador 1
+                MPI_Recv(&bola, 1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                if (bola == -1) break; // Señal de fin
 
-    // Imprimir resultado final
-    if (process_rank == 0) {
-        if (score_player_1 > score_player_2) {
-            std::cout << "0 wins " << score_player_1 << " to " << score_player_2 << std::endl;
-        } else if (score_player_2 > score_player_1) {
-            std::cout << "1 wins " << score_player_2 << " to " << score_player_1 << std::endl;
-        } else {
-            std::cout << "It's a tie " << score_player_1 << " to " << score_player_2 << std::endl;
+                MPI_Recv(&score_player_1, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                MPI_Recv(&score_player_2, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+                // round++;
+                double random_value = dist(gen);
+                bool hit = random_value <= accuracy_player_2;
+
+                if (hit) {
+                    bola = 0;
+                    score_player_2++;
+                } else {
+                    bola = 1;
+                    score_player_1++;
+                }
+
+                // Enviar bola y puntajes de vuelta a jugador 1
+                MPI_Send(&bola, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
+                MPI_Send(&score_player_1, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
+                MPI_Send(&score_player_2, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
+
+                if (score_player_1 >= victory_score || score_player_2 >= victory_score) {
+                    break;
+                }
+            }
         }
     }
 
