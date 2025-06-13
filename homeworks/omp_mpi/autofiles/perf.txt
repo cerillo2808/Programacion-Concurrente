@@ -1,0 +1,20 @@
+// job001b en omp con 4 hilos
+
+Fin del programa
+
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/omp_mpi/omp/bin/omp concurrente25a-yosery_zheng/homeworks/omp_mpi/omp/tests/job001b/job001.txt 4':
+
+          48603.58 msec task-clock:u              #    0.993 CPUs utilized
+                 0	context-switches:u        #    0.000 /sec
+                 0	cpu-migrations:u          #    0.000 /sec
+               110	page-faults:u             #    2.263 /sec
+      183351614206	cycles:u                  #    3.772 GHz
+      255988564279	instructions:u            #    1.40  insn per cycle
+       12729408446	branches:u                #  261.903 M/sec
+          18775310	branch-misses:u           #    0.15% of all branches
+
+      48.964167489 seconds time elapsed
+
+      48.545120000 seconds user
+       0.000000000 seconds sys
+
