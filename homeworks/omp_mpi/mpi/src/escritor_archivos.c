@@ -32,7 +32,10 @@ void generar_archivo_binario(const char *nombre_archivo, uint64_t R, uint64_t C,
 void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
     Plate plate, double tiempoSegundos, int iteraciones) {
     char rutaCompleta[512];
-    snprintf(rutaCompleta, sizeof(rutaCompleta), "%s/%s", directorio,
+    /*snprintf(rutaCompleta, sizeof(rutaCompleta), "%s/%s", directorio,
+    nombreArchivo);*/
+    
+    snprintf(rutaCompleta, sizeof(rutaCompleta), "%s",
     nombreArchivo);
 
     FILE *tsvFile = fopen(rutaCompleta, "a");

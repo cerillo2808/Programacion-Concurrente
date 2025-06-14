@@ -21,7 +21,7 @@ double* leer_plate(const char *nombreJob, Plate *plate, const char *nombreCarpet
 
     char rutaCompleta[512];
     // la ruta completa sólo puede medir 512 como máximo
-    snprintf(rutaCompleta, sizeof(rutaCompleta), "%s%s", nombreCarpeta,
+    snprintf(rutaCompleta, sizeof(rutaCompleta), "%s/%s", nombreCarpeta,
              plate->nombreArchivo);
     // agregarle a nombre de archivo el path completo
 
