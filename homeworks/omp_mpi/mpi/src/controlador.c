@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,9 +6,9 @@
 #include "plate.h"
 #include "simulacion.h"
 #include "escritor_archivos.h"
-#include <libgen.h>
 
 #define TAG_LINEA 100
+#define TAG_FIN 200
 
 void iniciar_simulacion(char *argumentos[]) {
   int world_size;
@@ -21,50 +20,61 @@ void iniciar_simulacion(char *argumentos[]) {
     return;
   }
 
-  char linea[512];
-  int worker_id = 1;
-  while (fgets(linea, sizeof(linea), archivo)) {
-    MPI_Send(linea, (int)strlen(linea)+1, MPI_CHAR, worker_id, TAG_LINEA, MPI_COMM_WORLD);
-    worker_id++;
-    if (worker_id >= world_size) break;
+  char lineas[1024][512];
+  int total_lineas = 0;
+  while (fgets(lineas[total_lineas], sizeof(lineas[total_lineas]), archivo)) {
+    total_lineas++;
   }
-
-  for (int i = worker_id; i < world_size; ++i) {
-    MPI_Send("FIN", 4, MPI_CHAR, i, TAG_LINEA, MPI_COMM_WORLD);
-  }
-
   fclose(archivo);
+
+  int enviados = 0, recibidos = 0;
+  for (int i = 1; i < world_size && enviados < total_lineas; ++i) {
+    MPI_Send(lineas[enviados], (int)strlen(lineas[enviados])+1, MPI_CHAR, i, TAG_LINEA, MPI_COMM_WORLD);
+    enviados++;
+  }
+
+  while (recibidos < total_lineas) {
+    MPI_Status status;
+    MPI_Recv(NULL, 0, MPI_CHAR, MPI_ANY_SOURCE, TAG_FIN, MPI_COMM_WORLD, &status);
+    int worker = status.MPI_SOURCE;
+    recibidos++;
+
+    if (enviados < total_lineas) {
+      MPI_Send(lineas[enviados], (int)strlen(lineas[enviados])+1, MPI_CHAR, worker, TAG_LINEA, MPI_COMM_WORLD);
+      enviados++;
+    } else {
+      MPI_Send(NULL, 0, MPI_CHAR, worker, TAG_LINEA, MPI_COMM_WORLD);
+    }
+  }
 }
 
 void worker_simulacion(char *argumentos[]) {
   char linea[512];
-  MPI_Recv(linea, sizeof(linea), MPI_CHAR, 0, TAG_LINEA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  MPI_Status status;
 
-  if (strcmp(linea, "FIN") == 0) return;
-
-  // Parsear plate desde la línea
-  Plate plate = crear_plate(linea);
-
-  // Ahora extraemos el job_nombre desde argv[1]
   char job_nombre[256];
-  char* base = basename(argumentos[1]);  // Por ejemplo: job003.txt
+  char* base = strrchr(argumentos[1], '/');
+  base = base ? base + 1 : argumentos[1];
   strncpy(job_nombre, base, sizeof(job_nombre));
   job_nombre[sizeof(job_nombre)-1] = '\0';
   char *punto = strrchr(job_nombre, '.');
   if (punto != NULL) *punto = '\0';
 
-  // Guardamos el job_nombre dentro del Plate
-  strncpy(plate.nombreJob, job_nombre, sizeof(plate.nombreJob));
-  plate.nombreJob[sizeof(plate.nombreJob)-1] = '\0';
+  while (1) {
+    MPI_Recv(linea, sizeof(linea), MPI_CHAR, 0, TAG_LINEA, MPI_COMM_WORLD, &status);
+    if (status._ucount == 0) break;
 
-  // Continuamos normal
-  double* temperaturas = leer_plate(plate.nombreArchivo, &plate, argumentos[2]);
-  cambio_temperatura(temperaturas, &plate, 1);
+    Plate plate = crear_plate(linea);
+    strncpy(plate.nombreJob, job_nombre, sizeof(plate.nombreJob));
+    plate.nombreJob[sizeof(plate.nombreJob)-1] = '\0';
 
-  // Usamos plate.nombreJob en la escritura
-  generar_archivo_tsv(plate.nombreArchivo, job_nombre, plate, plate.tiempoSegundos, plate.iteraciones);
+    double* temperaturas = leer_plate(plate.nombreArchivo, &plate, argumentos[2]);
+    cambio_temperatura(temperaturas, &plate, 1);
 
-  // generar_archivo_binario(plate.nombreBin, plate.R, plate.C, temperaturas);
+    generar_archivo_tsv(plate.nombreArchivo, job_nombre, plate, plate.tiempoSegundos, plate.iteraciones);
+    generar_archivo_binario(plate.nombreBin, plate.R, plate.C, temperaturas);
 
-  free(temperaturas);
+    free(temperaturas);
+    MPI_Send(NULL, 0, MPI_CHAR, 0, TAG_FIN, MPI_COMM_WORLD);
+  }
 }
