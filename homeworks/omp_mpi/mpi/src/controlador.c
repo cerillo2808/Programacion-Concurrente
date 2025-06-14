@@ -43,7 +43,9 @@ void iniciar_simulacion(char *argumentos[]) {
       MPI_Send(lineas[enviados], (int)strlen(lineas[enviados])+1, MPI_CHAR, worker, TAG_LINEA, MPI_COMM_WORLD);
       enviados++;
     } else {
-      MPI_Send(NULL, 0, MPI_CHAR, worker, TAG_LINEA, MPI_COMM_WORLD);
+      for (int i = 1; i < world_size; ++i) {
+        MPI_Send(NULL, 0, MPI_CHAR, i, TAG_FIN, MPI_COMM_WORLD);
+      }   
     }
   }
 }
@@ -61,8 +63,10 @@ void worker_simulacion(char *argumentos[]) {
   if (punto != NULL) *punto = '\0';
 
   while (1) {
-    MPI_Recv(linea, sizeof(linea), MPI_CHAR, 0, TAG_LINEA, MPI_COMM_WORLD, &status);
-    if (status._ucount == 0) break;
+    MPI_Recv(linea, sizeof(linea), MPI_CHAR, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+    if (status.MPI_TAG == TAG_FIN) {
+        break;
+    }
 
     Plate plate = crear_plate(linea);
     strncpy(plate.nombreJob, job_nombre, sizeof(plate.nombreJob));
