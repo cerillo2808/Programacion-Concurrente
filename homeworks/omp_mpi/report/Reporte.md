@@ -12,12 +12,14 @@ Las duraciones reportadas fueron la más rápida de tres ejecuciones diferentes 
   - [Versión concurrente inicial (Tarea02)](#versión-concurrente-inicial-tarea02)
   - [Iteración 1](#iteración-1-1)
   - [Mapeo dinámico](#mapeo-dinámico)
+- [Comparación de optimizaciones](#comparación-de-optimizaciones)
+- [Comparación del grado de concurrencia](#comparación-del-grado-de-concurrencia)
+
 - [Comparación de rendimiento distruibuido](#comparación-de-rendimiento-distribuido)
   - [OMP-Pthreads](#omp---pthreads)
   - [MPI-Pthreads](#mpi---pthreads)
   - [OMP-MPI](#omp---mpi)
-- [Comparación de optimizaciones](#comparación-de-optimizaciones)
-- [Comparación del grado de concurrencia](#comparación-del-grado-de-concurrencia)
+
 
 ## Optimizaciones seriales
 
@@ -107,12 +109,6 @@ Perf para versión dinámica en job001b
 
 Se aumentó aún más el speedup, aunque por poco. Sin embargo, es la optimización más rápida.
 
-### Comparación de rendimiento distribuido
-
-#### OMP - Pthreads
-#### MPI - Pthreads
-#### OMP - MPI
-
 ### Comparación de optimizaciones
 En la siguiente tabla, la parte relevante es el lado izquierdo.
 ![alt text](../img/excel.png)
@@ -129,3 +125,9 @@ En la siguiente tabla, la parte relevante es el lado derecho.
 ![alt text](../img/excel.png) <br>
 ![alt text](../img/grafico_concurrencia.png) <br>
 Se puede observar que la cantidad de hilos no afecta demasiado al tiempo de ejecución y lo anterior puede ser debido a que la eficiencia no está cerca de 1. Sin embargo, no es 0 tampoco, por lo que con más hilos sí se ejecuta en menos tiempo. El caso más interesante hubiera sido job020b, sin embargo, por el timeout del clúster, no se logró recolectar datos.
+
+### Comparación de rendimiento distribuido
+
+#### OMP - Pthreads
+#### MPI - Pthreads
+#### OMP - MPI
