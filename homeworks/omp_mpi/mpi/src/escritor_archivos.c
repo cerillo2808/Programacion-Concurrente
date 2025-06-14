@@ -35,7 +35,8 @@ void generar_archivo_tsv(const char *directorio, const char *nombreArchivo,
     /*snprintf(rutaCompleta, sizeof(rutaCompleta), "%s/%s", directorio,
     nombreArchivo);*/
     
-    snprintf(rutaCompleta, sizeof(rutaCompleta), "output/job001.tsv");
+    snprintf(rutaCompleta, sizeof(rutaCompleta), "output/%s.tsv", nombreArchivo);
+    printf("Ruta completa del archivo TSV: %s\n", rutaCompleta);
     FILE *tsvFile = fopen(rutaCompleta, "a");
     if (!tsvFile) {
         printf("Error: No se pudo abrir el archivo TSV para escritura en %s\n",
