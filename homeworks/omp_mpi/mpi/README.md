@@ -7,7 +7,7 @@ El archivo txt contiene en orden el nombre del archivo de la lámina, el tiempo 
 
 El archivo plate###.bin está en binario, donde los primeros ocho bits son el número de filas de la lámina, y los próximos ocho bits son el número de columnas. Después, en orden, están las temperaturas de cada celda de la lámina. El programa lee el archivo plate###.bin y carga la información a una matriz.
 
-En la simulación, se usa una fórmula de relación para calcular el cambio de temperatura de cada celda. Para aprovechar la concurrencia, se divide la matriz de manera equitativa entre la cantidad de hilos a utilizar. Por lo tanto, de manera simultánea, los hilos calculan el cambio en las celdas que les toca. Una vez el cambio es menor que el punto de equilibrio, los hilos se eliminan, se actualiza la matriz inicial, y se procede a escribir los archivos de reporte. 
+En la simulación, se usa una fórmula de relación para calcular el cambio de temperatura de cada celda. Para aprovechar la concurrencia, se usa MPI para dividir cada línea del archivo txt en un núcleo. Se usa una distribución dinámica, entonces si hay menos núcleos que líneas, cada que un núcleo se libere, toma la siguiente línea para trabajar. En caso contrario, cuando hay más núcleos que líneas, los otros núcleos simplemente se mantienen dormantes.
 
 Las salidas del programa son los plate###-k.bin, actualizadas con su nueva temperatura, siendo k la cantidad de iteraciones necesarias para que la temperatura de la lámina quede en equilibrio. También un archivo job###.tsv, que contiene la información original además de las iteraciones y el tiempo transcurrido hasta que se detuvo la simulación.
 
@@ -18,26 +18,24 @@ Las salidas del programa son los plate###-k.bin, actualizadas con su nueva tempe
 - Estar en un entorno Linux.
 
 ### 1. Instalar el programa
-Descargar la carpeta `pthread` que se encuentra en el directorio `concurrente25a-yosery_zheng/homeworks`. Para clonar el repositorio entero, puede usar el comando `git clone https://github.com/cerillo2808/concurrente25a-yosery_zheng.git`
+Descargar la carpeta `omp_mpi` que se encuentra en el directorio `concurrente25a-yosery_zheng/homeworks`. Para clonar el repositorio entero, puede usar el comando `git clone https://github.com/cerillo2808/concurrente25a-yosery_zheng.git`
 
 ### 2. Compilar el programa
-Posicionarse en el directorio `../pthread` y ejecutar el comando `make`.
+Posicionarse en el directorio `../omp_mpi/mpi` y ejecutar el comando `make`.
 
 ### 3. Input (Entrada del programa)
-El programa necesita de un archivo .txt que especifique los archivos binarios que contienen las láminas a procesar, mismas que deben ser provistas también. Dentro del código fuente se encontrará que el archivo .txt es referido como `job###.txt` y las láminas como `plate###.bin`.
+El programa necesita de un archivo .txt que especifique los archivos binarios que contienen las láminas a procesar, mismas que deben ser provistas también. Dentro del código fuente se encontrará que el archivo .txt es referido como `job###.txt` y las láminas como `plate###.bin`. Como segundo argumento, el programa ocupa la ruta de la carpeta en donde están los archivos binarios.
 
-Para incluir los archivos, agréguelos a la carpeta `serial/tests`. Tome en cuenta de que ya hay un caso de prueba dentro, por lo tanto, si lo que desea es probar un caso nuevo, elimine los archivos dentro de la carpeta `tests` y suba los que quiere procesar.
-
-Para ingresar la cantidad de hilos a utilizar, se pone un espacio a la par de la ruta del job y seguidamente el número. 
+Para la cantidad de núcleos a utilizar, corra con el np correspondiente.
 
 Ejemplo de una entrada:
 ````
-./bin/pthread tests/job001.txt 4
+mpirun -np 4 ./bin/mpi tests/job001b/job001.txt tests/job001b
 ````
-Siendo 4 la cantidad de hilos a utilizar.
+Siendo 4 la cantidad de núcleos a utilizar y tests/job001b el directorio en donde se encuentran los archivos binarios.
 
 ### 4. Ejecutar el programa
-Si está posicionado en el directorio `../pthread`, ejecute el comando `./bin/pthread tests/job###.txt 1`. Tome en cuenta de que job###.txt es el nombre del archivo a procesar. En caso de que quiera usar el caso de prueba incluido en el programa, el comando es `./bin/pthread tests/job001.txt 1`. 
+Si está posicionado en el directorio `../omp_mpi/mpi`, ejecute el comando `mpirun -np 4 ./bin/mpi tests/job001b/job001.txt tests/job001b`.
 
 ### 5. Output (Salidas del programa)
 El programa generará una carpeta llamada `output`. Dentro de la carpeta estará un reporte con la información original del .txt provisto además de las iteraciones y el tiempo que duró la simulación de cada lámina. El programa, dentro de la carpeta `output`, también generará archivos binarios de nombre `plate###-k.bin` para cada lámina procesada. Estos archivos son la representación de cómo quedaron las temperaturas de cada celda después de que se estabilizó la temperatura. Además, la k de su nombre representa las iteraciones necesitadas.
@@ -63,7 +61,7 @@ El programa generará una carpeta llamada `output`. Dentro de la carpeta estará
 ![alt text](design/imagenes/image-4.png)
 
 # Detalles Técnicos
-Puede ver los diagramas de diseño del presente programa en el siguiente [enlace](/homeworks/pthread/design/README.md).
+Puede ver los diagramas de diseño del presente programa en el siguiente [enlace](/homeworks/pthread/design/README.md). Debido al indeterminismo, los casos de prueba no salen en el orden exacto, sino que en el orden en el que el procesador decide trabajar cada línea del archivo txt.
 
 # Créditos
 Makefile hecho por [Jeisson Hidalgo-Céspedes](https://jeisson.ecci.ucr.ac.cr/misc/Makefile).

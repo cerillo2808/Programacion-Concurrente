@@ -1,0 +1,107 @@
+procedimiento main():
+    iniciar_mpi()
+    obtener_rank()
+    si (argumentos son válidos):
+        si (rank == 0):
+            iniciar_simulacion(argumentos)
+        si (rank != 0):
+            worker_simulacion(argumentos)
+    finalizar_mpi()
+fin procedimiento
+
+procedimiento iniciar_simulacion(argumentos):
+    abrir archivo job.txt
+    leer todas las líneas del archivo
+    contar total_lineas
+
+    // envío inicial de trabajo
+    para (i = 1 hasta min(world_size-1, total_lineas)):
+        enviar línea[i] al worker i (TAG_LINEA)
+        enviados++
+
+    recibidos = 0
+
+    mientras (recibidos < total_lineas):
+        recibir señal de terminación (TAG_FIN) de cualquier worker
+        recibidos++
+
+        si (aún hay líneas por enviar):
+            enviar siguiente línea al worker (TAG_LINEA)
+            enviados++
+    
+    // cuando ya no quedan líneas, enviar señales de terminación a todos los workers
+    para (i = 1 hasta world_size-1):
+        enviar TAG_FIN al worker i
+fin procedimiento
+
+procedimiento worker_simulacion(argumentos):
+    obtener job_nombre desde argumentos[1] (ejemplo: "job001")
+    mientras (verdadero):
+        recibir mensaje del master (MPI_ANY_TAG)
+
+        si (tag recibido == TAG_FIN):
+            romper ciclo y finalizar worker
+
+        // procesamiento normal de la línea
+        plate = crear_plate(linea recibida)
+        temperaturas = leer_plate(plate.nombreArchivo, plate, directorio)
+
+        si (temperaturas != NULL):
+            iteraciones = cambio_temperatura(temperaturas, plate, 1)
+            plate.iteraciones = iteraciones
+            plate.tiempoSegundos = iteraciones * plate.delta
+
+            calcular nombreBin:
+                plate.nombreBin = directorio + "/" + plate.nombreArchivo + ".bin"
+            calcular nombreTsv:
+                plate.nombreJob = job_nombre + ".tsv"
+
+            generar_archivo_tsv(plate.nombreArchivo, plate.nombreJob, plate, plate.tiempoSegundos, iteraciones)
+            generar_archivo_binario(plate.nombreBin, plate.R, plate.C, temperaturas)
+
+            liberar temperaturas
+
+        enviar señal TAG_FIN al master indicando que terminó una línea
+fin procedimiento
+
+procedimiento crear_plate(...):
+    guarda el contenido de la línea del job a los atributos del plate
+fin procedimiento
+
+procedimiento cambio_temperatura():
+    inicializar memoria para hilos
+    inicializar memoria privada
+    dividir_array(memoria privada, memoria compartida, plate)
+    for (cada hilo)
+        asignar plate
+        asignar temperaturas
+        asignar memoria compartida
+    inicializar matriz temperaturas temporal
+    while(cambio>epsilon)
+        iteraciones++
+        matriz temperaturas temporal [bordes] = matriz temperaturas original [bordes]
+        for (cada hilo)
+            asignar temperaturas temporal
+        crear hilos -> llaman a cambio_temperatura_local
+        esperar hilos
+        copiar temperaturas temporal a temperaturas original
+    liberar memoria hilos
+    liberar memoria privada
+    liberar temperaturas temporal
+    retorna iteraciones
+fin procedimiento
+
+procedimiento cambio_temperatura_local
+    for (cada celda que le toca al hilo)
+        calcular el cambio en temperatura
+fin procedimiento
+
+procedimiento nombreBin(...):
+    hace un char* con un nombre de forma plate###-k.bin, con k como el número de iteraciones
+    guarda el char* como atributo del plate
+fin procedimiento
+
+procedimiento nombreTsv(...):
+    hace un char* con el nombre job###.tsv
+    guarda el char* como atributo del plate
+fin procedimiento
