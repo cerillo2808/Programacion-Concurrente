@@ -54,29 +54,31 @@ void worker_simulacion(char *argumentos[]) {
   char linea[512];
   MPI_Status status;
 
-  char job_nombre[256];
-  char* base = strrchr(argumentos[1], '/');
-  base = base ? base + 1 : argumentos[1];
-  strncpy(job_nombre, base, sizeof(job_nombre));
-  job_nombre[sizeof(job_nombre)-1] = '\0';
-  char *punto = strrchr(job_nombre, '.');
-  if (punto != NULL) *punto = '\0';
-
   while (1) {
     MPI_Recv(linea, sizeof(linea), MPI_CHAR, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
     if (status.MPI_TAG == TAG_FIN) {
         break;
     }
 
+      char job_nombre[256];
+      char* base = strrchr(argumentos[1], '/');
+      base = base ? base + 1 : argumentos[1];
+      strncpy(job_nombre, base, sizeof(job_nombre));
+      job_nombre[sizeof(job_nombre)-1] = '\0';
+      char *punto = strrchr(job_nombre, '.');
+      if (punto != NULL) *punto = '\0';
+      strncat(job_nombre, ".tsv", sizeof(job_nombre) - strlen(job_nombre) - 1);
+
     Plate plate = crear_plate(linea);
-    strncpy(plate.nombreJob, job_nombre, sizeof(plate.nombreJob));
-    plate.nombreJob[sizeof(plate.nombreJob)-1] = '\0';
 
     double* temperaturas = leer_plate(plate.nombreArchivo, &plate, argumentos[2]);
     cambio_temperatura(temperaturas, &plate, 1);
-
-    generar_archivo_tsv(plate.nombreArchivo, job_nombre, plate, plate.tiempoSegundos, plate.iteraciones);
-    generar_archivo_binario(plate.nombreBin, plate.R, plate.C, temperaturas);
+    nombreBin(&plate);
+    generar_archivo_binario(plate.nombreBin, plate.R, plate.C,
+                                                          temperaturas);
+    nombreTsv(&plate);
+    generar_archivo_tsv("output", job_nombre, plate,
+                              plate.tiempoSegundos, plate.iteraciones);
 
     free(temperaturas);
     MPI_Send(NULL, 0, MPI_CHAR, 0, TAG_FIN, MPI_COMM_WORLD);
