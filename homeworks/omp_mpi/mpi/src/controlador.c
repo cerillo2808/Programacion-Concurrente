@@ -7,6 +7,7 @@
 #include "plate.h"
 #include "simulacion.h"
 #include "escritor_archivos.h"
+#include <libgen.h>
 
 #define TAG_LINEA 100
 
@@ -41,15 +42,29 @@ void worker_simulacion(char *argumentos[]) {
 
   if (strcmp(linea, "FIN") == 0) return;
 
+  // Parsear plate desde la línea
   Plate plate = crear_plate(linea);
-  double* temperaturas = leer_plate(plate.nombreArchivo, &plate, argumentos[2]);
 
+  // Ahora extraemos el job_nombre desde argv[1]
+  char job_nombre[256];
+  char* base = basename(argumentos[1]);  // Por ejemplo: job003.txt
+  strncpy(job_nombre, base, sizeof(job_nombre));
+  job_nombre[sizeof(job_nombre)-1] = '\0';
+  char *punto = strrchr(job_nombre, '.');
+  if (punto != NULL) *punto = '\0';
+
+  // Guardamos el job_nombre dentro del Plate
+  strncpy(plate.nombreJob, job_nombre, sizeof(plate.nombreJob));
+  plate.nombreJob[sizeof(plate.nombreJob)-1] = '\0';
+
+  // Continuamos normal
+  double* temperaturas = leer_plate(plate.nombreArchivo, &plate, argumentos[2]);
   cambio_temperatura(temperaturas, &plate, 1);
 
-  // Corrección de path
-  char pathTSV[512];
-  snprintf(pathTSV, sizeof(pathTSV), "%s/%s", argumentos[2], plate.nombreJob);
-  generar_archivo_tsv(plate.nombreArchivo, pathTSV, plate, plate.tiempoSegundos, plate.iteraciones);
+  // Usamos plate.nombreJob en la escritura
+  generar_archivo_tsv(plate.nombreArchivo, job_nombre, plate, plate.tiempoSegundos, plate.iteraciones);
+
+  // generar_archivo_binario(plate.nombreBin, plate.R, plate.C, temperaturas);
 
   free(temperaturas);
 }
