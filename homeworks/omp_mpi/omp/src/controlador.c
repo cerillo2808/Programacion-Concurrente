@@ -39,22 +39,26 @@ int run(int argc, char *argv[]) {
             }
             fclose(jobFile);
 
-            #pragma omp parallel for num_threads(shared_data->cantidadHilos) schedule(dynamic)
+            // Usa OpenMP para procesar las plates en paralelo
+            #pragma omp parallel for num_threads(shared_data->cantidadHilos) schedule(dynamic) //NOLINT
             for (int i = 0; i < num_lines; i++) {
                 Plate plate = crear_plate(lineas[i]);
-                double *temperaturas = leer_plate(shared_data->nombreJob, &plate, jobPath);
+                double *temperaturas = leer_plate(shared_data->nombreJob,
+                                                         &plate, jobPath);
                 if (temperaturas != NULL) {
                     cambio_temperatura(temperaturas, &plate, 1);
                     nombreBin(&plate);
-                    generar_archivo_binario(plate.nombreBin, plate.R, plate.C, temperaturas);
+                    generar_archivo_binario(plate.nombreBin, plate.R,
+                                             plate.C, temperaturas);
                     nombreTsv(&plate);
-                    generar_archivo_tsv("output", plate.nombreTsv, plate, plate.tiempoSegundos, plate.iteraciones);
+                    generar_archivo_tsv("output", plate.nombreTsv, plate,
+                                 plate.tiempoSegundos, plate.iteraciones);
                     free(plate.nombreBin);
                     free(plate.nombreTsv);
                     free(temperaturas);
                 }
             }
-            
+
             free(shared_data->nombreJob);
             free(shared_data);
             return 0;
@@ -152,6 +156,7 @@ int guardarJob(FILE* jobFile, char* jobPath, shared_data_t* shared_data) {
 }
 
 void* procesar_plate_thread_dinamico(void* arg) {
+    // Cada hilo procesa una línea de forma dinámica
     dynamic_thread_data_t* data = (dynamic_thread_data_t*)arg;
     while (1) {
         int idx;
