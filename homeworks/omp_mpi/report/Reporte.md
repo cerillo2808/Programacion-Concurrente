@@ -127,7 +127,47 @@ En la siguiente tabla, la parte relevante es el lado derecho.
 Se puede observar que la cantidad de hilos no afecta demasiado al tiempo de ejecución y lo anterior puede ser debido a que la eficiencia no está cerca de 1. Sin embargo, no es 0 tampoco, por lo que con más hilos sí se ejecuta en menos tiempo. El caso más interesante hubiera sido job020b, sin embargo, por el timeout del clúster, no se logró recolectar datos.
 
 ### Comparación de rendimiento distribuido
+En el job020b, tanto pthread_dinamico, omp, y mpi dieron timeout en el cluster, por lo que todas duran más que 5400 segundos. Se usan 7 nodos a diferencia de 4 nodos para las comparaciones de MPI por directriz del profesor. Se usan todos los nodos del clúster.
+
+#### job001b
+| Etiqueta | Duración (s) | _Speedup_ | Núcleos/Hilos | Eficiencia |
+| - | - | - | - | - |
+| Pthreads | 48.299692553 | 1 | 4 | 1 |
+| OMP | 47.364956000 | 1.0197 | 4 | 0.2549 |
+| MPI | 26.210253366 | 1.8416 | 7 | 0.4604 |
+
+#### job002b
+| Etiqueta | Duración (s) | _Speedup_ | Núcleos/Hilos | Eficiencia |
+| - | - | - | - | - |
+| Pthreads | 1.992774530 | 1 | 4 | 1 | 
+| OMP | 48.005787023 | 0.0415 | 4 | 0.0104 |
+| MPI | 5.402552686 | 0.3688 | 7 | 0.0922 |
+
+#### job003b
+| Etiqueta | Duración (s) | _Speedup_ | Núcleos/Hilos | Eficiencia |
+| - | - | - | - | - |
+| Pthreads | 49.579922405 | 1 | 4 | 1 |
+| OMP | 47.645413625 | 1.0406 | 4 | 0.2601 |
+| MPI | 21.365685092 | 2.3201 | 7 | 0.5800 |
+
+### Gráfico combinado
+![alt text](../img/grafico_distribucion.png)
 
 #### OMP - Pthreads
+En job001b y job003b, OMP logra apenas superar ligeramente el rendimiento de Pthreads, con speedups de 1.0197 y 1.0406 respectivamente. Sin embargo, las eficiencias de 0.2549 y 0.2601 indican un uso bajo de los 4 hilos disponibles. Esto sugiere que la carga de trabajo paralelizable dentro de cada plate no es lo suficientemente grande para justificar la sobrecarga de sincronización que introduce OpenMP.
+
+En el caso de job002b, el rendimiento de OMP es claramente peor que el de Pthreads. El speedup cae a 0.0415, con una eficiencia bajísima de apenas 0.0104. Esto indica que el problema es demasiado pequeño para beneficiarse de la paralelización con OpenMP, y que los costos de crear hilos, sincronizar y gestionar la memoria superan los beneficios de dividir la carga.
+
+En resumen, OMP sólo resulta competitivo frente a Pthreads en los problemas de mayor tamaño, pero incluso ahí, su ganancia es marginal.
+
 #### MPI - Pthreads
+Al comparar MPI contra Pthreads, se observa un mejor aprovechamiento de la paralelización en los problemas más grandes. En job001b y job003b, MPI obtiene speedups de 1.8416 y 2.3201 respectivamente, y eficiencias de 0.4604 y 0.5800 sobre los 7 nodos utilizados. Esto indica que el modelo de distribución de líneas de trabajo permite un reparto más balanceado de la carga.
+
+En job002b, sin embargo, el comportamiento de MPI también cae. El speedup es de apenas 0.3688, con eficiencia de 0.0922. Esto es coherente con lo observado en OMP; el problema es demasiado pequeño para justificar el uso de un modelo distribuido, donde el costo de la comunicación y el reparto de trabajo dominan sobre el cómputo real.
+
+En general, MPI comienza a ser más rápido que Pthreads cuando el tamaño del problema crece y la carga de trabajo puede ser distribuida más efectivamente entre nodos.
+
 #### OMP - MPI
+En job001b y job003b, MPI supera a OMP de forma consistente. Las eficiencias también son mejores en MPI, incluso usando más nodos. Esto sugiere que, mientras OMP está limitado por la cantidad de cores dentro de un solo nodo y su overhead interno de sincronización, MPI escala mejor al poder aprovechar múltiples nodos, incluso con la duración adicional de la comunicación entre nodos.
+
+En conclusión, para problemas pequeños, ningún modelo paraleliza bien. Sin embargo, para problemas medianos y grandes, MPI es más rápido que OMP, especialmente cuando se aprovecha el clúster completo.

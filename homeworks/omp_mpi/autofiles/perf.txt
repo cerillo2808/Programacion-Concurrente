@@ -4,17 +4,110 @@ Fin del programa
 
  Performance counter stats for './concurrente25a-yosery_zheng/homeworks/omp_mpi/omp/bin/omp concurrente25a-yosery_zheng/homeworks/omp_mpi/omp/tests/job001b/job001.txt 4':
 
-          48603.58 msec task-clock:u              #    0.993 CPUs utilized
-                 0	context-switches:u        #    0.000 /sec
-                 0	cpu-migrations:u          #    0.000 /sec
-               110	page-faults:u             #    2.263 /sec
-      183351614206	cycles:u                  #    3.772 GHz
-      255988564279	instructions:u            #    1.40  insn per cycle
-       12729408446	branches:u                #  261.903 M/sec
-          18775310	branch-misses:u           #    0.15% of all branches
+          47427.18 msec task-clock:u              #    0.991 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+               109      page-faults:u             #    2.298 /sec                   
+      178928108446      cycles:u                  #    3.773 GHz                    
+      255988495142      instructions:u            #    1.43  insn per cycle         
+       12729387534      branches:u                #  268.399 M/sec                  
+          17755683      branch-misses:u           #    0.14% of all branches        
 
-      48.964167489 seconds time elapsed
+      47.880470429 seconds time elapsed
 
-      48.545120000 seconds user
-       0.000000000 seconds sys
+      47.364956000 seconds user
+       0.005943000 seconds sys
 
+// job002b en omp con 4 hilos
+
+Fin del programa
+
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/omp_mpi/omp/bin/omp concurrente25a-yosery_zheng/homeworks/omp_mpi/omp/tests/job002b/job002.txt 4':
+
+          47435.56 msec task-clock:u              #    0.988 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+               109      page-faults:u             #    2.298 /sec                   
+      178937660231      cycles:u                  #    3.772 GHz                    
+      255988637801      instructions:u            #    1.43  insn per cycle         
+       12729428477      branches:u                #  268.352 M/sec                  
+          17801133      branch-misses:u           #    0.14% of all branches        
+
+      48.005787023 seconds time elapsed
+
+      47.376862000 seconds user
+       0.000998000 seconds sys
+
+// job003b en omp con 4 hilos
+
+Fin del programa
+
+ Performance counter stats for './concurrente25a-yosery_zheng/homeworks/omp_mpi/omp/bin/omp concurrente25a-yosery_zheng/homeworks/omp_mpi/omp/tests/job003b/job003.txt 4':
+
+         142217.72 msec task-clock:u              #    2.985 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+               123      page-faults:u             #    0.865 /sec                   
+      512679382330      cycles:u                  #    3.605 GHz                    
+      715761951160      instructions:u            #    1.40  insn per cycle         
+       35836199885      branches:u                #  251.981 M/sec                  
+         117828085      branch-misses:u           #    0.33% of all branches        
+
+      47.645413625 seconds time elapsed
+
+     142.074697000 seconds user
+       0.008794000 seconds sys
+
+// job001b en mpi con 7 nucleos
+
+ Performance counter stats for 'mpirun -np 7 ./concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/bin/mpi concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/tests/job001b/job001.txt concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/tests/job001b':
+
+             17.81 msec task-clock:u              #    0.001 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+              1671      page-faults:u             #   93.831 K/sec                  
+          21320454      cycles:u                  #    1.197 GHz                    
+          25593652      instructions:u            #    1.20  insn per cycle         
+           5001214      branches:u                #  280.831 M/sec                  
+            138666      branch-misses:u           #    2.77% of all branches        
+
+      26.210253366 seconds time elapsed
+
+       0.008793000 seconds user
+       0.010172000 seconds sys
+
+// job002b en mpi con 7 nucleos
+
+Performance counter stats for 'mpirun -np 7 ./concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/bin/mpi concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/tests/job002b/job002.txt concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/tests/job002b':
+
+             17.61 msec task-clock:u              #    0.003 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+              1659      page-faults:u             #   94.206 K/sec                  
+          21281588      cycles:u                  #    1.208 GHz                    
+          25549031      instructions:u            #    1.20  insn per cycle         
+           4980778      branches:u                #  282.833 M/sec                  
+            138245      branch-misses:u           #    2.78% of all branches        
+
+       5.402552686 seconds time elapsed
+
+       0.006533000 seconds user
+       0.011439000 seconds sys
+
+// job003b en mpi con 7 nucleos
+
+ Performance counter stats for 'mpirun -np 7 ./concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/bin/mpi concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/tests/job003b/job003.txt concurrente25a-yosery_zheng/homeworks/omp_mpi/mpi/tests/job003b':
+
+             17.63 msec task-clock:u              #    0.001 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+              1658      page-faults:u             #   94.036 K/sec                  
+          21090002      cycles:u                  #    1.196 GHz                    
+          25553404      instructions:u            #    1.21  insn per cycle         
+           4983375      branches:u                #  282.641 M/sec                  
+            139765      branch-misses:u           #    2.80% of all branches        
+
+      21.365685092 seconds time elapsed
+
+       0.005638000 seconds user
+       0.012678000 seconds sys
