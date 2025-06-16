@@ -160,3 +160,4 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 6 | 13 | Ejemplo | [send_recv_urd](examples/mpi/send_recv_urd/) | send_recv_ord_itm pero usa un proceso intermediario.
 | 7 | 13 | Ejercicio | [ping_pong_perfect](exercises/mpi/ping_pong_perfect/) | Simulación de ping pong con MPI.
 | 8 | 13 | Ejercicio | [ping_pong_realistic](exercises/mpi/ping_pong_realistic/) | Simulación de ping pong con probabilidad de que no se reciba la bola.
+| 9 | 14 | Ejemplo | [stdin_sendrecv](examples/mpi/stdin_sendrecv/) | Los procesos leen un arreglo de la entrada estándar y lo imprime.
