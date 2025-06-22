@@ -161,4 +161,5 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 7 | 13 | Ejercicio | [ping_pong_perfect](exercises/mpi/ping_pong_perfect/) | Simulación de ping pong con MPI.
 | 8 | 13 | Ejercicio | [ping_pong_realistic](exercises/mpi/ping_pong_realistic/) | Simulación de ping pong con probabilidad de que no se reciba la bola.
 | 9 | 14 | Ejemplo | [stdin_sendrecv](examples/mpi/stdin_sendrecv/) | Los procesos leen un arreglo de la entrada estándar y lo imprime.
-| 10 | 15 | Ejemplo | [relay_race_dist](examples/mpi/relay_race_dist/) | Uso de barreras en MPI.
+| 10 | 14 | Ejemplo | [relay_race_dist](examples/mpi/relay_race_dist/) | Uso de barreras en MPI.
+| 11 | 14 | Ejemplo | [hybrid_distr_bcast](examples/mpi/hybrid_distr_bcast/) | Pasar programa de comunicación punto a punto a comunicación colectiva.
