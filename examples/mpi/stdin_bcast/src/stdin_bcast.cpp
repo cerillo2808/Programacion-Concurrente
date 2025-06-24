@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
 }
 
 void process_values(int process_number, const char* process_hostname) {
-
   std::vector<double> values;
   size_t value_count = 0;
 
@@ -66,7 +65,6 @@ void process_values(int process_number, const char* process_hostname) {
   if (MPI_Bcast(&value_count, /*count*/ 1, MPI_UINT64_T, /*root*/ 0
     , MPI_COMM_WORLD) != MPI_SUCCESS ) {
     fail("could not broadcast value count");
-
     }
 
     values.resize(value_count);
@@ -74,7 +72,6 @@ void process_values(int process_number, const char* process_hostname) {
   if (MPI_Bcast(&values[0], value_count, MPI_DOUBLE, /*root*/ 0
     , MPI_COMM_WORLD) != MPI_SUCCESS ) {
     fail("could not broadcast values");
-
   }
 
   for (size_t index = 0; index < values.size(); ++index) {

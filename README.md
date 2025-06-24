@@ -164,3 +164,4 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 10 | 14 | Ejemplo | [relay_race_dist](examples/mpi/relay_race_dist/) | Uso de barreras en MPI.
 | 11 | 14 | Ejemplo | [hybrid_distr_bcast](examples/mpi/hybrid_distr_bcast/) | Pasar programa de comunicación punto a punto a comunicación colectiva.
 | 12 | 15 | Ejemplo | [stdin_bcast](examples/mpi/stdin_bcast/) | Proceso intermedio comparte los valores intermedio.
+| 13 | 15 | Ejemplo | [lucky_number_reduce](examples/mpi/lucky_number_reduce/) | Proceso 0 imprime el mínimo, máximo y promedio de los números de suerte que cada proceso generó.
