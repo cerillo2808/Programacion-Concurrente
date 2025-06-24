@@ -165,3 +165,4 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 11 | 14 | Ejemplo | [hybrid_distr_bcast](examples/mpi/hybrid_distr_bcast/) | Pasar programa de comunicación punto a punto a comunicación colectiva.
 | 12 | 15 | Ejemplo | [stdin_bcast](examples/mpi/stdin_bcast/) | Proceso intermedio comparte los valores intermedio.
 | 13 | 15 | Ejemplo | [lucky_number_reduce](examples/mpi/lucky_number_reduce/) | Proceso 0 imprime el mínimo, máximo y promedio de los números de suerte que cada proceso generó.
+| 14 | 15 | Ejemplo | [lucky_number_who](examples/mpi/mpi_lucky_number_who/) | Modificación de lucky_number_reduce en donde cada proceso reporta si es mayor o menor.
