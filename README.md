@@ -140,6 +140,7 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 23 | 8 | Ejercicio | [signaling_3](exercises/pthreads/signaling_3/) | Red de petri y pseudocódigo para que tres hilos se ejecuten en un orden específico.
 | 24 | 8 | Ejercicio | [taskc_patterns](exercises/pthreads/taskc_patterns/README.md) | Patrones básicos de concurrencia de tareas.
 | 25 | 9 | Common | [ComandosCluster](common/ComandosCluster.md) | Comandos básicos para usar el clúster Poás.
+| 26 | 16 | Ejemplo | [readers_writers](examples/mpi/readers_writers/) | Varios lectores puedan leer de un medio común, pero sólo un escritor puede modificarlo a la vez.
 
 # OpenMP
 | # | Semana | Tipo | Nombre | Descripción
