@@ -140,7 +140,9 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 23 | 8 | Ejercicio | [signaling_3](exercises/pthreads/signaling_3/) | Red de petri y pseudocódigo para que tres hilos se ejecuten en un orden específico.
 | 24 | 8 | Ejercicio | [taskc_patterns](exercises/pthreads/taskc_patterns/README.md) | Patrones básicos de concurrencia de tareas.
 | 25 | 9 | Common | [ComandosCluster](common/ComandosCluster.md) | Comandos básicos para usar el clúster Poás.
-| 26 | 16 | Ejemplo | [readers_writers](examples/mpi/readers_writers/) | Varios lectores puedan leer de un medio común, pero sólo un escritor puede modificarlo a la vez.
+| 26 | 16 | Ejemplo | [readers_writers](examples/pthreads/readers_writers/) | Varios lectores puedan leer de un medio común, pero sólo un escritor puede modificarlo a la vez.
+| 27 | 16 | Ejercicio | [reentrant_rand](exercises/pthreads/reentrant_rand/) | Generador de números aleatorios thread safe y reentrante.
+| 28 | 16 | Taskc | [build_h2o](taskc/build_h2o/) | Simulación de creación del agua.
 
 # OpenMP
 | # | Semana | Tipo | Nombre | Descripción
@@ -168,4 +170,3 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 13 | 15 | Ejemplo | [lucky_number_reduce](examples/mpi/lucky_number_reduce/) | Proceso 0 imprime el mínimo, máximo y promedio de los números de suerte que cada proceso generó.
 | 14 | 15 | Ejemplo | [lucky_number_who](examples/mpi/mpi_lucky_number_who/) | Modificación de lucky_number_reduce en donde cada proceso reporta si es mayor o menor.
 | 15 | 15 | Ejemplo | [dining_philosophers](examples/mpi/dining_philosophers/) | Problema de los filósofos comensales.
-| 16 | 16 | Ejercicio | [reentrant_rand](exercises/pthreads/reentrant_rand/) | Generador de números aleatorios thread safe y reentrante.
