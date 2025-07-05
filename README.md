@@ -168,3 +168,4 @@ No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los
 | 13 | 15 | Ejemplo | [lucky_number_reduce](examples/mpi/lucky_number_reduce/) | Proceso 0 imprime el mínimo, máximo y promedio de los números de suerte que cada proceso generó.
 | 14 | 15 | Ejemplo | [lucky_number_who](examples/mpi/mpi_lucky_number_who/) | Modificación de lucky_number_reduce en donde cada proceso reporta si es mayor o menor.
 | 15 | 15 | Ejemplo | [dining_philosophers](examples/mpi/dining_philosophers/) | Problema de los filósofos comensales.
+| 16 | 16 | Ejercicio | [reentrant_rand](exercises/pthreads/reentrant_rand/) | Generador de números aleatorios thread safe y reentrante.
