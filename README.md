@@ -103,6 +103,7 @@ Método de intercambio de datos directamente entre dos procesos. Puede lograrse 
 No se pueden enviar datos discontinuos, tiene que ser alguna estructura como los arreglos. Múltiples procesos participan en la comunicación a la vez. Un proceso puede enviar su mensaje a cualquier otro (broadcast) o escuchar mensajes de cualquier otro proceso (gather).
 
 ### 24. Reducción
+Es una operación en la que se combinan los datos de todos los procesos para que sólo haya un resultado común. Son operaciones específicas como la suma.
 
 # Tareas
 | # | Nombre | Descripción
