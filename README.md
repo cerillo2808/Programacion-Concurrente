@@ -4,6 +4,8 @@ Profesor: Daniel Alvarado <br>
 Semestre I, 2025 <br>
 Grupo 02
 
+Nombre original del repositorio: concurrente25a-yosery_zheng
+
 # Tabla de Contenidos
 1. [Glossary](#glossary)
 2. [Tareas](#tareas)
